@@ -55,8 +55,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    apple: { sizes: "180x180", type: "image/png", url: "/apple-touch-icon.png" },
+    icon: { sizes: "192x192", type: "image/png", url: "/icon-192.png" },
   },
   manifest: "/manifest.json",
   openGraph: {
