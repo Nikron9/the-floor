@@ -32,7 +32,7 @@ export const handle = async (
     }
 
     console.error("[community]", error);
-    return fail("Something went wrong on our end. Try again.", 500);
+    return fail("Coś poszło nie tak po naszej stronie. Spróbuj ponownie.", 500);
   }
 };
 
@@ -45,6 +45,6 @@ export const readJson = async (
       ? (body as Record<string, unknown>)
       : {};
   } catch {
-    throw new InvalidInput("Expected a JSON body.");
+    throw new InvalidInput("Oczekiwano treści w formacie JSON.");
   }
 };

@@ -11,7 +11,7 @@ export async function GET(_request: Request, { params }: Params) {
   return handle(async () => {
     const { id } = await params;
     const category = await repo().get(id);
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     const key = await readKey();
     const isOwner = Boolean(key) && category.authorKey === key;
@@ -23,10 +23,10 @@ export async function GET(_request: Request, { params }: Params) {
     // admin sees both -- a hidden category is exactly the one they need to
     // look at.
     if (category.status === "draft" && !canEdit) {
-      return fail("No category with that id.", 404);
+      return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     }
     if (category.hiddenAt && !canEdit) {
-      return fail("That category is hidden pending review.", 410);
+      return fail("Ta kategoria jest ukryta do czasu weryfikacji.", 410);
     }
 
     const votes = key ? await repo().getVotes([id], key) : {};
@@ -43,11 +43,11 @@ export async function PATCH(request: Request, { params }: Params) {
     const key = await readKey();
     const category = await repo().get(id);
 
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     const isOwner = Boolean(key) && category.authorKey === key;
     const admin = await isAdmin();
     if (!isOwner && !admin) {
-      return fail("That isn't your category.", 403);
+      return fail("To nie jest twoja kategoria.", 403);
     }
 
     const body = await readJson(request);
@@ -64,7 +64,7 @@ export async function PATCH(request: Request, { params }: Params) {
       .filter((imageKey) => !keptKeys.has(imageKey));
 
     const saved = await repo().saveItems(id, items);
-    if (!saved) return fail("No category with that id.", 404);
+    if (!saved) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     await Promise.all(orphaned.map((imageKey) => imageStore().remove(imageKey)));
 
@@ -79,10 +79,10 @@ export async function DELETE(_request: Request, { params }: Params) {
     const key = await readKey();
     const category = await repo().get(id);
 
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     const isOwner = Boolean(key) && category.authorKey === key;
     if (!isOwner && !(await isAdmin())) {
-      return fail("That isn't your category.", 403);
+      return fail("To nie jest twoja kategoria.", 403);
     }
 
     await repo().remove(id);

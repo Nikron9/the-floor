@@ -631,8 +631,8 @@ export const repo = (): Repo => {
 
   if (isProduction()) {
     throw new NotConfigured(
-      "Community categories aren't set up on this deployment yet. " +
-        "It needs DATABASE_URL, with lib/community/schema.sql applied."
+      "Kategorie społeczności nie są jeszcze skonfigurowane w tym wdrożeniu. " +
+        "Wymagany jest DATABASE_URL z zastosowanym lib/community/schema.sql."
     );
   }
 

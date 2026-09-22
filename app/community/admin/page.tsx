@@ -43,7 +43,7 @@ export default function CommunityAdminPage() {
       setRows(categories);
       setStatus("ready");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't load.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się wczytać.");
       setStatus("error");
     }
   }, []);
@@ -55,7 +55,7 @@ export default function CommunityAdminPage() {
         if (found.admin) load();
       })
       .catch((caught: unknown) => {
-        setError(caught instanceof Error ? caught.message : "Couldn't load.");
+        setError(caught instanceof Error ? caught.message : "Nie udało się wczytać.");
         setSession({ admin: false, configured: false });
       });
   }, [load]);
@@ -69,7 +69,7 @@ export default function CommunityAdminPage() {
       setSession({ admin: true, configured: true });
       load();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Sign-in failed.");
+      setError(caught instanceof Error ? caught.message : "Logowanie nie powiodło się.");
     }
   };
 
@@ -96,14 +96,14 @@ export default function CommunityAdminPage() {
         )
       );
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't do that.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się tego zrobić.");
     } finally {
       setPending(null);
     }
   };
 
   const onDelete = async (row: ModerationRow) => {
-    if (!window.confirm(`Delete "${row.name}" and all its images? This can't be undone.`)) {
+    if (!window.confirm(`Usunąć „${row.name}” wraz ze wszystkimi obrazkami? Tej operacji nie można cofnąć.`)) {
       return;
     }
     setPending(row.id);
@@ -112,7 +112,7 @@ export default function CommunityAdminPage() {
       await deleteCategory(row.id);
       setRows((previous) => previous.filter((candidate) => candidate.id !== row.id));
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't delete.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się usunąć.");
     } finally {
       setPending(null);
     }
@@ -121,7 +121,7 @@ export default function CommunityAdminPage() {
   if (!session) {
     return (
       <FloorPageLayout>
-        <p className="text-white/60 p-20 text-center">Loading…</p>
+        <p className="text-white/60 p-20 text-center">Ładowanie…</p>
       </FloorPageLayout>
     );
   }
@@ -132,13 +132,13 @@ export default function CommunityAdminPage() {
         <div className="p-8 md:p-16 max-w-md mx-auto flex flex-col gap-6">
           <div>
             <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Community categories
+              ← Kategorie społeczności
             </Link>
             <h1
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
             >
-              Admin
+              Administrator
             </h1>
           </div>
 
@@ -146,7 +146,7 @@ export default function CommunityAdminPage() {
             <form onSubmit={onSignIn} className="flex flex-col gap-4">
               <label className="flex flex-col gap-2">
                 <span className="font-semibold" style={{ color: "#00d4ff" }}>
-                  Admin secret
+                  Hasło administratora
                 </span>
                 <input
                   type="password"
@@ -164,14 +164,14 @@ export default function CommunityAdminPage() {
                 className="font-semibold"
                 disabled={secret.length === 0}
               >
-                Sign in
+                Zaloguj się
               </FloorButton>
             </form>
           ) : (
             <p className="text-white/70">
-              This deployment has no admin. Set{" "}
-              <code className="text-[#00d4ff]">COMMUNITY_ADMIN_SECRET</code> in
-              its environment and redeploy to add one.
+              To wdrożenie nie ma administratora. Ustaw{" "}
+              <code className="text-[#00d4ff]">COMMUNITY_ADMIN_SECRET</code> w
+              zmiennych środowiskowych i wdróż ponownie, aby go dodać.
             </p>
           )}
         </div>
@@ -185,33 +185,34 @@ export default function CommunityAdminPage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Community categories
+              ← Kategorie społeczności
             </Link>
             <h1
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
             >
-              Admin
+              Administrator
             </h1>
             <p className="text-white/60">
-              Every category, hidden ones first, then the most reported. Open a
-              category and hit Edit to replace a picture or drop an item.
+              Wszystkie kategorie: najpierw ukryte, potem najczęściej zgłaszane.
+              Otwórz kategorię i kliknij Edytuj, aby podmienić obrazek lub usunąć
+              element.
             </p>
           </div>
           <button
             onClick={onSignOut}
             className="text-sm text-white/50 hover:text-white underline"
           >
-            Sign out
+            Wyloguj się
           </button>
         </div>
 
         {error && <p className="text-yellow-200 text-sm">{error}</p>}
 
-        {status === "loading" && <p className="text-white/60 py-12">Loading…</p>}
+        {status === "loading" && <p className="text-white/60 py-12">Ładowanie…</p>}
 
         {status === "ready" && rows.length === 0 && (
-          <p className="text-white/60 py-12">Nothing in the pool yet.</p>
+          <p className="text-white/60 py-12">W puli nic jeszcze nie ma.</p>
         )}
 
         {rows.length > 0 && (
@@ -248,17 +249,17 @@ export default function CommunityAdminPage() {
                       {row.name}
                     </Link>
                     <p className="text-white/50 text-sm">
-                      {row.status === "draft" ? "draft" : "published"}
+                      {row.status === "draft" ? "szkic" : "opublikowana"}
                       {" · "}
-                      {row.itemCount} items · {row.upvotes - row.downvotes} score
+                      elementy: {row.itemCount} · wynik: {row.upvotes - row.downvotes}
                       {row.reportCount > 0 && (
                         <span className="text-yellow-200">
                           {" · "}
-                          {row.reportCount} report{row.reportCount === 1 ? "" : "s"}
+                          zgłoszenia: {row.reportCount}
                         </span>
                       )}
                       {row.hiddenAt && (
-                        <span className="text-red-300"> · hidden</span>
+                        <span className="text-red-300"> · ukryta</span>
                       )}
                     </p>
                   </div>
@@ -268,21 +269,21 @@ export default function CommunityAdminPage() {
                       href={`/community/${row.id}/edit`}
                       className="text-sm px-3 py-1 rounded bg-[#00d4ff] text-black font-semibold"
                     >
-                      Edit
+                      Edytuj
                     </Link>
                     <button
                       onClick={() => onToggleHidden(row)}
                       disabled={pending === row.id}
                       className="text-sm px-3 py-1 rounded bg-gray-700 text-white/80 hover:bg-gray-600 disabled:opacity-50"
                     >
-                      {row.hiddenAt ? "Unhide" : "Hide"}
+                      {row.hiddenAt ? "Przywróć" : "Ukryj"}
                     </button>
                     <button
                       onClick={() => onDelete(row)}
                       disabled={pending === row.id}
                       className="text-sm px-3 py-1 rounded bg-gray-800 text-red-300 hover:bg-red-600/80 hover:text-white disabled:opacity-50"
                     >
-                      Delete
+                      Usuń
                     </button>
                   </div>
                 </div>

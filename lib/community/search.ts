@@ -35,7 +35,7 @@ export type ImageResult = {
 export const SOURCE_LABELS: Record<ImageSource, string> = {
   commons: "Wikimedia Commons",
   openverse: "Openverse",
-  web: "Web images",
+  web: "Obrazy z sieci",
 };
 
 type SearchOptions = {

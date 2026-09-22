@@ -73,6 +73,64 @@ const own = <T>(
 ): T | undefined =>
   Object.prototype.hasOwnProperty.call(map, key) ? map[key] : undefined;
 
+/**
+ * Curated categories used to be keyed by their English names. Games saved in
+ * a browser before the switch to Polish keys still carry those, so map them to
+ * the current key instead of treating them as unknown.
+ */
+const LEGACY_CATEGORY_IDS: Readonly<Record<string, Category>> = {
+  "Airport Codes": "Kody lotnisk",
+  "Amusement Parks": "Wesołe miasteczka",
+  Apps: "Aplikacje",
+  "Board games": "Gry planszowe",
+  Books: "Książki",
+  "Brand slogans": "Slogany reklamowe",
+  "Broadway shows": "Musicale z Broadwayu",
+  "Chicago tourist stuff": "Atrakcje Chicago",
+  "City Skylines": "Panoramy miast",
+  Comedians: "Komicy",
+  "Disney Channel Original Movies": "Filmy Disney Channel",
+  "Disney characters": "Postacie Disneya",
+  Dogs: "Psy",
+  "EU Flags": "Flagi Europy",
+  "Fair foods": "Jedzenie z jarmarku",
+  "Famous people who died before turning 30": "Sławni, którzy zmarli przed 30",
+  "Fast food chains": "Sieci fast food",
+  Fridge: "Lodówka",
+  Fruits: "Owoce",
+  Garage: "Garaż",
+  "Harry Potter characters": "Postacie z Harry'ego Pottera",
+  Holidays: "Święta",
+  Horses: "Konie",
+  "Junk drawer": "Szuflada z rupieciami",
+  "Kitchen gadgets": "Gadżety kuchenne",
+  Laundry: "Pranie",
+  "MLB Teams": "Drużyny MLB",
+  Math: "Matematyka",
+  Movies: "Filmy",
+  "NBA Teams": "Drużyny NBA",
+  "NFL Teams": "Drużyny NFL",
+  "NHL Teams": "Drużyny NHL",
+  Pokemon: "Pokémony",
+  "Pool Equipment": "Wyposażenie basenu",
+  "Pop divas": "Diwy popu",
+  "Reality tv shows": "Reality show",
+  "Rom Coms": "Komedie romantyczne",
+  "Spirit Halloween Catalogue": "Kostiumy na Halloween",
+  Sports: "Sporty",
+  States: "Stany USA",
+  Superheros: "Superbohaterowie",
+  "Taylor Swift Lyrics": "Teksty Taylor Swift",
+  Thanksgiving: "Święto Dziękczynienia",
+  "Time Tables": "Tabliczka mnożenia",
+  "Video Game Characters": "Postacie z gier wideo",
+  "Video Games": "Gry wideo",
+};
+
+/** The current key for `id`, translating an old English curated key. */
+export const canonicalCategoryId = (id: CategoryId): CategoryId =>
+  own(LEGACY_CATEGORY_IDS, id) ?? id;
+
 export const isCuratedCategoryId = (id: CategoryId): id is Category =>
   Object.prototype.hasOwnProperty.call(CATEGORY_METADATA, id);
 
@@ -140,8 +198,9 @@ export const resolveCategory = (
 ): ResolvedCategory | undefined => {
   if (!id) return undefined;
 
-  if (isCuratedCategoryId(id)) {
-    return resolveCuratedCategory(id);
+  const curated = canonicalCategoryId(id);
+  if (isCuratedCategoryId(curated)) {
+    return resolveCuratedCategory(curated);
   }
 
   const found =
@@ -157,7 +216,11 @@ export const listSelectableCategories = (
   community: Readonly<Record<string, CommunityCategory>> = {}
 ): Array<{ id: CategoryId; name: string; source: CategorySource }> => {
   const curated = (Object.keys(CATEGORY_METADATA) as Category[])
-    .map((id) => ({ id: id as CategoryId, name: id, source: "curated" as const }))
+    .map((id) => ({
+      id: id as CategoryId,
+      name: CATEGORY_METADATA[id].name,
+      source: "curated" as const,
+    }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const contributed = Object.values(community)

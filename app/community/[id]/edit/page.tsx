@@ -69,7 +69,7 @@ export default function EditCategoryPage({
       })
       .catch((caught: unknown) => {
         if (cancelled) return;
-        setError(caught instanceof Error ? caught.message : "Couldn't load.");
+        setError(caught instanceof Error ? caught.message : "Nie udało się wczytać.");
         setStatus("error");
       });
 
@@ -113,7 +113,7 @@ export default function EditCategoryPage({
     } catch (caught) {
       patchCell(itemId, {
         status: "error",
-        message: caught instanceof Error ? caught.message : "Couldn't save.",
+        message: caught instanceof Error ? caught.message : "Nie udało się zapisać.",
       });
     }
   };
@@ -160,7 +160,7 @@ export default function EditCategoryPage({
       setCategory(saved);
     } catch (caught) {
       setCategory(category);
-      setError(caught instanceof Error ? caught.message : "Couldn't remove that.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się usunąć.");
     }
   };
 
@@ -172,7 +172,7 @@ export default function EditCategoryPage({
       const { category: next } = await setCategoryHidden(id, !category.hiddenAt);
       setCategory(next);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't do that.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się tego zrobić.");
     } finally {
       setWorking(false);
     }
@@ -180,7 +180,7 @@ export default function EditCategoryPage({
 
   const onDelete = async () => {
     if (!category) return;
-    if (!window.confirm(`Delete "${category.name}" and all its images? This can't be undone.`)) {
+    if (!window.confirm(`Usunąć „${category.name}” wraz ze wszystkimi obrazkami? Tej operacji nie można cofnąć.`)) {
       return;
     }
     setWorking(true);
@@ -190,7 +190,7 @@ export default function EditCategoryPage({
       removeCategory(id);
       router.push(category.isAdmin ? "/community/admin" : "/community");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't delete.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się usunąć.");
       setWorking(false);
     }
   };
@@ -198,7 +198,7 @@ export default function EditCategoryPage({
   if (status === "loading") {
     return (
       <FloorPageLayout>
-        <p className="text-white/60 p-20 text-center">Loading…</p>
+        <p className="text-white/60 p-20 text-center">Ładowanie…</p>
       </FloorPageLayout>
     );
   }
@@ -209,7 +209,7 @@ export default function EditCategoryPage({
         <div className="p-20 text-center flex flex-col gap-4">
           <p className="text-red-300">{error}</p>
           <Link href="/community" className="underline text-[#00d4ff]">
-            Back to the pool
+            Wróć do puli
           </Link>
         </div>
       </FloorPageLayout>
@@ -221,13 +221,13 @@ export default function EditCategoryPage({
       <FloorPageLayout>
         <div className="p-20 text-center flex flex-col gap-4">
           <p className="text-yellow-200">
-            Only the author or an admin can edit this category.
+            Tylko autor lub administrator może edytować tę kategorię.
           </p>
           <Link href={`/community/${id}`} className="underline text-[#00d4ff]">
-            Back to the category
+            Wróć do kategorii
           </Link>
           <Link href="/community/admin" className="underline text-white/50 text-sm">
-            Admin sign-in
+            Logowanie administratora
           </Link>
         </div>
       </FloorPageLayout>
@@ -247,20 +247,20 @@ export default function EditCategoryPage({
               href={`/community/${id}`}
               className="text-sm underline text-[#00d4ff]"
             >
-              ← Back to the category
+              ← Wróć do kategorii
             </Link>
             <h1
               className="text-3xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
             >
-              Editing “{category.name}”
+              Edycja „{category.name}”
             </h1>
             <p className="text-white/60 text-sm">
-              {withImages} of {category.items.length} have a picture
-              {category.status === "draft" ? " · draft" : " · published"}
-              {category.hiddenAt ? " · hidden from listings" : ""}
-              {category.isAdmin ? " · as admin" : ""}
-              {" · changes save immediately"}
+              Z obrazkiem: {withImages} z {category.items.length}
+              {category.status === "draft" ? " · szkic" : " · opublikowana"}
+              {category.hiddenAt ? " · ukryta na listach" : ""}
+              {category.isAdmin ? " · jako admin" : ""}
+              {" · zmiany zapisują się od razu"}
             </p>
           </div>
 
@@ -272,7 +272,7 @@ export default function EditCategoryPage({
                 disabled={working}
                 onClick={onToggleHidden}
               >
-                {category.hiddenAt ? "Unhide" : "Hide"}
+                {category.hiddenAt ? "Przywróć" : "Ukryj"}
               </FloorButton>
             )}
             <FloorButton
@@ -281,18 +281,18 @@ export default function EditCategoryPage({
               disabled={working}
               onClick={onDelete}
             >
-              Delete category
+              Usuń kategorię
             </FloorButton>
           </div>
         </div>
 
         <p className="text-white/50 text-sm">
-          <strong className="text-white/70">Find</strong> swaps in a different
-          picture, <strong className="text-white/70">Edit</strong> crops or
-          erases part of this one, and <strong className="text-white/70">×</strong>{" "}
-          removes the item. A replaced picture is deleted from storage, not just
-          unlinked. Games that already added this category keep their own copy
-          until it&rsquo;s re-added.
+          <strong className="text-white/70">Szukaj</strong> podmienia obrazek na
+          inny, <strong className="text-white/70">Edytuj</strong> przycina lub
+          wymazuje jego fragment, a <strong className="text-white/70">×</strong>{" "}
+          usuwa element. Zastąpiony obrazek jest usuwany z magazynu, a nie tylko
+          odłączany. Gry, które już dodały tę kategorię, zachowują własną kopię,
+          dopóki nie zostanie dodana ponownie.
         </p>
 
         {error && <p className="text-red-300">{error}</p>}

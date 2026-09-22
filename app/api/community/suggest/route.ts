@@ -47,13 +47,18 @@ const SYSTEM = [
   "Skip anything that is only identifiable from text on the image, anything",
   "adult or graphic, and any real private individual. Use the common name",
   "people actually say out loud, not a formal or Latin one.",
+  "",
+  "The players are Polish. Write every name and alternative in Polish, the",
+  "way a Polish player would shout it. Keep brands, people and titles in the",
+  "form used in Poland, and add the English original as an alternative when",
+  "it differs.",
 ].join("\n");
 
 export async function POST(request: Request) {
   return handle(async () => {
     if (!hasAiGateway()) {
       return fail(
-        "AI suggestions aren't configured. Set AI_GATEWAY_API_KEY, or type the items in yourself.",
+        "Propozycje AI nie są skonfigurowane. Ustaw AI_GATEWAY_API_KEY albo wpisz elementy samodzielnie.",
         503
       );
     }
@@ -79,7 +84,7 @@ export async function POST(request: Request) {
           maxRetries: 0,
           system: SYSTEM,
           output: Output.object({ schema: Suggestions }),
-          prompt: `Category: "${name}"\n\nSuggest ${count} items.`,
+          prompt: `Kategoria: "${name}"\n\nZaproponuj ${count} elementów.`,
         }));
         break;
       } catch (error) {
@@ -103,17 +108,17 @@ export async function POST(request: Request) {
       // "something went wrong" sends people looking in the wrong place.
       if (/credit card|verification/i.test(lastError)) {
         return fail(
-          "The AI Gateway needs a card on file before it will serve requests. " +
-            "Add one in the Vercel dashboard under AI Gateway, or type the " +
-            "items in yourself.",
+          "AI Gateway wymaga podpiętej karty, zanim zacznie obsługiwać żądania. " +
+            "Dodaj ją w panelu Vercel w sekcji AI Gateway albo wpisz " +
+            "elementy samodzielnie.",
           503
         );
       }
 
       return fail(
-        "The AI Gateway is rate-limiting us right now — its free tier allows " +
-          "very few requests. Wait a minute and try again, or type the items " +
-          "in yourself.",
+        "AI Gateway ogranicza teraz liczbę żądań — darmowy plan pozwala na " +
+          "bardzo niewiele. Odczekaj minutę i spróbuj ponownie albo wpisz " +
+          "elementy samodzielnie.",
         503
       );
     }

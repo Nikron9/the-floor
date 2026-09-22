@@ -31,17 +31,17 @@ export async function POST(request: Request, { params }: Params) {
     const key = await readKey();
     const category = await repo().get(id);
 
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     if ((!key || category.authorKey !== key) && !(await isAdmin())) {
-      return fail("That isn't your category.", 403);
+      return fail("To nie jest twoja kategoria.", 403);
     }
 
     const form = await request.formData().catch(() => undefined);
-    if (!form) return fail("Expected a multipart form.");
+    if (!form) return fail("Oczekiwano formularza multipart.");
 
     const itemId = cleanText(form.get("itemId"));
     const item = category.items.find((candidate) => candidate.id === itemId);
-    if (!item) return fail("No item with that id in this category.", 404);
+    if (!item) return fail("W tej kategorii nie ma elementu o takim identyfikatorze.", 404);
 
     let source: Buffer;
     let credit: ImageCredit | null = null;
@@ -51,13 +51,13 @@ export async function POST(request: Request, { params }: Params) {
 
     if (file instanceof File) {
       if (file.size > LIMITS.maxSourceImageBytes) {
-        return fail("That file is too large.");
+        return fail("Ten plik jest za duży.");
       }
       source = Buffer.from(await file.arrayBuffer());
     } else if (sourceUrl) {
       source = await fetchSourceImage(sourceUrl);
     } else {
-      return fail("Send either a file or a sourceUrl.");
+      return fail("Wyślij plik albo sourceUrl.");
     }
 
     // Attribution travels with the image so the category page can credit
@@ -91,7 +91,7 @@ export async function POST(request: Request, { params }: Params) {
       height: normalized.height,
       credit,
     });
-    if (!saved) return fail("No category with that id.", 404);
+    if (!saved) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     // Replacing an image leaves the old object behind otherwise, and storage
     // is the one budget this feature can actually blow.
@@ -113,14 +113,14 @@ export async function DELETE(request: Request, { params }: Params) {
     const key = await readKey();
     const category = await repo().get(id);
 
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     if ((!key || category.authorKey !== key) && !(await isAdmin())) {
-      return fail("That isn't your category.", 403);
+      return fail("To nie jest twoja kategoria.", 403);
     }
 
     const itemId = new URL(request.url).searchParams.get("itemId") ?? "";
     const item = category.items.find((candidate) => candidate.id === itemId);
-    if (!item) return fail("No item with that id in this category.", 404);
+    if (!item) return fail("W tej kategorii nie ma elementu o takim identyfikatorze.", 404);
 
     const saved = await repo().updateItem(id, item.id, {
       imageKey: null,
@@ -129,7 +129,7 @@ export async function DELETE(request: Request, { params }: Params) {
       height: null,
       credit: null,
     });
-    if (!saved) return fail("No category with that id.", 404);
+    if (!saved) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     if (item.imageKey) await imageStore().remove(item.imageKey);
 

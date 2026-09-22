@@ -9,41 +9,41 @@ const NEW_ISSUE_URL = `${REPO_URL}/issues/new`;
 const COMPARE_URL = `${REPO_URL}/compare`;
 
 const IMAGE_EXAMPLE_SNIPPET = `const SeaCreaturesCategory: CategoryMetadata = {
-  name: "Sea Creatures",
+  name: "Stworzenia morskie",
   folder: "sea-creatures",
   examples: [
     {
-      name: "Octopus",
+      name: "Ośmiornica",
       image: "octopus.png",
-      alternatives: ["Octopi"],
+      alternatives: ["Octopus"],
     },
     // ...more entries
   ],
 };`;
 
 const TEXT_EXAMPLE_SNIPPET = `const FamousQuotesCategory: CategoryMetadata = {
-  name: "Famous Quotes",
+  name: "Słynne cytaty",
   folder: "famous-quotes",
   examples: [
     {
       name: "Neil Armstrong",
-      text: "One small step for man...",
+      text: "To mały krok dla człowieka...",
       alternatives: [],
     },
     // ...more entries
   ],
 };`;
 
-const REGISTER_SNIPPET = `// 1. Add to the Category union
+const REGISTER_SNIPPET = `// 1. Dodaj do unii Category (klucz = nazwa kategorii)
 export type Category =
-  | "Pokemon"
+  | "Pokémony"
   // ...
-  | "Sea Creatures";
+  | "Stworzenia morskie";
 
-// 2. Register in CATEGORY_METADATA
+// 2. Zarejestruj w CATEGORY_METADATA
 export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   // ...
-  "Sea Creatures": SeaCreaturesCategory,
+  "Stworzenia morskie": SeaCreaturesCategory,
 };`;
 
 function CodeBlock({ children }: { children: string }) {
@@ -61,10 +61,10 @@ export default function ContributeCategoriesPage() {
         <div className="max-w-4xl w-full space-y-8">
           <div className="text-center mb-8">
             <h1 className="text-5xl md:text-7xl font-black metallic-text mb-4">
-              ADD A CATEGORY
+              DODAJ KATEGORIĘ
             </h1>
             <p className="text-xl md:text-2xl glow-text">
-              Want to see your favorite trivia subject on The Floor? Open a pull
+              Chcesz zobaczyć swój ulubiony temat w The Floor? Otwórz pull
               request!
             </p>
           </div>
@@ -72,120 +72,123 @@ export default function ContributeCategoriesPage() {
           <div className="space-y-6 text-lg leading-relaxed">
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl font-bold mb-4 glow-text">
-                How It Works
+                Jak to działa
               </h2>
               <p className="mb-4">
-                Categories are defined directly in the source code. To add a new
-                one, you&apos;ll fork the repo, add your images and data, and
-                open a pull request. Once it&apos;s merged, your category goes
-                live for everyone.
+                Kategorie są zdefiniowane bezpośrednio w kodzie źródłowym. Aby
+                dodać nową, zrób forka repozytorium, dodaj obrazki i dane, a
+                następnie otwórz pull request. Po jego scaleniu kategoria
+                będzie dostępna dla wszystkich.
               </p>
               <ol className="list-decimal list-inside space-y-2">
-                <li>Fork the repo on GitHub</li>
+                <li>Zrób forka repozytorium na GitHubie</li>
                 <li>
-                  Add your image files to{" "}
+                  Dodaj pliki obrazków do{" "}
                   <code className="text-[#00d4ff] font-mono">
-                    public/images/&lt;your-folder&gt;/
+                    public/images/&lt;twój-folder&gt;/
                   </code>
                 </li>
                 <li>
-                  Add a category entry in{" "}
+                  Dodaj wpis kategorii w{" "}
                   <code className="text-[#00d4ff] font-mono">app/data.ts</code>
                 </li>
-                <li>Open a pull request</li>
+                <li>Otwórz pull request</li>
               </ol>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl font-bold mb-4 glow-text">
-                Step 1: Add Your Images
+                Krok 1: Dodaj obrazki
               </h2>
               <p className="mb-4">
-                Drop your image files (PNG, JPG, or WEBP work best) into a new
-                folder under{" "}
+                Wrzuć pliki obrazków (najlepiej PNG, JPG lub WEBP) do nowego
+                folderu w{" "}
                 <code className="text-[#00d4ff] font-mono">public/images/</code>
-                . The folder name should be lowercase and kebab-case.
+                . Nazwa folderu powinna być pisana małymi literami w stylu kebab-case.
               </p>
               <CodeBlock>{`public/images/sea-creatures/
   octopus.png
   shark.png
   jellyfish.png`}</CodeBlock>
               <p className="mt-4 text-white/70 text-base">
-                Tip: aim for transparent backgrounds and a roughly square aspect
-                ratio so they look good in the grid.
+                Wskazówka: postaw na przezroczyste tło i proporcje zbliżone do
+                kwadratu, żeby obrazki dobrze wyglądały w siatce.
               </p>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl font-bold mb-4 glow-text">
-                Step 2: Define the Category
+                Krok 2: Zdefiniuj kategorię
               </h2>
               <p className="mb-4">
-                In{" "}
+                W pliku{" "}
                 <code className="text-[#00d4ff] font-mono">app/data.ts</code>,
-                create a new <code className="text-[#00d4ff] font-mono">CategoryMetadata</code>{" "}
-                constant. Each example has a{" "}
-                <code className="text-[#00d4ff] font-mono">name</code> (the
-                answer), the asset (<code className="text-[#00d4ff] font-mono">image</code>{" "}
-                filename or <code className="text-[#00d4ff] font-mono">text</code>{" "}
-                string), and an{" "}
+                utwórz nową stałą{" "}
+                <code className="text-[#00d4ff] font-mono">CategoryMetadata</code>.
+                Każdy przykład ma pole{" "}
+                <code className="text-[#00d4ff] font-mono">name</code>{" "}
+                (odpowiedź), zasób (nazwę pliku w{" "}
+                <code className="text-[#00d4ff] font-mono">image</code> lub
+                tekst w <code className="text-[#00d4ff] font-mono">text</code>)
+                oraz tablicę{" "}
                 <code className="text-[#00d4ff] font-mono">alternatives</code>{" "}
-                array of acceptable alternate answers.
+                z akceptowanymi alternatywnymi odpowiedziami.
               </p>
 
               <p className="mt-4 mb-2 font-semibold" style={{ color: "#00d4ff" }}>
-                Image-based category:
+                Kategoria obrazkowa:
               </p>
               <CodeBlock>{IMAGE_EXAMPLE_SNIPPET}</CodeBlock>
 
               <p className="mt-4 mb-2 font-semibold" style={{ color: "#00d4ff" }}>
-                Text-based category (no images needed):
+                Kategoria tekstowa (bez obrazków):
               </p>
               <CodeBlock>{TEXT_EXAMPLE_SNIPPET}</CodeBlock>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl font-bold mb-4 glow-text">
-                Step 3: Register It
+                Krok 3: Zarejestruj ją
               </h2>
               <p className="mb-4">
-                Add your category to the{" "}
-                <code className="text-[#00d4ff] font-mono">Category</code> type
-                union and the{" "}
+                Dodaj swoją kategorię do unii typu{" "}
+                <code className="text-[#00d4ff] font-mono">Category</code> oraz do
+                rekordu{" "}
                 <code className="text-[#00d4ff] font-mono">
                   CATEGORY_METADATA
                 </code>{" "}
-                record at the bottom of the file.
+                na końcu pliku.
               </p>
               <CodeBlock>{REGISTER_SNIPPET}</CodeBlock>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl font-bold mb-4 glow-text">
-                Step 4: Open a Pull Request
+                Krok 4: Otwórz pull request
               </h2>
               <p className="mb-4">
-                Push your branch to your fork and open a PR against{" "}
-                <code className="text-[#00d4ff] font-mono">main</code>. Include
-                the category name and a short description of the examples in
-                the PR body. We&apos;ll review and merge it in.
+                Wypchnij swoją gałąź do forka i otwórz PR do gałęzi{" "}
+                <code className="text-[#00d4ff] font-mono">main</code>. W opisie
+                PR podaj nazwę kategorii i krótki opis przykładów. Przejrzymy go
+                i scalimy.
               </p>
               <p className="text-white/70 text-base">
-                Not comfortable with code? Open an issue instead with your
-                category idea and example list — we can take it from there.
+                Nie czujesz się pewnie z kodem? Zamiast tego otwórz issue z
+                pomysłem na kategorię i listą przykładów — resztą zajmiemy się
+                my.
               </p>
             </section>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <a href={COMPARE_URL} target="_blank" rel="noopener noreferrer">
-              <FloorButton variant="rectangular">Open a Pull Request</FloorButton>
+              <FloorButton variant="rectangular">Otwórz pull request</FloorButton>
             </a>
             <a href={NEW_ISSUE_URL} target="_blank" rel="noopener noreferrer">
-              <FloorButton variant="rectangular">Suggest via Issue</FloorButton>
+              <FloorButton variant="rectangular">Zaproponuj przez issue</FloorButton>
             </a>
             <Link href="/categories" prefetch={false}>
-              <FloorButton variant="rectangular">Back to Categories</FloorButton>
+              <FloorButton variant="rectangular">Wróć do kategorii</FloorButton>
             </Link>
           </div>
         </div>

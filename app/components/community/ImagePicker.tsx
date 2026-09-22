@@ -82,7 +82,7 @@ export default function ImagePicker({
         setStatus("idle");
       } catch (caught) {
         if (controller.signal.aborted) return;
-        setError(caught instanceof Error ? caught.message : "Search failed.");
+        setError(caught instanceof Error ? caught.message : "Wyszukiwanie nie powiodło się.");
         setStatus("error");
       }
     },
@@ -114,12 +114,12 @@ export default function ImagePicker({
         <div className="p-4 border-b border-[#00d4ff]/40 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-4">
             <h3 className="text-xl font-bold" style={{ color: "#00d4ff" }}>
-              Pick an image for “{itemName}”
+              Wybierz obrazek dla „{itemName}”
             </h3>
             <button
               onClick={onClose}
               className="text-white/60 hover:text-white text-2xl leading-none px-2"
-              aria-label="Close"
+              aria-label="Zamknij"
             >
               ×
             </button>
@@ -132,7 +132,7 @@ export default function ImagePicker({
               onKeyDown={(event) => {
                 if (event.key === "Enter") run(query, source);
               }}
-              placeholder="Search terms"
+              placeholder="Szukana fraza"
               className="flex-1 bg-gray-800 text-white p-2 rounded border border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
             />
             <select
@@ -157,14 +157,14 @@ export default function ImagePicker({
               className="text-sm font-semibold"
               onClick={() => run(query, source)}
             >
-              Search
+              Szukaj
             </FloorButton>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
           {status === "loading" && (
-            <p className="text-white/60 text-center py-12">Searching…</p>
+            <p className="text-white/60 text-center py-12">Wyszukiwanie…</p>
           )}
 
           {status === "error" && (
@@ -174,16 +174,16 @@ export default function ImagePicker({
           {status === "idle" && results.length === 0 && (
             <div className="text-white/60 text-center py-12 flex flex-col gap-2">
               <p>
-                Nothing at least {LIMITS.minSourceImageEdge}px came back for
-                that.
+                Nie znaleziono niczego o rozmiarze co najmniej{" "}
+                {LIMITS.minSourceImageEdge}px.
               </p>
               <p className="text-sm">
-                Commons and Openverse are free-licence archives: strong on
-                animals, food, places and public figures, and they carry
-                essentially no branded or pop-culture artwork.
+                Commons i Openverse to archiwa na wolnych licencjach: mają dużo
+                zwierząt, jedzenia, miejsc i osób publicznych, ale praktycznie
+                żadnych grafik marek ani popkultury.
                 {webSearchAvailable
-                  ? " Try Web images for those."
-                  : " For those, paste a link or upload a file below."}
+                  ? " W takim przypadku spróbuj opcji Obrazy z sieci."
+                  : " W takim przypadku wklej link lub prześlij plik poniżej."}
               </p>
             </div>
           )}
@@ -220,7 +220,7 @@ export default function ImagePicker({
                 onPickUrl(pastedUrl.trim());
               }
             }}
-            placeholder="…or paste an image URL"
+            placeholder="…albo wklej adres URL obrazka"
             className="flex-1 bg-gray-800 text-white p-2 rounded border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
           />
           <FloorButton
@@ -229,10 +229,10 @@ export default function ImagePicker({
             disabled={!pastedUrl.trim()}
             onClick={() => onPickUrl(pastedUrl.trim())}
           >
-            Use link
+            Użyj linku
           </FloorButton>
           <label className="btn-glow rectangular text-sm font-semibold cursor-pointer text-center">
-            Upload file
+            Prześlij plik
             <input
               type="file"
               accept="image/*"

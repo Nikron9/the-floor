@@ -19,11 +19,11 @@ export const cleanText = (value: unknown): string =>
 export const parseCategoryName = (value: unknown): string => {
   const name = cleanText(value);
   if (name.length < 2) {
-    throw new InvalidInput("Give the category a name.");
+    throw new InvalidInput("Nadaj kategorii nazwę.");
   }
   if (name.length > LIMITS.maxCategoryNameLength) {
     throw new InvalidInput(
-      `Category names are capped at ${LIMITS.maxCategoryNameLength} characters.`
+      `Nazwa kategorii może mieć maksymalnie ${LIMITS.maxCategoryNameLength} znaków.`
     );
   }
   return name;
@@ -62,7 +62,7 @@ export const parseItems = (
   { existing = [] }: { existing?: CommunityItem[] } = {}
 ): CommunityItem[] => {
   if (!Array.isArray(value)) {
-    throw new InvalidInput("Expected a list of items.");
+    throw new InvalidInput("Oczekiwano listy elementów.");
   }
 
   const byId = new Map(existing.map((item) => [item.id, item]));
@@ -104,7 +104,7 @@ export const parseItems = (
   }
 
   if (items.length === 0) {
-    throw new InvalidInput("Add at least one item.");
+    throw new InvalidInput("Dodaj co najmniej jeden element.");
   }
 
   return items;
@@ -115,8 +115,8 @@ export const assertPublishable = (items: CommunityItem[]): void => {
 
   if (withImages.length < LIMITS.minItemsToPublish) {
     throw new InvalidInput(
-      `Categories need at least ${LIMITS.minItemsToPublish} items with images ` +
-        `before they can be published. This one has ${withImages.length}.`
+      `Do publikacji kategoria potrzebuje co najmniej ${LIMITS.minItemsToPublish} ` +
+        `elementów z obrazkami. Ta ma ${withImages.length}.`
     );
   }
 };

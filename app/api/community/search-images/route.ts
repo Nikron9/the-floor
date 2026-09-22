@@ -20,12 +20,12 @@ export async function POST(request: Request) {
   return handle(async () => {
     const key = serperApiKey();
     if (!key) {
-      return fail("Web image search isn't configured on this deployment.", 503);
+      return fail("Wyszukiwanie obrazów w sieci nie jest skonfigurowane w tym wdrożeniu.", 503);
     }
 
     const body = await request.json().catch(() => ({}));
     const query = cleanText((body as Record<string, unknown>)?.q).slice(0, 200);
-    if (!query) return fail("Give me something to search for.");
+    if (!query) return fail("Podaj frazę do wyszukania.");
 
     const response = await fetch("https://google.serper.dev/images", {
       method: "POST",
@@ -38,8 +38,8 @@ export async function POST(request: Request) {
       console.error("[community] serper:", response?.status);
       return fail(
         response?.status === 403
-          ? "The web image search key was rejected, or its quota is spent."
-          : "Web image search is unavailable right now.",
+          ? "Klucz wyszukiwarki obrazów został odrzucony albo wyczerpał się jego limit."
+          : "Wyszukiwanie obrazów w sieci jest teraz niedostępne.",
         503
       );
     }

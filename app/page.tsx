@@ -14,19 +14,19 @@ export default function HomePage() {
               THE FLOOR
             </h1>
             <p className="text-2xl md:text-3xl glow-text">
-              Fan-Made Online Game
+              Fanowska gra online
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/presenter" prefetch={false}>
-              <FloorButton variant="rectangular">Start Playing</FloorButton>
+              <FloorButton variant="rectangular">Zacznij grać</FloorButton>
             </Link>
             <Link href="/categories" prefetch={false}>
-              <FloorButton variant="rectangular">Browse Categories</FloorButton>
+              <FloorButton variant="rectangular">Przeglądaj kategorie</FloorButton>
             </Link>
             <Link href="/about" prefetch={false}>
-              <FloorButton variant="rectangular">About This Game</FloorButton>
+              <FloorButton variant="rectangular">O grze</FloorButton>
             </Link>
           </div>
         </div>

@@ -121,7 +121,7 @@ export default function ImageEditor({
 
     image.onerror = () =>
       setError(
-        "Couldn't load that image for editing. If it was just uploaded, give it a moment and try again."
+        "Nie udało się wczytać obrazka do edycji. Jeśli został przed chwilą przesłany, odczekaj chwilę i spróbuj ponownie."
       );
 
     image.src = src;
@@ -244,7 +244,7 @@ export default function ImageEditor({
         setHasMask(false);
         redraw();
       } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "Erase failed.");
+        setError(caught instanceof Error ? caught.message : "Nie udało się wymazać.");
       } finally {
         setBusy(false);
       }
@@ -319,10 +319,10 @@ export default function ImageEditor({
       const blob = await new Promise<Blob | null>((resolve) =>
         base.toBlob(resolve, "image/webp", 0.92)
       );
-      if (!blob) throw new Error("Couldn't read the edited image back.");
+      if (!blob) throw new Error("Nie udało się odczytać edytowanego obrazka.");
       await onSave(blob);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Save failed.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się zapisać.");
       setBusy(false);
     }
   };
@@ -338,12 +338,12 @@ export default function ImageEditor({
       >
         <div className="p-4 border-b border-[#00d4ff]/40 flex items-center justify-between gap-4">
           <h3 className="text-xl font-bold" style={{ color: "#00d4ff" }}>
-            Editing “{itemName}”
+            Edycja „{itemName}”
           </h3>
           <button
             onClick={onClose}
             className="text-white/60 hover:text-white text-2xl leading-none px-2"
-            aria-label="Close"
+            aria-label="Zamknij"
           >
             ×
           </button>
@@ -358,7 +358,7 @@ export default function ImageEditor({
                   straight to this canvas, so the ref has to already exist. */}
               {!ready && (
                 <p className="text-[#00d4ff] animate-pulse absolute">
-                  Loading image…
+                  Wczytywanie obrazka…
                 </p>
               )}
               <canvas
@@ -387,20 +387,20 @@ export default function ImageEditor({
                     setTool(option);
                     setCrop(null);
                   }}
-                  className={`px-4 py-2 text-sm font-semibold capitalize ${
+                  className={`px-4 py-2 text-sm font-semibold ${
                     tool === option
                       ? "bg-[#00d4ff] text-black"
                       : "bg-gray-800 text-white/80"
                   }`}
                 >
-                  {option}
+                  {option === "erase" ? "Wymaż" : "Przytnij"}
                 </button>
               ))}
             </div>
 
             {tool === "erase" && (
               <label className="flex items-center gap-2 text-sm text-white/80">
-                Brush
+                Pędzel
                 <input
                   type="range"
                   min={6}
@@ -420,7 +420,7 @@ export default function ImageEditor({
                 disabled={!hasMask || busy}
                 onClick={applyErase}
               >
-                {busy ? "Erasing…" : "Erase painted area"}
+                {busy ? "Wymazywanie…" : "Wymaż zamalowany obszar"}
               </FloorButton>
             ) : (
               <FloorButton
@@ -429,7 +429,7 @@ export default function ImageEditor({
                 disabled={!crop || crop.w < 8 || busy}
                 onClick={applyCrop}
               >
-                Apply crop
+                Przytnij
               </FloorButton>
             )}
 
@@ -439,7 +439,7 @@ export default function ImageEditor({
               disabled={!canUndo || busy}
               onClick={undo}
             >
-              Undo
+              Cofnij
             </FloorButton>
 
             <FloorButton
@@ -448,14 +448,14 @@ export default function ImageEditor({
               disabled={!ready || busy}
               onClick={save}
             >
-              {busy ? "Saving…" : "Save"}
+              {busy ? "Zapisywanie…" : "Zapisz"}
             </FloorButton>
           </div>
 
           <p className="text-xs text-white/50">
             {tool === "erase"
-              ? "Paint over text, logos or watermarks, then Erase. Works best on plain backgrounds like sky or blur — across a hard edge, Crop is usually the better fix."
-              : "Drag a box to keep. Everything outside it is discarded."}
+              ? "Zamaluj tekst, logo lub znak wodny, a potem kliknij Wymaż. Najlepiej działa na jednolitym tle, np. niebie lub rozmyciu — przy ostrych krawędziach lepiej sprawdzi się przycinanie."
+              : "Zaznacz prostokąt do zachowania. Wszystko poza nim zostanie odrzucone."}
           </p>
         </div>
       </div>

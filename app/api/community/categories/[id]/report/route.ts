@@ -23,12 +23,12 @@ export async function POST(request: Request, { params }: Params) {
 
     const category = await repo().get(id);
     if (!category || category.status !== "published") {
-      return fail("No category with that id.", 404);
+      return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     }
 
     const reporterKey = await ensureKey();
     const result = await repo().report(id, reporterKey, reason);
-    if (!result) return fail("No category with that id.", 404);
+    if (!result) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     return json({
       reported: true,

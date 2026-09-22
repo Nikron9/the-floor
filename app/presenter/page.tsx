@@ -79,10 +79,11 @@ export default function PresenterPage({
       className="w-full bg-yellow-500/10 border-2 border-yellow-400/80 rounded-lg p-4 text-yellow-100 lg:hidden"
       style={{ boxShadow: "0 0 20px rgba(234, 179, 8, 0.15)" }}
     >
-      <p className="font-bold">Desktop required to play.</p>
+      <p className="font-bold">Do gry wymagany jest komputer.</p>
       <p className="text-sm text-yellow-100/90 mt-1">
-        The presenter opens a separate projector window and uses multiple
-        windows/pop-ups, so gameplay isn’t supported on mobile.
+        Panel prowadzącego otwiera osobne okno projektora i korzysta z wielu
+        okien/wyskakujących okienek, więc gra nie działa na urządzeniach
+        mobilnych.
       </p>
     </div>
   );
@@ -260,7 +261,7 @@ export default function PresenterPage({
 
       // Check if category is already used
       if (usedCategories.has(newPlayerCategory)) {
-        alert("This category is already assigned to another player!");
+        alert("Ta kategoria jest już przypisana innemu graczowi!");
         return;
       }
 
@@ -288,7 +289,7 @@ export default function PresenterPage({
         editPlayerCategory !== currentPlayer.category &&
         usedCategories.has(editPlayerCategory)
       ) {
-        alert("This category is already assigned to another player!");
+        alert("Ta kategoria jest już przypisana innemu graczowi!");
         return;
       }
 
@@ -331,7 +332,7 @@ export default function PresenterPage({
             className="text-4xl font-bold mb-4 glow-text"
             style={{ color: "#00d4ff" }}
           >
-            Game Setup
+            Ustawienia gry
           </h3>
 
           {desktopPlayWarning}
@@ -340,7 +341,7 @@ export default function PresenterPage({
           <div className="mb-4">
             <input
               type="text"
-              placeholder="Search players or categories..."
+              placeholder="Szukaj graczy lub kategorii..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-black"
@@ -354,12 +355,12 @@ export default function PresenterPage({
               className="text-2xl font-bold mb-4 glow-text"
               style={{ color: "#00d4ff" }}
             >
-              Add New Player
+              Dodaj nowego gracza
             </h4>
             <div className="flex flex-col md:flex-row gap-4">
               <input
                 type="text"
-                placeholder="Player name"
+                placeholder="Imię gracza"
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}
                 className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
@@ -374,10 +375,10 @@ export default function PresenterPage({
                 }
                 className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
               >
-                <option value="">Select category...</option>
+                <option value="">Wybierz kategorię...</option>
                 {getAvailableCategories().map(({ id, name, source }) => (
                   <option key={id} value={id}>
-                    {source === "community" ? `${name} (community)` : name}
+                    {source === "community" ? `${name} (społeczności)` : name}
                   </option>
                 ))}
               </select>
@@ -389,7 +390,7 @@ export default function PresenterPage({
                   !newPlayerName.trim() || newPlayerCategory === undefined
                 }
               >
-                Add Player
+                Dodaj gracza
               </FloorButton>
             </div>
           </div>
@@ -400,14 +401,14 @@ export default function PresenterPage({
               className="text-2xl font-bold glow-text"
               style={{ color: "#00d4ff" }}
             >
-              Players ({gameDetails.data.length})
+              Gracze ({gameDetails.data.length})
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
               {filteredPlayers.length === 0 ? (
                 <div className="col-span-full text-center text-white/60 py-8">
                   {searchQuery
-                    ? "No players found matching your search"
-                    : "No players added yet"}
+                    ? "Nie znaleziono graczy pasujących do wyszukiwania"
+                    : "Nie dodano jeszcze żadnych graczy"}
                 </div>
               ) : (
                 filteredPlayers.map((player, index) => {
@@ -443,7 +444,7 @@ export default function PresenterPage({
                               ({ id, name, source }) => (
                                 <option key={id} value={id}>
                                   {source === "community"
-                                    ? `${name} (community)`
+                                    ? `${name} (społeczności)`
                                     : name}
                                 </option>
                               )
@@ -455,14 +456,14 @@ export default function PresenterPage({
                               className="flex-1 text-sm font-semibold"
                               onClick={() => handleUpdatePlayer(actualIndex)}
                             >
-                              Save
+                              Zapisz
                             </FloorButton>
                             <FloorButton
                               variant="rectangular"
                               className="flex-1 text-sm font-semibold"
                               onClick={handleCancelEdit}
                             >
-                              Cancel
+                              Anuluj
                             </FloorButton>
                           </div>
                         </>
@@ -488,14 +489,14 @@ export default function PresenterPage({
                               className="flex-1 text-sm font-semibold"
                               onClick={() => handleStartEdit(actualIndex)}
                             >
-                              Edit
+                              Edytuj
                             </FloorButton>
                             <FloorButton
                               variant="rectangular"
                               className="flex-1 text-sm font-semibold"
                               onClick={() => handleDeletePlayer(actualIndex)}
                             >
-                              Delete
+                              Usuń
                             </FloorButton>
                           </div>
                         </>
@@ -514,14 +515,14 @@ export default function PresenterPage({
               className="font-bold text-lg w-full sm:w-auto"
               onClick={() => setGameDetails(undefined)}
             >
-              Cancel
+              Anuluj
             </FloorButton>
             <FloorButton
               variant="rectangular"
               className="font-bold text-lg w-full sm:w-auto"
               onClick={() => {
                 if (gameDetails.data.length === 0) {
-                  alert("Please add at least one player to start the game!");
+                  alert("Dodaj co najmniej jednego gracza, aby rozpocząć grę!");
                   return;
                 }
                 setLiveGameDetails(gameDetails);
@@ -530,7 +531,7 @@ export default function PresenterPage({
               }}
               disabled={gameDetails.data.length === 0}
             >
-              Start Game
+              Rozpocznij grę
             </FloorButton>
           </div>
         </div>
@@ -547,12 +548,12 @@ export default function PresenterPage({
             className="text-4xl font-bold mb-6 glow-text"
             style={{ color: "#00d4ff" }}
           >
-            Demo Details
+            Pojedyncza runda
           </h3>
           {desktopPlayWarning}
           <label className="text-xl font-bold flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center mb-4">
             <span className="glow-text" style={{ color: "#00d4ff" }}>
-              Category:
+              Kategoria:
             </span>
             <select
               onChange={(e) => setDemoDetails({ category: e.target.value })}
@@ -563,7 +564,7 @@ export default function PresenterPage({
               {listSelectableCategories(communityCategories).map(
                 ({ id, name, source }) => (
                   <option key={id} value={id}>
-                    {source === "community" ? `${name} (community)` : name}
+                    {source === "community" ? `${name} (społeczności)` : name}
                   </option>
                 )
               )}
@@ -575,7 +576,7 @@ export default function PresenterPage({
               className="font-bold text-lg w-full sm:w-auto"
               onClick={() => setDemoDetails(undefined)}
             >
-              Cancel
+              Anuluj
             </FloorButton>
             <FloorButton
               variant="rectangular"
@@ -599,7 +600,7 @@ export default function PresenterPage({
             className="text-4xl font-bold mb-6 glow-text"
             style={{ color: "#00d4ff" }}
           >
-            Round Details
+            Szczegóły rundy
           </h3>
           {desktopPlayWarning}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -609,7 +610,7 @@ export default function PresenterPage({
                 className="cursor-pointer font-bold text-lg"
                 onClick={() => triggerStartRound()}
               >
-                Start Round
+                Rozpocznij rundę
               </FloorButton>
             )}
             {roundDetails.roundState === REVEAL_STATE.FINISHED && (
@@ -618,14 +619,14 @@ export default function PresenterPage({
                 className="cursor-pointer font-bold text-lg"
                 onClick={() => triggerFinishRound()}
               >
-                Finish Round
+                Zakończ rundę
               </FloorButton>
             )}
             {roundDetails.roundState !== REVEAL_STATE.FINISHED &&
               roundDetails.roundState !== REVEAL_STATE.NOT_STARTED && (
                 <div className="flex flex-col gap-4">
                   <p className="text-xl text-white font-semibold">
-                    Use the keyboard to pass or correct the round:
+                    Użyj klawiatury, aby spasować lub zaliczyć odpowiedź:
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <FloorButton
@@ -637,7 +638,7 @@ export default function PresenterPage({
                         roundDetails.roundState === REVEAL_STATE.REVEALED
                       }
                     >
-                      Pass{" "}
+                      Pas{" "}
                       <code className="ml-2 px-2 py-1 bg-black/30 rounded">
                         [1]
                       </code>
@@ -651,7 +652,7 @@ export default function PresenterPage({
                         roundDetails.roundState === REVEAL_STATE.PASSED
                       }
                     >
-                      Correct{" "}
+                      Dobrze{" "}
                       <code className="ml-2 px-2 py-1 bg-black/30 rounded">
                         [2]
                       </code>
@@ -666,7 +667,7 @@ export default function PresenterPage({
               style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
             >
               <p className="text-xl text-white">
-                Current Answer:{" "}
+                Aktualna odpowiedź:{" "}
                 <span
                   className="font-bold glow-text"
                   style={{ color: "#00d4ff" }}
@@ -675,20 +676,20 @@ export default function PresenterPage({
                 </span>
               </p>
               <p className="text-lg text-white">
-                Example #:{" "}
+                Przykład nr:{" "}
                 <span className="font-bold" style={{ color: "#00d4ff" }}>
                   {roundDetails.exampleIndex}
                 </span>
               </p>
               <p className="text-lg text-white">
-                Total # of Examples:{" "}
+                Liczba przykładów:{" "}
                 <span className="font-bold" style={{ color: "#00d4ff" }}>
                   {examples?.length}
                 </span>
               </p>
 
               <p className="text-lg text-white">
-                Alternatives:{" "}
+                Alternatywy:{" "}
                 <span className="font-semibold" style={{ color: "#ff6b35" }}>
                   {roundDetails.example?.alternatives.join(", ")}
                 </span>
@@ -700,7 +701,7 @@ export default function PresenterPage({
                   className="cursor-pointer font-semibold text-sm flex-1"
                   onClick={() => triggerFinishRound("challenger")}
                 >
-                  Force Win ({roundDetails.challenger.person})
+                  Wymuś wygraną ({roundDetails.challenger.person})
                 </FloorButton>
 
                 <FloorButton
@@ -708,7 +709,7 @@ export default function PresenterPage({
                   className="cursor-pointer font-semibold text-sm flex-1"
                   onClick={() => triggerFinishRound("defender")}
                 >
-                  Force Win ({roundDetails.defender.person})
+                  Wymuś wygraną ({roundDetails.defender.person})
                 </FloorButton>
               </div>
             </div>
@@ -739,11 +740,10 @@ export default function PresenterPage({
             className="text-4xl font-bold mb-2 glow-text"
             style={{ color: "#00d4ff" }}
           >
-            Resume Game in Progress?
+            Wznowić trwającą grę?
           </h3>
           <p className="text-white/80">
-            We found a saved game with {players.length}{" "}
-            {players.length === 1 ? "player" : "players"}
+            Znaleźliśmy zapisaną grę. Liczba graczy: {players.length}
             {players.length > 0 ? ":" : "."}
           </p>
           {players.length > 0 && (
@@ -763,7 +763,7 @@ export default function PresenterPage({
               className="font-semibold"
               onClick={() => setHasResumedLiveGame(true)}
             >
-              Resume Game
+              Wznów grę
             </FloorButton>
             <FloorButton
               variant="rectangular"
@@ -773,7 +773,7 @@ export default function PresenterPage({
                 setLiveGameDetails(undefined);
               }}
             >
-              Start New Game
+              Nowa gra
             </FloorButton>
           </div>
         </div>
@@ -789,7 +789,7 @@ export default function PresenterPage({
             className="text-4xl font-bold mb-6 glow-text"
             style={{ color: "#00d4ff" }}
           >
-            Live Game Details
+            Trwająca gra
           </h3>
           {desktopPlayWarning}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -798,14 +798,14 @@ export default function PresenterPage({
               className="font-semibold"
               onClick={() => triggerRandomizer()}
             >
-              Randomizer
+              Losowanie
             </FloorButton>
             <FloorButton
               variant="rectangular"
               className="font-semibold"
               onClick={() => triggerGoBackToFloor()}
             >
-              Go Back to Floor
+              Wróć do planszy
             </FloorButton>
             <FloorButton
               variant="rectangular"
@@ -816,7 +816,7 @@ export default function PresenterPage({
                 setHasResumedLiveGame(false);
               }}
             >
-              End Game
+              Zakończ grę
             </FloorButton>
           </div>
         </div>
@@ -834,7 +834,7 @@ export default function PresenterPage({
             THE FLOOR
           </div>
           <div className="text-base sm:text-lg md:text-2xl text-white/80 font-light mt-4">
-            Play The Floor at home
+            Zagraj w The Floor w domu
           </div>
         </div>
 
@@ -845,7 +845,7 @@ export default function PresenterPage({
             className="font-bold text-xl relative z-10"
             onClick={() => setGameDetails({ data: [] })}
           >
-            Start Game
+            Rozpocznij grę
           </FloorButton>
         </div>
 
@@ -854,30 +854,30 @@ export default function PresenterPage({
           <FloorButton
             variant="rectangular"
             className="font-semibold text-base"
-            onClick={() => setDemoDetails({ category: "Apps" })}
+            onClick={() => setDemoDetails({ category: "Aplikacje" })}
           >
-            Start Single Round
+            Zagraj pojedynczą rundę
           </FloorButton>
           <Link
             className="font-semibold text-base text-center"
             href="/categories"
             prefetch={false}
           >
-            View available categories
+            Zobacz dostępne kategorie
           </Link>
           <Link
             className="font-semibold text-base text-center"
             href="/community"
             prefetch={false}
           >
-            Community categories
+            Kategorie społeczności
           </Link>
           <Link
             className="font-semibold text-base text-center"
             href="/about"
             prefetch={false}
           >
-            About this game
+            O grze
           </Link>
         </div>
       </div>

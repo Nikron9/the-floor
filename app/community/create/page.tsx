@@ -139,7 +139,7 @@ export default function CreateCategoryPage() {
       const { items } = await suggestItems(name.trim());
       setManualList(items.map((item) => item.name).join("\n"));
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Suggestion failed.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się wygenerować propozycji.");
     } finally {
       setWorking(false);
     }
@@ -148,7 +148,7 @@ export default function CreateCategoryPage() {
   const onStart = async () => {
     const items = parseManual();
     if (items.length === 0) {
-      setError("Add some items first — one per line.");
+      setError("Najpierw dodaj elementy — po jednym w linii.");
       return;
     }
 
@@ -176,7 +176,7 @@ export default function CreateCategoryPage() {
       // anything.
       runFill(created.map((cell) => cell.item.id));
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't start.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się rozpocząć.");
     } finally {
       setWorking(false);
     }
@@ -210,7 +210,7 @@ export default function CreateCategoryPage() {
         if (!result) {
           patchCell(itemId, {
             status: "empty",
-            message: "Nothing found — try Find.",
+            message: "Nic nie znaleziono — użyj Szukaj.",
             resultIndex: index,
           });
           return;
@@ -223,7 +223,7 @@ export default function CreateCategoryPage() {
         patchCell(itemId, {
           status: "error",
           message:
-            caught instanceof Error ? caught.message : "Couldn't fetch that.",
+            caught instanceof Error ? caught.message : "Nie udało się pobrać.",
         });
       }
     },
@@ -283,7 +283,7 @@ export default function CreateCategoryPage() {
     } catch (caught) {
       patchCell(itemId, {
         status: "error",
-        message: caught instanceof Error ? caught.message : "Couldn't save.",
+        message: caught instanceof Error ? caught.message : "Nie udało się zapisać.",
       });
     }
   };
@@ -298,7 +298,7 @@ export default function CreateCategoryPage() {
     } catch (caught) {
       patchCell(itemId, {
         status: "error",
-        message: caught instanceof Error ? caught.message : "Couldn't save.",
+        message: caught instanceof Error ? caught.message : "Nie udało się zapisać.",
       });
     }
   };
@@ -313,7 +313,7 @@ export default function CreateCategoryPage() {
     } catch (caught) {
       patchCell(itemId, {
         status: "error",
-        message: caught instanceof Error ? caught.message : "Couldn't save.",
+        message: caught instanceof Error ? caught.message : "Nie udało się zapisać.",
       });
     }
   };
@@ -328,7 +328,7 @@ export default function CreateCategoryPage() {
     } catch (caught) {
       patchCell(itemId, {
         status: "error",
-        message: caught instanceof Error ? caught.message : "Couldn't save.",
+        message: caught instanceof Error ? caught.message : "Nie udało się zapisać.",
       });
       setEditing(null);
     }
@@ -365,7 +365,7 @@ export default function CreateCategoryPage() {
       await publishCategory(categoryId);
       setPublished(true);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't publish.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się opublikować.");
     } finally {
       setWorking(false);
     }
@@ -382,16 +382,16 @@ export default function CreateCategoryPage() {
       <FloorPageLayout>
         <div className="p-8 md:p-20 max-w-2xl mx-auto flex flex-col gap-6 text-center">
           <h1 className="text-4xl font-bold glow-text" style={{ color: "#00d4ff" }}>
-            “{name}” is live
+            „{name}” jest już dostępna
           </h1>
           <p className="text-white/80">
-            It&rsquo;s in the community pool now. Anyone can add it to a game,
-            and votes decide how far up the list it climbs.
+            Kategoria trafiła do puli społeczności. Każdy może dodać ją do gry,
+            a głosy zdecydują, jak wysoko znajdzie się na liście.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/community">
               <FloorButton variant="rectangular" className="font-semibold">
-                Browse the pool
+                Przeglądaj pulę
               </FloorButton>
             </Link>
             <FloorButton
@@ -408,7 +408,7 @@ export default function CreateCategoryPage() {
                 setCategoryId(null);
               }}
             >
-              Make another
+              Utwórz kolejną
             </FloorButton>
           </div>
         </div>
@@ -425,22 +425,22 @@ export default function CreateCategoryPage() {
               className="text-4xl font-bold glow-text mb-2"
               style={{ color: "#00d4ff" }}
             >
-              New community category
+              Nowa kategoria społeczności
             </h1>
             <p className="text-white/70">
-              Name it, get a list of items, then pick a picture for each one.
+              Nadaj nazwę, przygotuj listę elementów, a potem wybierz obrazek dla każdego z nich.
             </p>
           </div>
 
           <label className="flex flex-col gap-2">
             <span className="font-semibold" style={{ color: "#00d4ff" }}>
-              Category name
+              Nazwa kategorii
             </span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={LIMITS.maxCategoryNameLength}
-              placeholder="Cursed gas station snacks"
+              placeholder="Przekąski ze stacji benzynowej"
               className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
             />
           </label>
@@ -448,7 +448,7 @@ export default function CreateCategoryPage() {
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <span className="font-semibold" style={{ color: "#00d4ff" }}>
-                Items — one per line
+                Elementy — po jednym w linii
               </span>
               {capabilities.aiSuggestions && (
                 <FloorButton
@@ -457,7 +457,7 @@ export default function CreateCategoryPage() {
                   disabled={name.trim().length < 2 || working}
                   onClick={onSuggest}
                 >
-                  {working ? "Thinking…" : "Suggest 50 with AI"}
+                  {working ? "Myślę…" : "Zaproponuj 50 z AI"}
                 </FloorButton>
               )}
             </div>
@@ -465,12 +465,12 @@ export default function CreateCategoryPage() {
               value={manualList}
               onChange={(event) => setManualList(event.target.value)}
               rows={12}
-              placeholder={"Slush Puppie\nBeef jerky\nFlamin' Hot Cheetos"}
+              placeholder={"Hot dog\nZapiekanka\nBatonik"}
               className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff] font-mono text-sm"
             />
             <p className="text-white/50 text-sm">
-              {parseManual().length} items · at least{" "}
-              {LIMITS.minItemsToPublish} with pictures to publish · up to{" "}
+              elementy: {parseManual().length} · do publikacji potrzeba co
+              najmniej {LIMITS.minItemsToPublish} z obrazkami · maksymalnie{" "}
               {LIMITS.maxItemsPerCategory}
             </p>
           </div>
@@ -484,11 +484,11 @@ export default function CreateCategoryPage() {
               disabled={working || name.trim().length < 2}
               onClick={onStart}
             >
-              Find pictures
+              Znajdź obrazki
             </FloorButton>
             <Link href="/community">
               <FloorButton variant="rectangular" className="font-semibold">
-                Back to the pool
+                Wróć do puli
               </FloorButton>
             </Link>
           </div>
@@ -509,8 +509,8 @@ export default function CreateCategoryPage() {
               {name}
             </h1>
             <p className="text-white/60 text-sm">
-              {withImages} of {cells.length} have a picture
-              {autoFilling ? " · still fetching…" : ""}
+              Z obrazkiem: {withImages} z {cells.length}
+              {autoFilling ? " · wciąż pobieram…" : ""}
             </p>
           </div>
 
@@ -523,7 +523,7 @@ export default function CreateCategoryPage() {
                   cancelRef.current = true;
                 }}
               >
-                Stop
+                Zatrzymaj
               </FloorButton>
             ) : (
               <FloorButton
@@ -532,7 +532,7 @@ export default function CreateCategoryPage() {
                 onClick={fillRemaining}
                 disabled={withImages === cells.length}
               >
-                Fill the gaps
+                Uzupełnij braki
               </FloorButton>
             )}
             <FloorButton
@@ -541,7 +541,7 @@ export default function CreateCategoryPage() {
               disabled={working || withImages < LIMITS.minItemsToPublish}
               onClick={onPublish}
             >
-              {working ? "Publishing…" : "Publish"}
+              {working ? "Publikowanie…" : "Opublikuj"}
             </FloorButton>
           </div>
         </div>
@@ -555,19 +555,18 @@ export default function CreateCategoryPage() {
               className="mt-1"
             />
             <span>
-              Use web image search to fill the gaps. Slower and metered, but
-              it&rsquo;s the only source with branded and pop-culture pictures —
-              Wikimedia answers &ldquo;Tony the Tiger&rdquo; with a wristwatch.
+              Użyj wyszukiwarki obrazów w sieci do uzupełniania braków. Wolniej
+              i z limitem, ale to jedyne źródło z obrazkami marek i popkultury —
+              Wikimedia na hasło &bdquo;Tony the Tiger&rdquo; pokazuje zegarek.
             </span>
           </label>
         )}
 
         {withImages < LIMITS.minItemsToPublish && (
           <p className="text-white/50 text-sm">
-            {LIMITS.minItemsToPublish - withImages} more picture
-            {LIMITS.minItemsToPublish - withImages === 1 ? "" : "s"} needed
-            before this can be published. Items without one are dropped when you
-            publish.
+            Do publikacji brakuje jeszcze obrazków:{" "}
+            {LIMITS.minItemsToPublish - withImages}. Elementy bez obrazka zostaną
+            pominięte przy publikacji.
           </p>
         )}
 

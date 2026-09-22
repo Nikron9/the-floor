@@ -13,16 +13,16 @@ type Params = { params: Promise<{ id: string }> };
  */
 export async function POST(request: Request, { params }: Params) {
   return handle(async () => {
-    if (!(await isAdmin())) return fail("Admins only.", 403);
+    if (!(await isAdmin())) return fail("Tylko dla administratorów.", 403);
 
     const { id } = await params;
     const body = await readJson(request);
     if (typeof body.hidden !== "boolean") {
-      return fail("hidden must be true or false.");
+      return fail("Pole hidden musi mieć wartość true lub false.");
     }
 
     const category = await repo().setHidden(id, body.hidden);
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     return json({ category: toView(category, 0, false, true) });
   });

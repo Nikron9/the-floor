@@ -36,7 +36,7 @@ export default function CommunityPage() {
       setHasMore(more);
       setStatus("ready");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't load.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się wczytać.");
       setStatus("error");
     }
   }, []);
@@ -60,7 +60,7 @@ export default function CommunityPage() {
       });
       setHasMore(more);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't load more.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się wczytać więcej.");
     } finally {
       setLoadingMore(false);
     }
@@ -93,7 +93,7 @@ export default function CommunityPage() {
         )
       );
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Vote failed.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się zagłosować.");
     }
   };
 
@@ -121,7 +121,7 @@ export default function CommunityPage() {
           })),
       });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't add that.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się dodać.");
     } finally {
       setPending(null);
     }
@@ -129,7 +129,7 @@ export default function CommunityPage() {
 
   const onReport = async (id: string) => {
     const reason = window.prompt(
-      "What's wrong with this category? (offensive, broken images, spam…)"
+      "Co jest nie tak z tą kategorią? (obraźliwa, uszkodzone obrazki, spam…)"
     );
     if (reason === null) return;
 
@@ -140,11 +140,11 @@ export default function CommunityPage() {
       }
       setError(
         result.hidden
-          ? "Reported — that category is now hidden pending review."
-          : "Reported. Thanks."
+          ? "Zgłoszono — kategoria jest ukryta do czasu weryfikacji."
+          : "Zgłoszono. Dziękujemy."
       );
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Report failed.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się zgłosić.");
     }
   };
 
@@ -157,22 +157,22 @@ export default function CommunityPage() {
               className="text-4xl font-bold glow-text mb-2"
               style={{ color: "#00d4ff" }}
             >
-              Community categories
+              Kategorie społeczności
             </h1>
             <p className="text-white/70">
-              Made by the community, results may vary. These are kept separate
-              from the{" "}
+              Tworzone przez społeczność, więc jakość bywa różna. Są trzymane
+              osobno od{" "}
               <Link href="/categories" className="underline text-[#00d4ff]">
-                built-in categories
+                wbudowanych kategorii
               </Link>
-              , which are hand-made. Vote on what&rsquo;s good and report
-              anything that isn&rsquo;t.
+              , które są przygotowane ręcznie. Głosuj na dobre i zgłaszaj te,
+              które takie nie są.
             </p>
           </div>
 
           <Link href="/community/create">
             <FloorButton variant="rectangular" className="font-semibold">
-              Create a category
+              Utwórz kategorię
             </FloorButton>
           </Link>
         </div>
@@ -182,13 +182,13 @@ export default function CommunityPage() {
             <button
               key={option}
               onClick={() => setSort(option)}
-              className={`px-4 py-2 text-sm font-semibold rounded capitalize ${
+              className={`px-4 py-2 text-sm font-semibold rounded ${
                 sort === option
                   ? "bg-[#00d4ff] text-black"
                   : "bg-gray-800 text-white/70 hover:bg-gray-700"
               }`}
             >
-              {option}
+              {option === "top" ? "Najlepsze" : "Najnowsze"}
             </button>
           ))}
         </div>
@@ -197,27 +197,27 @@ export default function CommunityPage() {
           <p className="text-yellow-200 text-sm">{error}</p>
         )}
 
-        {status === "loading" && <p className="text-white/60 py-12">Loading…</p>}
+        {status === "loading" && <p className="text-white/60 py-12">Ładowanie…</p>}
 
         {status === "error" && (
           <div className="text-white/60 py-16 text-center flex flex-col gap-3">
             <p className="text-yellow-200">{error}</p>
             <p className="text-sm">
-              The rest of the game is unaffected —{" "}
+              Reszta gry działa normalnie —{" "}
               <Link href="/categories" className="underline text-[#00d4ff]">
-                the built-in categories
+                wbudowane kategorie
               </Link>{" "}
-              don&rsquo;t need any of this.
+              nie potrzebują niczego z tego.
             </p>
           </div>
         )}
 
         {status === "ready" && categories.length === 0 && (
           <div className="text-white/60 py-16 text-center flex flex-col gap-3">
-            <p>Nothing here yet.</p>
+            <p>Nic tu jeszcze nie ma.</p>
             <p>
               <Link href="/community/create" className="underline text-[#00d4ff]">
-                Make the first one.
+                Utwórz pierwszą.
               </Link>
             </p>
           </div>
@@ -264,8 +264,8 @@ export default function CommunityPage() {
                       {category.name}
                     </Link>
                     <p className="text-white/50 text-sm">
-                      {category.itemCount} items
-                      {category.isOwner ? " · yours" : ""}
+                      elementy: {category.itemCount}
+                      {category.isOwner ? " · twoja" : ""}
                     </p>
                   </div>
 
@@ -273,7 +273,7 @@ export default function CommunityPage() {
                     <button
                       onClick={() => onVote(category.id, 1)}
                       disabled={category.isOwner}
-                      aria-label="Upvote"
+                      aria-label="Głos za"
                       className={`px-2 py-1 rounded text-sm disabled:opacity-30 ${
                         category.myVote === 1
                           ? "bg-[#00d4ff] text-black"
@@ -288,7 +288,7 @@ export default function CommunityPage() {
                     <button
                       onClick={() => onVote(category.id, -1)}
                       disabled={category.isOwner}
-                      aria-label="Downvote"
+                      aria-label="Głos przeciw"
                       className={`px-2 py-1 rounded text-sm disabled:opacity-30 ${
                         category.myVote === -1
                           ? "bg-red-500 text-black"
@@ -305,7 +305,7 @@ export default function CommunityPage() {
                         onClick={() => removeCategory(category.id)}
                         className="text-sm px-3 py-1 rounded bg-gray-700 text-white/80 hover:bg-gray-600"
                       >
-                        Remove
+                        Usuń
                       </button>
                     ) : (
                       <button
@@ -313,7 +313,7 @@ export default function CommunityPage() {
                         disabled={pending === category.id}
                         className="text-sm px-3 py-1 rounded bg-[#00d4ff] text-black font-semibold disabled:opacity-50"
                       >
-                        {pending === category.id ? "Adding…" : "Add to my game"}
+                        {pending === category.id ? "Dodawanie…" : "Dodaj do mojej gry"}
                       </button>
                     )}
                   </div>
@@ -322,7 +322,7 @@ export default function CommunityPage() {
                     onClick={() => onReport(category.id)}
                     className="text-xs text-white/40 hover:text-red-300 self-start"
                   >
-                    Report
+                    Zgłoś
                   </button>
                 </div>
               </div>
@@ -338,26 +338,25 @@ export default function CommunityPage() {
               disabled={loadingMore}
               onClick={loadMore}
             >
-              {loadingMore ? "Loading…" : "Load more"}
+              {loadingMore ? "Ładowanie…" : "Wczytaj więcej"}
             </FloorButton>
           </div>
         )}
 
         {status === "ready" && !hasMore && categories.length > 0 && (
           <p className="text-white/40 text-sm text-center pt-2">
-            That&rsquo;s all {categories.length} of them.
+            To już wszystkie ({categories.length}).
           </p>
         )}
 
         {Object.keys(mine).length > 0 && (
           <p className="text-white/60 text-sm border-t border-white/10 pt-4">
-            {Object.keys(mine).length} community categor
-            {Object.keys(mine).length === 1 ? "y is" : "ies are"} loaded in this
-            browser and will show up in the{" "}
+            Kategorie społeczności wczytane w tej przeglądarce:{" "}
+            {Object.keys(mine).length}. Pojawią się na liście kategorii w{" "}
             <Link href="/presenter" className="underline text-[#00d4ff]">
-              presenter
-            </Link>{" "}
-            category list.
+              panelu prowadzącego
+            </Link>
+            .
           </p>
         )}
       </div>

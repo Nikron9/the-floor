@@ -16,12 +16,22 @@ const cookie = Cookie({
 
 export const metadata: Metadata = {
   title: {
-    default: "Play The Floor Online - Free Game Show Game",
+    default: "Zagraj w The Floor online – darmowa gra teleturniejowa",
     template: "%s | The Floor",
   },
   description:
-    "Play The Floor online for free! A fan-made online version of the hit Fox game show hosted by Rob Lowe. Challenge friends in trivia duels, conquer categories, and compete to control the entire floor. The ultimate online trivia game show experience.",
+    "Zagraj w The Floor online za darmo! Fanowska wersja przebojowego teleturnieju. Wyzywaj znajomych na pojedynki wiedzy, zdobywaj kategorie i walcz o kontrolę nad całą planszą.",
   keywords: [
+    "the floor gra",
+    "the floor online",
+    "gra the floor",
+    "zagraj w the floor",
+    "teleturniej online",
+    "gra teleturniejowa",
+    "quiz online",
+    "gra w pojedynki",
+    "gra imprezowa",
+    "kategorie the floor",
     "play the floor",
     "play the floor online",
     "the floor game",
@@ -61,26 +71,26 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "pl_PL",
     url: "https://the-floor-game.vercel.app",
     siteName: "The Floor - Fan Game",
-    title: "Play The Floor Online - Free Fan-Made Game Show Game",
+    title: "Zagraj w The Floor online – darmowa fanowska gra teleturniejowa",
     description:
-      "Play The Floor online for free! A fan-made online version of the hit Fox game show hosted by Rob Lowe. Challenge friends in trivia duels and compete to control the entire floor.",
+      "Zagraj w The Floor online za darmo! Fanowska wersja przebojowego teleturnieju. Wyzywaj znajomych na pojedynki wiedzy i walcz o kontrolę nad całą planszą.",
     images: [
       {
         url: "https://the-floor-game.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "The Floor - Play Online (Fan Game)",
+        alt: "The Floor – graj online (gra fanowska)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Play The Floor Online - Free Fan-Made Game Show Game",
+    title: "Zagraj w The Floor online – darmowa fanowska gra teleturniejowa",
     description:
-      "Play The Floor online for free! A fan-made online version of the hit Fox game show. Challenge friends in trivia duels and compete to control the entire floor.",
+      "Zagraj w The Floor online za darmo! Fanowska wersja przebojowego teleturnieju. Wyzywaj znajomych na pojedynki wiedzy i walcz o kontrolę nad całą planszą.",
     images: ["https://the-floor-game.vercel.app/og-image.png"],
     creator: "@thefloor",
   },
@@ -101,7 +111,7 @@ export default function RootLayout({
     "@type": "VideoGame",
     name: "The Floor - Fan Game",
     description:
-      "Play The Floor online for free! A fan-made online version of the hit Fox game show hosted by Rob Lowe. Challenge friends in trivia duels, conquer categories, and compete to control the entire floor.",
+      "Zagraj w The Floor online za darmo! Fanowska wersja przebojowego teleturnieju. Wyzywaj znajomych na pojedynki wiedzy, zdobywaj kategorie i walcz o kontrolę nad całą planszą.",
     applicationCategory: "Game",
     operatingSystem: "Web Browser",
     offers: {
@@ -109,7 +119,7 @@ export default function RootLayout({
       price: "0",
       priceCurrency: "USD",
     },
-    genre: ["Trivia", "Game Show", "Quiz"],
+    genre: ["Trivia", "Game Show", "Quiz", "Teleturniej"],
     gamePlatform: ["Web Browser"],
     publisher: {
       "@type": "Organization",
@@ -128,11 +138,11 @@ export default function RootLayout({
         "The Floor is an American game show based on the Dutch game show of the same name, hosted by Rob Lowe and premiered on January 2, 2024, on Fox.",
     },
     keywords:
-      "play the floor, play the floor online, the floor game, the floor online, the floor game show, the floor trivia game, rob lowe the floor, the floor free game, online game show, trivia game",
+      "the floor gra, gra the floor, zagraj w the floor, teleturniej online, quiz online, play the floor, play the floor online, the floor game, the floor online, the floor game show, the floor trivia game, rob lowe the floor, the floor free game, online game show, trivia game",
   };
 
   return (
-    <html lang="en">
+    <html lang="pl">
       <body
         className={`${montserrat.variable} ${cookie.variable} antialiased`}
       >

@@ -13,7 +13,7 @@ import type {
 const unwrap = async (response: Response) => {
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(body?.error ?? `Request failed (HTTP ${response.status})`);
+    throw new Error(body?.error ?? `Żądanie nie powiodło się (HTTP ${response.status})`);
   }
   return body;
 };

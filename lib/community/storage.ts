@@ -198,9 +198,9 @@ export const imageStore = (): ImageStore => {
 
   if (isProduction()) {
     throw new NotConfigured(
-      "Community image storage isn't set up on this deployment yet. It needs " +
-        "R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET " +
-        "and R2_PUBLIC_BASE_URL."
+      "Magazyn obrazków społeczności nie jest jeszcze skonfigurowany w tym " +
+        "wdrożeniu. Wymagane są R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, " +
+        "R2_SECRET_ACCESS_KEY, R2_BUCKET i R2_PUBLIC_BASE_URL."
     );
   }
 

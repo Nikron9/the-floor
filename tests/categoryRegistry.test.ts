@@ -41,19 +41,19 @@ const community: Record<string, CommunityCategory> = {
 
 describe("resolving curated categories", () => {
   it("turns folder + filename into a src the browser can load", () => {
-    const resolved = resolveCategory("Fruits");
+    const resolved = resolveCategory("Owoce");
 
     expect(resolved?.source).toBe("curated");
-    expect(resolved?.name).toBe("Fruits");
+    expect(resolved?.name).toBe("Owoce");
     expect(resolved?.examples[0]).toEqual({
-      name: "Apple",
-      alternatives: ["Apples"],
+      name: "Jabłko",
+      alternatives: ["Apple", "Apples"],
       src: "/images/fruits/apple.png",
     });
   });
 
   it("keeps text prompts as text, with no src", () => {
-    const resolved = resolveCategory("Math");
+    const resolved = resolveCategory("Matematyka");
     const example = resolved?.examples[0];
 
     expect(example && isTextExample(example)).toBe(true);
@@ -73,14 +73,14 @@ describe("resolving curated categories", () => {
     // round.tsx shuffles the examples in debug mode. When resolution returned
     // the array off CATEGORY_METADATA, that sort reordered the category for
     // the rest of the session.
-    const first = resolveCategory("Fruits")!;
-    const second = resolveCategory("Fruits")!;
+    const first = resolveCategory("Owoce")!;
+    const second = resolveCategory("Owoce")!;
 
     expect(first.examples).not.toBe(second.examples);
     expect(first.examples).toEqual(second.examples);
 
     first.examples.reverse();
-    expect(resolveCategory("Fruits")!.examples[0].name).toBe("Apple");
+    expect(resolveCategory("Owoce")!.examples[0].name).toBe("Jabłko");
   });
 });
 
@@ -123,11 +123,17 @@ describe("category ids", () => {
     );
   });
 
+  it("still resolves the old English keys from saved games", () => {
+    expect(resolveCategory("Fruits")?.id).toBe("Owoce");
+    expect(categoryDisplayName("Taylor Swift Lyrics")).toBe("Teksty Taylor Swift");
+    expect(resolveCategory("Anime")?.id).toBe("Anime");
+  });
+
   it("keeps the two pools apart", () => {
-    expect(isCuratedCategoryId("Fruits")).toBe(true);
+    expect(isCuratedCategoryId("Owoce")).toBe(true);
     expect(isCuratedCategoryId(`${COMMUNITY_ID_PREFIX}abc-123`)).toBe(false);
     expect(isCommunityCategoryId(`${COMMUNITY_ID_PREFIX}abc-123`)).toBe(true);
-    expect(isCommunityCategoryId("Fruits")).toBe(false);
+    expect(isCommunityCategoryId("Owoce")).toBe(false);
   });
 
   it("does not mistake inherited object keys for curated categories", () => {
@@ -174,8 +180,8 @@ describe("display names", () => {
     ).toBe("Cursed Gas Station Snacks");
   });
 
-  it("uses the key itself for curated ones", () => {
-    expect(categoryDisplayName("Fruits")).toBe("Fruits");
+  it("uses the category's display name for curated ones", () => {
+    expect(categoryDisplayName("Owoce")).toBe("Owoce");
   });
 
   it("falls back to the raw id rather than rendering blank", () => {

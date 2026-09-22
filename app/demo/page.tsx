@@ -9,20 +9,20 @@ export function Demo() {
   const category = searchParams.get("category") as CategoryId | undefined;
 
   if (!category) {
-    return <div>No category provided</div>;
+    return <div>Nie podano kategorii</div>;
   }
 
   return (
     <Round
       category={category}
       challenger={{
-        person: "Challenger",
+        person: "Pretendent",
         category,
         hasPlayed: true,
         isStillInTheGame: true,
       }}
       defender={{
-        person: "Defender",
+        person: "Obrońca",
         category,
         hasPlayed: true,
         isStillInTheGame: true,
@@ -34,7 +34,7 @@ export function Demo() {
 
 export default function DemoPage({ params }: { params: Promise<any> }) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Ładowanie...</div>}>
       <Demo />
     </Suspense>
   );

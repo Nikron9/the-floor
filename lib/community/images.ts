@@ -45,18 +45,18 @@ export async function normalizeImage(input: Buffer): Promise<NormalizedImage> {
     pipeline = sharp(input, { failOn: "error" });
     metadata = await pipeline.metadata();
   } catch {
-    throw new ImageRejected("That doesn't look like an image we can read.");
+    throw new ImageRejected("To nie wygląda na obrazek, który da się odczytać.");
   }
 
   const { width, height } = metadata;
   if (!width || !height) {
-    throw new ImageRejected("That image has no readable dimensions.");
+    throw new ImageRejected("Nie da się odczytać wymiarów tego obrazka.");
   }
 
   if (Math.max(width, height) < LIMITS.minSourceImageEdge) {
     throw new ImageRejected(
-      `That image is only ${width}x${height}. The long edge needs to be at least ` +
-        `${LIMITS.minSourceImageEdge}px so it stays sharp on a big screen.`
+      `Ten obrazek ma tylko ${width}x${height}. Dłuższy bok musi mieć co najmniej ` +
+        `${LIMITS.minSourceImageEdge}px, żeby był ostry na dużym ekranie.`
     );
   }
 
@@ -117,25 +117,25 @@ export async function fetchSourceImage(rawUrl: string): Promise<Buffer> {
   try {
     url = new URL(rawUrl);
   } catch {
-    throw new ImageRejected("That isn't a valid URL.");
+    throw new ImageRejected("To nie jest prawidłowy adres URL.");
   }
 
   if (url.protocol !== "http:" && url.protocol !== "https:") {
-    throw new ImageRejected("Only http and https URLs are allowed.");
+    throw new ImageRejected("Dozwolone są tylko adresy http i https.");
   }
 
   const host = url.hostname.replace(/^\[|\]$/g, "");
   if (isIP(host)) {
     if (isPrivateAddress(host)) {
-      throw new ImageRejected("That address isn't reachable.");
+      throw new ImageRejected("Ten adres jest nieosiągalny.");
     }
   } else {
     const resolved = await lookup(host, { all: true }).catch(() => []);
     if (resolved.length === 0) {
-      throw new ImageRejected("Couldn't resolve that host.");
+      throw new ImageRejected("Nie udało się rozwiązać nazwy hosta.");
     }
     if (resolved.some((entry) => isPrivateAddress(entry.address))) {
-      throw new ImageRejected("That address isn't reachable.");
+      throw new ImageRejected("Ten adres jest nieosiągalny.");
     }
   }
 
@@ -173,28 +173,28 @@ export async function fetchSourceImage(rawUrl: string): Promise<Buffer> {
   if (!response?.ok) {
     if (response?.status === 429) {
       throw new ImageRejected(
-        "That image host is rate-limiting us. Try the Find button and pick one directly."
+        "Serwer z obrazkami ogranicza liczbę żądań. Użyj przycisku Szukaj i wybierz obrazek bezpośrednio."
       );
     }
     throw new ImageRejected(
-      `Couldn't download that image${response ? ` (HTTP ${response.status})` : ""}.`
+      `Nie udało się pobrać obrazka${response ? ` (HTTP ${response.status})` : ""}.`
     );
   }
 
   const type = response.headers.get("content-type") ?? "";
   if (type && !type.startsWith("image/")) {
-    throw new ImageRejected(`That URL returned ${type}, not an image.`);
+    throw new ImageRejected(`Ten adres zwrócił ${type}, a nie obrazek.`);
   }
 
   const body = response.body;
-  if (!body) throw new ImageRejected("That URL returned an empty response.");
+  if (!body) throw new ImageRejected("Ten adres zwrócił pustą odpowiedź.");
 
   const chunks: Uint8Array[] = [];
   let total = 0;
   for await (const chunk of body as unknown as AsyncIterable<Uint8Array>) {
     total += chunk.byteLength;
     if (total > LIMITS.maxSourceImageBytes) {
-      throw new ImageRejected("That image is too large to download.");
+      throw new ImageRejected("Ten obrazek jest za duży, żeby go pobrać.");
     }
     chunks.push(chunk);
   }

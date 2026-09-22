@@ -39,7 +39,7 @@ const authorized = (request: Request): boolean => {
 export async function GET(request: Request) {
   return handle(async () => {
     if (!authorized(request)) {
-      return fail("Not authorized.", 401);
+      return fail("Brak autoryzacji.", 401);
     }
 
     const store = imageStore();

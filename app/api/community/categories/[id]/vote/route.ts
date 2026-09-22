@@ -18,22 +18,22 @@ export async function POST(request: Request, { params }: Params) {
 
     const raw = Number(body.direction);
     if (![1, 0, -1].includes(raw)) {
-      return fail("direction must be 1, 0 or -1.");
+      return fail("Pole direction musi mieć wartość 1, 0 lub -1.");
     }
     const direction = raw as -1 | 0 | 1;
 
     const category = await repo().get(id);
     if (!category || category.status !== "published" || category.hiddenAt) {
-      return fail("No category with that id.", 404);
+      return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     }
 
     const voterKey = await ensureKey();
     if (category.authorKey === voterKey) {
-      return fail("You can't vote on your own category.", 403);
+      return fail("Nie możesz głosować na własną kategorię.", 403);
     }
 
     const tally = await repo().vote(id, voterKey, direction);
-    if (!tally) return fail("No category with that id.", 404);
+    if (!tally) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     return json({ ...tally, myVote: direction });
   });

@@ -331,11 +331,11 @@ export default function Round({
       <FloorPageLayout>
         <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-10 text-center">
           <p className="text-6xl font-bold text-yellow-500">
-            Category unavailable
+            Kategoria niedostępna
           </p>
           <p className="text-2xl text-white/80">
-            “{String(category)}” isn’t loaded in this browser. Re-add it from
-            the community page to play this round.
+            „{String(category)}” nie jest wczytana w tej przeglądarce. Dodaj ją
+            ponownie ze strony społeczności, aby zagrać tę rundę.
           </p>
         </div>
       </FloorPageLayout>

@@ -19,9 +19,9 @@ export async function POST(_request: Request, { params }: Params) {
     const key = await readKey();
     const category = await repo().get(id);
 
-    if (!category) return fail("No category with that id.", 404);
+    if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
     if (!key || category.authorKey !== key) {
-      return fail("That isn't your category.", 403);
+      return fail("To nie jest twoja kategoria.", 403);
     }
 
     assertPublishable(category.items);
@@ -34,7 +34,7 @@ export async function POST(_request: Request, { params }: Params) {
     }
 
     const published = await repo().publish(id);
-    if (!published) return fail("No category with that id.", 404);
+    if (!published) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
     return json({ category: toView(published, 0, true) });
   });

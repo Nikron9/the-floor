@@ -18,12 +18,16 @@ export default function CategoriesPage() {
   >(undefined);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter categories based on search query
-  const filteredCategories = Object.keys(CATEGORY_METADATA).filter(
-    (category) =>
-      category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      category.toLowerCase().includes(searchQuery.toLowerCase())
-  ) as Category[];
+  // Filter categories based on search query, by the name shown on screen
+  const filteredCategories = (Object.keys(CATEGORY_METADATA) as Category[])
+    .filter((category) =>
+      CATEGORY_METADATA[category].name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) =>
+      CATEGORY_METADATA[a].name.localeCompare(CATEGORY_METADATA[b].name, "pl")
+    );
 
   useEffect(() => {
     if (selectedCategory && containerRef) {
@@ -44,14 +48,14 @@ export default function CategoriesPage() {
               className="text-4xl font-bold glow-text"
               style={{ color: "#00d4ff" }}
             >
-              {selectedCategory}
+              {CATEGORY_METADATA[selectedCategory].name}
             </h2>
             <FloorButton
               variant="rectangular"
               className="font-semibold"
               onClick={() => setSelectedCategory(undefined)}
             >
-              Back to Categories
+              Wróć do kategorii
             </FloorButton>
           </div>
 
@@ -59,7 +63,7 @@ export default function CategoriesPage() {
           <div className="bg-gray-900/50 p-4 rounded-lg border-2 border-[#00d4ff] mb-6">
             <p className="text-white">
               <span className="font-semibold" style={{ color: "#00d4ff" }}>
-                Total Examples:
+                Liczba przykładów:
               </span>{" "}
               {examples.length}
             </p>
@@ -152,14 +156,14 @@ export default function CategoriesPage() {
           className="text-4xl font-bold mb-4 glow-text"
           style={{ color: "#00d4ff" }}
         >
-          Categories
+          Kategorie
         </h1>
 
         {/* Search Bar */}
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Search categories..."
+            placeholder="Szukaj kategorii..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-black"
@@ -171,7 +175,7 @@ export default function CategoriesPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[70vh] overflow-y-auto">
           {filteredCategories.length === 0 ? (
             <div className="col-span-full text-center text-white/60 py-8">
-              No categories found matching your search
+              Nie znaleziono kategorii pasujących do wyszukiwania
             </div>
           ) : (
             filteredCategories.map((category) => {
@@ -190,12 +194,12 @@ export default function CategoriesPage() {
                     });
                   }}
                 >
-                  <span className="text-center">{category}</span>
+                  <span className="text-center">{categoryData.name}</span>
                   <span
                     className="text-xs font-normal"
                     style={{ color: "#00d4ff" }}
                   >
-                    {categoryData.examples.length} examples
+                    przykłady: {categoryData.examples.length}
                   </span>
                 </FloorButton>
               );
@@ -210,21 +214,21 @@ export default function CategoriesPage() {
             className="font-semibold"
             onClick={() => (window.location.href = "/presenter")}
           >
-            Back to Presenter
+            Wróć do panelu prowadzącego
           </FloorButton>
           <Link href="/about" prefetch={false}>
             <FloorButton variant="rectangular" className="font-semibold">
-              About This Game
+              O grze
             </FloorButton>
           </Link>
           <Link href="/categories/contribute" prefetch={false}>
             <FloorButton variant="rectangular" className="font-semibold">
-              How to Add More Categories
+              Jak dodać więcej kategorii
             </FloorButton>
           </Link>
           <Link href="/community" prefetch={false}>
             <FloorButton variant="rectangular" className="font-semibold">
-              Community Categories
+              Kategorie społeczności
             </FloorButton>
           </Link>
         </div>

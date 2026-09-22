@@ -11,7 +11,7 @@ import { fail, handle, json } from "@/lib/community/http";
  */
 export async function GET() {
   return handle(async () => {
-    if (!(await isAdmin())) return fail("Admins only.", 403);
+    if (!(await isAdmin())) return fail("Tylko dla administratorów.", 403);
 
     const categories = await repo().listForModeration(200);
     return json({ categories: categories.map(toModerationRow) });

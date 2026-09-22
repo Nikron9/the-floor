@@ -14,71 +14,70 @@ export default function AboutPage() {
               THE FLOOR
             </h1>
             <p className="text-2xl md:text-3xl glow-text mb-4">
-              Fan-Made Online Game
+              Fanowska gra online
             </p>
           </div>
 
           <div className="space-y-6 text-lg md:text-xl leading-relaxed">
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 glow-text">
-                About This Game
+                O grze
               </h2>
               <p className="mb-4">
-                This is a{" "}
-                <strong className="glow-text">fan-made, unofficial</strong>{" "}
-                online version of the hit Fox game show <em>The Floor</em>,
-                hosted by Rob Lowe. Created by a fan of the show, this web-based
-                game allows you to experience the excitement of The Floor from
-                your browser.
+                To{" "}
+                <strong className="glow-text">fanowska, nieoficjalna</strong>{" "}
+                wersja online przebojowego teleturnieju <em>The Floor</em>{" "}
+                stacji Fox, prowadzonego przez Roba Lowe&apos;a. Stworzona przez
+                fana programu gra przeglądarkowa pozwala poczuć emocje The Floor
+                bez wychodzenia z domu.
               </p>
               <p className="mb-4">
-                Play with friends, challenge opponents in trivia duels, and
-                compete to control the entire floor—just like on the show!
+                Graj ze znajomymi, wyzywaj przeciwników na pojedynki wiedzy i
+                walcz o kontrolę nad całą planszą — zupełnie jak w programie!
               </p>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 glow-text">
-                How to Play
+                Jak grać
               </h2>
               <ol className="list-decimal list-inside space-y-3">
                 <li>
-                  <strong>Set Up Your Game:</strong> Go to the presenter page
-                  and add players with their unique categories.
+                  <strong>Przygotuj grę:</strong> Przejdź do panelu prowadzącego
+                  i dodaj graczy wraz z ich kategoriami.
                 </li>
                 <li>
-                  <strong>Start the Game:</strong> Click &ldquo;Start Game&rdquo;
-                  to begin playing.
+                  <strong>Rozpocznij grę:</strong> Kliknij &bdquo;Rozpocznij
+                  grę&rdquo;, aby zacząć.
                 </li>
                 <li>
-                  <strong>Challenge Opponents:</strong> Players take turns
-                  challenging each other in head-to-head trivia duels.
+                  <strong>Wyzywaj przeciwników:</strong> Gracze na zmianę
+                  wyzywają się nawzajem na pojedynki wiedzy jeden na jednego.
                 </li>
                 <li>
-                  <strong>Win Territory:</strong> The winner of each duel takes
-                  control of the loser&apos;s territory.
+                  <strong>Zdobywaj terytorium:</strong> Zwycięzca każdego
+                  pojedynku przejmuje terytorium przegranego.
                 </li>
                 <li>
-                  <strong>Conquer the Floor:</strong> Be the last player
-                  standing to win!
+                  <strong>Zdobądź planszę:</strong> Wygrywa ostatni gracz, który
+                  pozostanie w grze!
                 </li>
               </ol>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 glow-text">
-                Support the Project
+                Wesprzyj projekt
               </h2>
               <p className="mb-4">
-                The Floor: The Game is completely free to play. If you&apos;re
-                enjoying it and want to help cover hosting costs, you can tip
-                the project via Buy Me a Coffee — every bit helps keep the
-                lights on.
+                The Floor: The Game jest całkowicie darmowa. Jeśli dobrze się
+                bawisz i chcesz pomóc pokryć koszty hostingu, możesz wesprzeć
+                projekt przez Buy Me a Coffee — każda pomoc się liczy.
               </p>
               <p>
-                Tap the{" "}
-                <strong className="glow-text">Buy me a coffee</strong> button in
-                the bottom-right corner of the page, or visit{" "}
+                Kliknij przycisk{" "}
+                <strong className="glow-text">Postaw mi kawę</strong> w prawym
+                dolnym rogu strony albo odwiedź{" "}
                 <a
                   href="https://buymeacoffee.com/campavao"
                   target="_blank"
@@ -93,48 +92,47 @@ export default function AboutPage() {
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 glow-text">
-                Disclaimer
+                Zastrzeżenie
               </h2>
               <p className="mb-4">
-                <em>The Floor</em> is a trademark of Fox Broadcasting Company.
-                This game is an independent, fan-created project and is not
-                affiliated with, endorsed by, or associated with Fox
-                Broadcasting Company, Rob Lowe, or any official The Floor
-                production.
+                <em>The Floor</em> jest znakiem towarowym Fox Broadcasting
+                Company. Ta gra jest niezależnym projektem fanowskim i nie jest
+                powiązana z Fox Broadcasting Company, Robem Lowe&apos;em ani
+                żadną oficjalną produkcją The Floor, ani przez nich popierana.
               </p>
               <p>
-                This game is provided for entertainment purposes only and is
-                completely free to play. No commercial use is intended.
+                Gra służy wyłącznie celom rozrywkowym i jest całkowicie darmowa.
+                Nie jest przeznaczona do użytku komercyjnego.
               </p>
             </section>
 
             <section className="bg-black/60 p-6 md:p-8 border-2 border-white/20">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 glow-text">
-                About The Show
+                O programie
               </h2>
               <p className="mb-4">
-                <em>The Floor</em> is an American game show based on the Dutch
-                game show of the same name. The series is hosted by Rob Lowe and
-                premiered on January 2, 2024, on Fox.
+                <em>The Floor</em> to amerykański teleturniej oparty na
+                holenderskim formacie o tej samej nazwie. Prowadzi go Rob Lowe,
+                a premiera odbyła się 2 stycznia 2024 roku na antenie Fox.
               </p>
               <p>
-                Contestants with expertise in various trivia subjects challenge
-                each other in head-to-head duels, with the winner taking over
-                all territory controlled by the loser. The contestant who gains
-                full control over the Floor wins $250,000.
+                Uczestnicy, eksperci w różnych dziedzinach, wyzywają się na
+                pojedynki jeden na jednego, a zwycięzca przejmuje całe
+                terytorium przegranego. Uczestnik, który zdobędzie kontrolę nad
+                całą planszą, wygrywa 250 000 dolarów.
               </p>
             </section>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <Link href="/presenter" prefetch={false}>
-              <FloorButton variant="rectangular">Start Playing</FloorButton>
+              <FloorButton variant="rectangular">Zacznij grać</FloorButton>
             </Link>
             <Link href="/categories" prefetch={false}>
-              <FloorButton variant="rectangular">Browse Categories</FloorButton>
+              <FloorButton variant="rectangular">Przeglądaj kategorie</FloorButton>
             </Link>
             <Link href="/" prefetch={false}>
-              <FloorButton variant="rectangular">Home</FloorButton>
+              <FloorButton variant="rectangular">Strona główna</FloorButton>
             </Link>
           </div>
         </div>

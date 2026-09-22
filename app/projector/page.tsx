@@ -261,14 +261,14 @@ export function Projector() {
     return (
       <FloorPageLayout>
         <div className="flex flex-col items-center justify-center h-full text-white text-xl gap-4 font-bold w-full">
-          <p className="text-center">Game not found</p>
-          <p className="text-center">Go back to start a new game</p>
+          <p className="text-center">Nie znaleziono gry</p>
+          <p className="text-center">Wróć, aby rozpocząć nową grę</p>
           <FloorButton
             variant="rectangular"
             className="font-semibold"
             onClick={() => (window.location.href = "/presenter")}
           >
-            Go Back
+            Wróć
           </FloorButton>
         </div>
       </FloorPageLayout>
@@ -288,7 +288,7 @@ export function Projector() {
     return (
       <FloorPageLayout>
         <div className="flex flex-col items-center justify-center h-full text-white text-9xl font-bold w-full">
-          <p className="text-center">{Array.from(whoIsRemaining)[0]} wins!</p>
+          <p className="text-center">{Array.from(whoIsRemaining)[0]} wygrywa!</p>
         </div>
       </FloorPageLayout>
     );
@@ -422,7 +422,7 @@ const getHighlightedFloorPieceCategories = (
 
 export default function ProjectorPage({ params }: { params: Promise<any> }) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Ładowanie...</div>}>
       <Projector />
     </Suspense>
   );

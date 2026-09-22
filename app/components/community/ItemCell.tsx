@@ -86,14 +86,14 @@ export default function ItemCell({
           />
         ) : (
           <span className="text-white/30 text-sm px-2 text-center">
-            {status === "error" ? "No image" : "—"}
+            {status === "error" ? "Brak obrazka" : "—"}
           </span>
         )}
 
         {busy && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
             <span className="text-[#00d4ff] text-sm animate-pulse">
-              {status === "searching" ? "Searching…" : "Saving…"}
+              {status === "searching" ? "Szukam…" : "Zapisuję…"}
             </span>
           </div>
         )}
@@ -101,8 +101,8 @@ export default function ItemCell({
         <button
           onClick={onRemove}
           disabled={busy}
-          title="Remove this item"
-          aria-label={`Remove ${item.name}`}
+          title="Usuń ten element"
+          aria-label={`Usuń ${item.name}`}
           className="absolute top-1 right-1 w-6 h-6 rounded bg-black/70 text-white/70 hover:text-white hover:bg-red-600/80 text-sm leading-none disabled:opacity-40"
         >
           ×
@@ -128,26 +128,26 @@ export default function ItemCell({
           <button
             onClick={onShuffle}
             disabled={busy || !canShuffle}
-            title="Try the next search result"
+            title="Spróbuj następnego wyniku wyszukiwania"
             className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700 disabled:opacity-40"
           >
-            Next
+            Dalej
           </button>
           <button
             onClick={onSearch}
             disabled={busy}
-            title="Search for a different image"
+            title="Wyszukaj inny obrazek"
             className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700 disabled:opacity-40"
           >
-            Find
+            Szukaj
           </button>
           <button
             onClick={onEdit}
             disabled={busy || !item.imageUrl}
-            title="Crop or erase text and watermarks"
+            title="Przytnij lub wymaż tekst i znaki wodne"
             className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700 disabled:opacity-40"
           >
-            Edit
+            Edytuj
           </button>
         </div>
       </div>

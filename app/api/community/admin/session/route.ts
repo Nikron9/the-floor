@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   return handle(async () => {
     if (!isAdminConfigured()) {
       return fail(
-        "There's no admin on this deployment. Set COMMUNITY_ADMIN_SECRET to add one.",
+        "To wdrożenie nie ma administratora. Ustaw COMMUNITY_ADMIN_SECRET, aby go dodać.",
         503
       );
     }
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     const secret = typeof body.secret === "string" ? body.secret : "";
 
     if (!(await signInAdmin(secret))) {
-      return fail("That's not the admin secret.", 403);
+      return fail("To nie jest hasło administratora.", 403);
     }
 
     return json({ admin: true });

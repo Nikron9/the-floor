@@ -52,7 +52,7 @@ export default function CommunityCategoryPage({
       })
       .catch((caught: unknown) => {
         if (cancelled) return;
-        setError(caught instanceof Error ? caught.message : "Couldn't load.");
+        setError(caught instanceof Error ? caught.message : "Nie udało się wczytać.");
         setStatus("error");
       });
 
@@ -84,14 +84,14 @@ export default function CommunityCategoryPage({
       setCategory(next);
       setError("");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't do that.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się tego zrobić.");
     }
   };
 
   /** Owner or admin. Gone for good, images included. */
   const onDelete = async () => {
     if (!category) return;
-    if (!window.confirm(`Delete "${category.name}" and all its images? This can't be undone.`)) {
+    if (!window.confirm(`Usunąć „${category.name}” wraz ze wszystkimi obrazkami? Tej operacji nie można cofnąć.`)) {
       return;
     }
     try {
@@ -99,30 +99,30 @@ export default function CommunityCategoryPage({
       removeCategory(id);
       router.push("/community");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Couldn't delete.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się usunąć.");
     }
   };
 
   const onReport = async () => {
-    const reason = window.prompt("What's wrong with this category?");
+    const reason = window.prompt("Co jest nie tak z tą kategorią?");
     if (reason === null) return;
 
     try {
       const result = await reportCategory(id, reason);
       setError(
         result.hidden
-          ? "Reported — this category is now hidden pending review."
-          : "Reported. Thanks."
+          ? "Zgłoszono — kategoria jest ukryta do czasu weryfikacji."
+          : "Zgłoszono. Dziękujemy."
       );
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Report failed.");
+      setError(caught instanceof Error ? caught.message : "Nie udało się zgłosić.");
     }
   };
 
   if (status === "loading") {
     return (
       <FloorPageLayout>
-        <p className="text-white/60 p-20 text-center">Loading…</p>
+        <p className="text-white/60 p-20 text-center">Ładowanie…</p>
       </FloorPageLayout>
     );
   }
@@ -133,7 +133,7 @@ export default function CommunityCategoryPage({
         <div className="p-20 text-center flex flex-col gap-4">
           <p className="text-red-300">{error}</p>
           <Link href="/community" className="underline text-[#00d4ff]">
-            Back to the pool
+            Wróć do puli
           </Link>
         </div>
       </FloorPageLayout>
@@ -146,7 +146,7 @@ export default function CommunityCategoryPage({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Community categories
+              ← Kategorie społeczności
             </Link>
             <h1
               className="text-4xl font-bold glow-text mt-2"
@@ -155,10 +155,10 @@ export default function CommunityCategoryPage({
               {category.name}
             </h1>
             <p className="text-white/60">
-              {category.items.length} items
-              {category.status === "draft" ? " · draft, not published" : ""}
-              {category.hiddenAt ? " · hidden from listings" : ""}
-              {category.isAdmin ? " · signed in as admin" : ""}
+              elementy: {category.items.length}
+              {category.status === "draft" ? " · szkic, nieopublikowana" : ""}
+              {category.hiddenAt ? " · ukryta na listach" : ""}
+              {category.isAdmin ? " · zalogowano jako admin" : ""}
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export default function CommunityCategoryPage({
             {category.canEdit && (
               <Link href={`/community/${category.id}/edit`}>
                 <FloorButton variant="rectangular" className="font-semibold">
-                  Edit
+                  Edytuj
                 </FloorButton>
               </Link>
             )}
@@ -176,7 +176,7 @@ export default function CommunityCategoryPage({
                 className="font-semibold"
                 onClick={() => removeCategory(category.id)}
               >
-                Remove from my game
+                Usuń z mojej gry
               </FloorButton>
             ) : (
               <FloorButton
@@ -184,7 +184,7 @@ export default function CommunityCategoryPage({
                 className="font-semibold"
                 onClick={onAdd}
               >
-                Add to my game
+                Dodaj do mojej gry
               </FloorButton>
             )}
           </div>
@@ -207,7 +207,7 @@ export default function CommunityCategoryPage({
                     className="w-full h-full object-contain"
                   />
                 ) : (
-                  <span className="text-white/30 text-sm">No image</span>
+                  <span className="text-white/30 text-sm">Brak obrazka</span>
                 )}
               </div>
               <div className="p-2">
@@ -216,7 +216,7 @@ export default function CommunityCategoryPage({
                 </p>
                 {item.alternatives.length > 0 && (
                   <p className="text-[11px] text-white/40 truncate">
-                    also: {item.alternatives.join(", ")}
+                    także: {item.alternatives.join(", ")}
                   </p>
                 )}
               </div>
@@ -226,7 +226,7 @@ export default function CommunityCategoryPage({
 
         <div className="border-t border-white/10 pt-6 flex flex-col gap-3">
           <h2 className="text-lg font-bold" style={{ color: "#00d4ff" }}>
-            Image credits
+            Źródła obrazków
           </h2>
           <ul className="text-xs text-white/50 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
             {category.items
@@ -257,14 +257,14 @@ export default function CommunityCategoryPage({
               onClick={onReport}
               className="text-xs text-white/40 hover:text-red-300"
             >
-              Report this category
+              Zgłoś tę kategorię
             </button>
             {category.isAdmin && (
               <button
                 onClick={onToggleHidden}
                 className="text-xs text-white/40 hover:text-yellow-200"
               >
-                {category.hiddenAt ? "Unhide (clears reports)" : "Hide from listings"}
+                {category.hiddenAt ? "Przywróć (czyści zgłoszenia)" : "Ukryj na listach"}
               </button>
             )}
             {category.canEdit && (
@@ -272,7 +272,7 @@ export default function CommunityCategoryPage({
                 onClick={onDelete}
                 className="text-xs text-white/40 hover:text-red-300"
               >
-                Delete this category
+                Usuń tę kategorię
               </button>
             )}
           </div>
