@@ -201,3 +201,59 @@ export async function fetchSourceImage(rawUrl: string): Promise<Buffer> {
 
   return Buffer.concat(chunks);
 }
+
+export type LinkedImage = { url: string; width: number | null; height: number | null };
+
+/**
+ * Accept an image the browser already loaded and checked, to be stored as a
+ * link rather than as bytes.
+ *
+ * The server deliberately does not fetch it: pulling images from one Vercel IP
+ * is what got the tool rate-limited by Wikimedia. So this is a plausibility
+ * check, not proof -- https only (a projector page is https, so anything else
+ * would be blocked as mixed content), no bare IPs or local names, and the
+ * dimensions the browser measured must clear the same floor as a stored image.
+ * A link that later changes or disappears is the accepted cost of storing
+ * nothing; reports and the admin handle the abusive case.
+ */
+export function validateLinkedImage(
+  rawUrl: string,
+  rawWidth: unknown,
+  rawHeight: unknown
+): LinkedImage {
+  if (rawUrl.length > 2048) {
+    throw new ImageRejected("Ten adres obrazka jest za długi.");
+  }
+
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    throw new ImageRejected("To nie jest prawidłowy adres URL.");
+  }
+
+  if (url.protocol !== "https:") {
+    throw new ImageRejected("Linkować można tylko obrazki z adresów https.");
+  }
+
+  const host = url.hostname.replace(/^\[|\]$/g, "");
+  if (isIP(host) || !host.includes(".") || host.endsWith(".local")) {
+    throw new ImageRejected("Ten adres jest nieosiągalny.");
+  }
+
+  const toSize = (value: unknown) => {
+    const number = Number(value);
+    return Number.isFinite(number) && number > 0 ? Math.round(number) : null;
+  };
+  const width = toSize(rawWidth);
+  const height = toSize(rawHeight);
+
+  if (width && height && Math.max(width, height) < LIMITS.minSourceImageEdge) {
+    throw new ImageRejected(
+      `Ten obrazek ma tylko ${width}x${height}. Dłuższy bok musi mieć co najmniej ` +
+        `${LIMITS.minSourceImageEdge}px, żeby był ostry na dużym ekranie.`
+    );
+  }
+
+  return { url: url.toString(), width, height };
+}

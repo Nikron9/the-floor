@@ -1,6 +1,10 @@
 "use client";
 
-import { fetchAndShrink } from "@/lib/community/clientImage";
+import {
+  ClientImageFailed,
+  fetchAndShrink,
+  probeLinkable,
+} from "@/lib/community/clientImage";
 import type { ImageResult } from "@/lib/community/search";
 import type {
   CommunityCategorySummary,
@@ -113,7 +117,67 @@ const creditFields = (form: FormData, credit: ImageResult["credit"]) => {
 };
 
 /**
- * Attach a search result, downloading it in the browser where possible.
+ * The URL to link for a search result.
+ *
+ * Commons originals are often 10-20 MB camera files; linking one would make
+ * every screen showing the category download all of it. Commons serves scaled
+ * copies on its standard thumbnail steps, so a wide original is linked at 1280
+ * px (sharp on a 1080p projector) instead. Everything else links as-is.
+ */
+const COMMONS_LINK_WIDTH = 1280;
+
+export const linkUrlFor = (result: ImageResult): string => {
+  const thumb = result.thumbUrl;
+  if (
+    result.width > COMMONS_LINK_WIDTH &&
+    thumb.startsWith("https://upload.wikimedia.org/") &&
+    thumb.includes("/thumb/") &&
+    /\/\d+px-[^/]+$/.test(thumb)
+  ) {
+    return thumb.replace(/\/\d+px-([^/]+)$/, `/${COMMONS_LINK_WIDTH}px-$1`);
+  }
+  return result.fullUrl;
+};
+
+/** Try to attach by link. Undefined means "can't link it, store a copy". */
+const tryAttachLink = async (
+  categoryId: string,
+  itemId: string,
+  url: string,
+  addCredit: (form: FormData) => void,
+  signal?: AbortSignal
+): Promise<{ item: CommunityItem } | undefined> => {
+  let size: { width: number; height: number };
+  try {
+    size = await probeLinkable(url, signal);
+  } catch (error) {
+    if (error instanceof ClientImageFailed) return undefined;
+    throw error;
+  }
+
+  const form = new FormData();
+  form.append("itemId", itemId);
+  form.append("linkUrl", url);
+  form.append("linkWidth", String(size.width));
+  form.append("linkHeight", String(size.height));
+  addCredit(form);
+
+  return fetch(`/api/community/categories/${categoryId}/images`, {
+    method: "POST",
+    body: form,
+    signal,
+  }).then(unwrap);
+};
+
+/**
+ * Attach a search result -- by link when the browser can read it, otherwise
+ * as a stored copy.
+ *
+ * Linking is the default because it costs no storage at all: the picture is
+ * served by Commons or Openverse, whose licences allow it. A copy is stored
+ * only when the host won't send CORS headers or the file is huge.
+ *
+ * The copy path downloads in the browser where possible.
  *
  * Both sources send permissive CORS headers, so the bytes come straight from
  * the visitor to Commons or Openverse rather than through us. That matters:
@@ -131,6 +195,15 @@ export const attachImageFromResult = async (
   result: ImageResult,
   signal?: AbortSignal
 ): Promise<{ item: CommunityItem }> => {
+  const linked = await tryAttachLink(
+    categoryId,
+    itemId,
+    linkUrlFor(result),
+    (form) => creditFields(form, result.credit),
+    signal
+  );
+  if (linked) return linked;
+
   const form = new FormData();
   form.append("itemId", itemId);
   creditFields(form, result.credit);
@@ -149,11 +222,18 @@ export const attachImageFromResult = async (
   }).then(unwrap);
 };
 
-export const attachImageFromUrl = (
+export const attachImageFromUrl = async (
   categoryId: string,
   itemId: string,
   sourceUrl: string
 ): Promise<{ item: CommunityItem }> => {
+  const linked = await tryAttachLink(categoryId, itemId, sourceUrl, (form) => {
+    form.append("creditSource", "Pasted link");
+    form.append("creditSourceUrl", sourceUrl);
+  });
+  if (linked) return linked;
+
+  // The host blocks cross-origin reads, so the server fetches and stores it.
   const form = new FormData();
   form.append("itemId", itemId);
   form.append("sourceUrl", sourceUrl);

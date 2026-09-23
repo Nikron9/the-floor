@@ -142,8 +142,7 @@ export const isProduction = () => process.env.NODE_ENV === "production";
  * True when the tool is falling back to the on-disk dev store. Surfaced in the
  * UI so it's obvious nothing is really being published.
  */
-export const isUsingDevFallback = () =>
-  !isProduction() && (!r2Config() || !databaseUrl());
+export const isUsingDevFallback = () => !isProduction() && !databaseUrl();
 
 /**
  * Models to try for item suggestions, in order.

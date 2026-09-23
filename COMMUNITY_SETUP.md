@@ -29,9 +29,34 @@ ship it.
 
 ## Going live
 
-Three services, all on free tiers.
+Postgres is the only required service. Images need no service of their own
+unless you want one.
 
-### 1. Images — Cloudflare R2
+### Where images live
+
+Most pictures are **not copied at all**. A search pick or a pasted link that the
+browser can read (CORS headers, decodes, long edge ≥ 600 px, under 6 MB) is
+saved as the link itself — Commons wide originals are linked at their 1280 px
+thumbnail instead. Zero storage, zero egress.
+
+Only pictures that exist nowhere else are stored: files uploaded from disk,
+images edited in the browser (crop / erase), and links whose host blocks
+cross-origin reads. Those go into the `community_images` table in the same
+Postgres and are served from `/api/community/images/…` with an immutable,
+CDN-cacheable header. At ~129 KB each, Neon's free 0.5 GB holds thousands.
+
+The trade-offs of linking, accepted on purpose:
+
+- A linked image can disappear or change at the source. The grid shows it
+  broken; *Find* replaces it.
+- The admin can unlink a picture, but can't delete it at the source.
+- The server doesn't re-download linked images (that's what got it
+  rate-limited by Wikimedia), so the https / size checks are the browser's.
+
+If you configure R2 (below), stored pictures go there instead of Postgres;
+linking works the same either way.
+
+### 1. Images — Cloudflare R2 (optional)
 
 R2 rather than Vercel Blob for one reason: **egress is free**. Blob's Hobby
 allowance is 1 GB stored and 2,000 writes a month, and one 50-item category is
@@ -74,6 +99,9 @@ needs after a quiet week.
 ```bash
 psql "$DATABASE_URL" -f lib/community/schema.sql
 ```
+
+No psql? Paste `lib/community/schema.sql` into the Neon console's SQL Editor.
+Re-running it is safe — every statement is `if not exists`.
 
 ```
 DATABASE_URL=postgres://...

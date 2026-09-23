@@ -1,9 +1,10 @@
 import { mkdir, readdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { neon } from "@neondatabase/serverless";
 import { AwsClient } from "aws4fetch";
 
-import { NotConfigured, isProduction, r2Config } from "./config";
+import { NotConfigured, databaseUrl, isProduction, r2Config } from "./config";
 
 export type StoredObject = { key: string; uploadedAt: Date };
 
@@ -129,6 +130,82 @@ const r2Store = (config: NonNullable<ReturnType<typeof r2Config>>): ImageStore =
 };
 
 /**
+ * Images kept in the same Postgres as the categories.
+ *
+ * Only pictures that exist nowhere else end up here: files uploaded from disk,
+ * images edited in the browser (crop, erase) and the rare link the browser
+ * couldn't read directly. Anything picked from search or pasted as a link that
+ * the browser *can* read is stored as that link and costs no storage at all --
+ * see `app/api/community/categories/[id]/images/route.ts`.
+ *
+ * That split is what makes this fit Neon's free 0.5 GB without a second
+ * service: at ~130 KB per stored image it holds several thousand edited or
+ * uploaded pictures, while linked ones are free. Bytes are served back through
+ * `/api/community/images/...` with an immutable cache header, so the CDN
+ * absorbs repeat views.
+ *
+ * base64 over the wire rather than raw bytea: the HTTP driver's handling of
+ * binary parameters is the one thing here that's easy to get subtly wrong.
+ */
+const postgresStore = (connectionString: string): ImageStore => {
+  const sql = neon(connectionString);
+
+  return {
+    async put(key, body, contentType) {
+      await sql`
+        insert into community_images (key, content_type, body)
+        values (${key}, ${contentType}, decode(${body.toString("base64")}, 'base64'))
+        on conflict (key) do nothing
+      `;
+      return storedImagePath(key);
+    },
+
+    async remove(key) {
+      // Best effort, like R2: the cleanup job sweeps whatever this misses.
+      await sql`delete from community_images where key = ${key}`.catch(
+        () => undefined
+      );
+    },
+
+    async list() {
+      const rows = await sql`select key, created_at from community_images`;
+      return rows.map((row) => ({
+        key: String(row.key),
+        uploadedAt: new Date(row.created_at as string),
+      }));
+    },
+
+    describe: () => "Postgres (community_images)",
+  };
+};
+
+/** Where a browser loads an image kept in Postgres. */
+export const storedImagePath = (key: string) =>
+  `/api/community/images/${key.split("/").map(encodeURIComponent).join("/")}`;
+
+/** Read one image back out of Postgres, for the serving route. */
+export const readStoredImage = async (
+  key: string
+): Promise<{ body: Buffer; contentType: string } | undefined> => {
+  const url = databaseUrl();
+  if (!url) return undefined;
+
+  const sql = neon(url);
+  const rows = await sql`
+    select content_type, encode(body, 'base64') as body
+      from community_images
+     where key = ${key}
+  `;
+  const row = rows[0];
+  if (!row) return undefined;
+
+  return {
+    body: Buffer.from(String(row.body), "base64"),
+    contentType: String(row.content_type),
+  };
+};
+
+/**
  * Writes into `public/community-dev/` so the whole flow works on a fresh clone
  * with no accounts and no env vars. Dev only -- see `imageStore()`.
  */
@@ -196,11 +273,17 @@ export const imageStore = (): ImageStore => {
     return cached;
   }
 
+  // No R2: keep the few images that need storing next to the categories.
+  const url = databaseUrl();
+  if (url) {
+    cached = postgresStore(url);
+    return cached;
+  }
+
   if (isProduction()) {
     throw new NotConfigured(
       "Magazyn obrazków społeczności nie jest jeszcze skonfigurowany w tym " +
-        "wdrożeniu. Wymagane są R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, " +
-        "R2_SECRET_ACCESS_KEY, R2_BUCKET i R2_PUBLIC_BASE_URL."
+        "wdrożeniu. Wymagany jest DATABASE_URL (albo komplet zmiennych R2_*)."
     );
   }
 

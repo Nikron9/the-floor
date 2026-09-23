@@ -4,7 +4,11 @@ import { imageKey } from "@/lib/community/ids";
 import { readKey } from "@/lib/community/identity";
 import { isAdmin } from "@/lib/community/adminSession";
 import { LIMITS } from "@/lib/community/config";
-import { fetchSourceImage, normalizeImage } from "@/lib/community/images";
+import {
+  fetchSourceImage,
+  normalizeImage,
+  validateLinkedImage,
+} from "@/lib/community/images";
 import { imageStore } from "@/lib/community/storage";
 import { cleanText } from "@/lib/community/validate";
 import type { ImageCredit } from "@/lib/community/types";
@@ -20,7 +24,11 @@ type Params = { params: Promise<{ id: string }> };
  * category gets a picture is by going through this route, which is why
  * `parseItems` refuses to read image fields off the request.
  *
- * Accepts either a multipart upload (`file`) or a URL to fetch (`sourceUrl`).
+ * Accepts a link the browser already verified (`linkUrl`), stored as-is with
+ * nothing copied; a multipart upload (`file`); or a URL for the server to fetch
+ * (`sourceUrl`). Only the last two use storage -- search picks and readable
+ * pasted links go by link, so storage holds only pictures that exist nowhere
+ * else: uploads, edits, and links the browser couldn't read.
  *
  * Owner or admin: the admin's whole job is replacing a picture that shouldn't
  * be there, and it goes through the same normalisation as everything else.
@@ -46,6 +54,45 @@ export async function POST(request: Request, { params }: Params) {
     let source: Buffer;
     let credit: ImageCredit | null = null;
 
+    // Attribution travels with the image so the category page can credit
+    // Wikimedia/Openverse contributors, which their licences require.
+    const creditSource = cleanText(form.get("creditSource"));
+    if (creditSource) {
+      credit = {
+        source: creditSource,
+        sourceUrl: cleanText(form.get("creditSourceUrl")) || null,
+        author: cleanText(form.get("creditAuthor")) || null,
+        license: cleanText(form.get("creditLicense")) || null,
+      };
+    }
+
+    const previousKey = item.imageKey;
+    const linkUrl = cleanText(form.get("linkUrl"));
+
+    if (linkUrl) {
+      const linked = validateLinkedImage(
+        linkUrl,
+        form.get("linkWidth"),
+        form.get("linkHeight")
+      );
+
+      const saved = await repo().updateItem(id, item.id, {
+        imageKey: null,
+        imageUrl: linked.url,
+        width: linked.width,
+        height: linked.height,
+        credit,
+      });
+      if (!saved) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
+
+      if (previousKey) await imageStore().remove(previousKey);
+
+      return json({
+        item: saved.items.find((candidate) => candidate.id === item.id),
+        bytes: 0,
+      });
+    }
+
     const file = form.get("file");
     const sourceUrl = cleanText(form.get("sourceUrl"));
 
@@ -60,18 +107,6 @@ export async function POST(request: Request, { params }: Params) {
       return fail("Wyślij plik albo sourceUrl.");
     }
 
-    // Attribution travels with the image so the category page can credit
-    // Wikimedia/Openverse contributors, which their licences require.
-    const creditSource = cleanText(form.get("creditSource"));
-    if (creditSource) {
-      credit = {
-        source: creditSource,
-        sourceUrl: cleanText(form.get("creditSourceUrl")) || null,
-        author: cleanText(form.get("creditAuthor")) || null,
-        license: cleanText(form.get("creditLicense")) || null,
-      };
-    }
-
     const normalized = await normalizeImage(source);
     const storageKey = imageKey(category.id, item.id, normalized.hash);
     const url = await imageStore().put(
@@ -79,8 +114,6 @@ export async function POST(request: Request, { params }: Params) {
       normalized.buffer,
       "image/webp"
     );
-
-    const previousKey = item.imageKey;
 
     // Patch just this item. The grid uploads several at once, and rewriting
     // the whole array here would drop whatever the other requests just wrote.

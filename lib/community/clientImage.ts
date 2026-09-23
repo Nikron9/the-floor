@@ -89,3 +89,60 @@ export async function fetchAndShrink(
     bitmap.close();
   }
 }
+
+/**
+ * Above this, a link isn't worth keeping: every screen showing the category
+ * would download it in full. Such images are shrunk and stored instead.
+ */
+const MAX_LINKED_IMAGE_BYTES = 6 * 1024 * 1024;
+
+/**
+ * Check that an image can be used straight from its own URL.
+ *
+ * Linking needs three things from the browser's side: the host sends CORS
+ * headers (the grid and the editor load images with crossOrigin="anonymous",
+ * and the editor must read pixels back), the file really decodes as an image,
+ * and it's big enough for a TV. Returns the measured size, or throws
+ * ClientImageFailed -- in which case the caller falls back to storing a copy.
+ */
+export async function probeLinkable(
+  url: string,
+  signal?: AbortSignal
+): Promise<{ width: number; height: number }> {
+  if (!url.startsWith("https://")) {
+    throw new ClientImageFailed("Only https images can be linked.");
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(url, { mode: "cors", signal });
+  } catch {
+    throw new ClientImageFailed("Couldn't fetch that image from the browser.");
+  }
+  if (!response.ok) {
+    throw new ClientImageFailed(`That image returned HTTP ${response.status}.`);
+  }
+
+  const blob = await response.blob();
+  if (blob.size > MAX_LINKED_IMAGE_BYTES) {
+    throw new ClientImageFailed("Too large to link; it will be stored instead.");
+  }
+
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(blob);
+  } catch {
+    throw new ClientImageFailed("That file isn't an image we can read.");
+  }
+
+  try {
+    if (Math.max(bitmap.width, bitmap.height) < LIMITS.minSourceImageEdge) {
+      throw new ClientImageFailed(
+        `Only ${bitmap.width}x${bitmap.height} — too small for a big screen.`
+      );
+    }
+    return { width: bitmap.width, height: bitmap.height };
+  } finally {
+    bitmap.close();
+  }
+}

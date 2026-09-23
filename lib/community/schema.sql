@@ -50,3 +50,14 @@ create table if not exists community_reports (
   created_at  timestamptz not null default now(),
   primary key (category_id, reporter_key)
 );
+
+-- Images that exist nowhere else: uploads from disk, pictures edited in the
+-- browser, and links the browser couldn't read. Search picks and readable
+-- links are stored as the link itself and never land here. Used only when R2
+-- isn't configured; see lib/community/storage.ts.
+create table if not exists community_images (
+  key          text        primary key,
+  content_type text        not null,
+  body         bytea       not null,
+  created_at   timestamptz not null default now()
+);
