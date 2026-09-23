@@ -14,6 +14,7 @@ import classNames from "classnames";
 import { PROJECTOR_MESSAGE_TYPE } from "../presenter/page";
 import Round from "./round";
 import { boardLayout, neighbourIndices } from "./boardLayout";
+import { markDrawn, planDraw, winnerHasPlayed } from "./randomizer";
 import { useLocalStorage } from "usehooks-ts";
 import confetti from "canvas-confetti";
 import FloorPageLayout from "../components/FloorPageLayout";
@@ -61,6 +62,14 @@ export function Projector() {
   const randomizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const finalSelectedPieceRef = useRef<FloorData | null>(null);
 
+  // Read through a ref: the spin changes the selection every 250ms, and
+  // having it in onRandomize's dependencies would re-create the broadcast
+  // channel effect -- whose cleanup cancels the spin halfway through.
+  const selectedFloorPieceRef = useRef(selectedFloorPiece);
+  useEffect(() => {
+    selectedFloorPieceRef.current = selectedFloorPiece;
+  }, [selectedFloorPiece]);
+
   const onRandomize = useCallback(() => {
     setIsRandomizing(true);
 
@@ -72,51 +81,51 @@ export function Projector() {
       clearTimeout(randomizeTimeoutRef.current);
     }
 
-    const unrandomizedPieces =
-      gameDetails?.data?.filter((piece) => !piece.hasPlayed) ?? [];
-
-    if (unrandomizedPieces.length === 0) {
+    const pieces = gameDetails?.data ?? [];
+    if (pieces.length === 0) {
       setIsRandomizing(false);
       return;
     }
 
-    // Start interval that picks a random piece every second
+    // Whoever is selected right now just won (or was just drawn) and is
+    // passing their turn, so they sit this draw out. See randomizer.ts for
+    // the rest of the rules.
+    const plan = planDraw(pieces, selectedFloorPieceRef.current?.person);
+    const finalPerson =
+      plan.candidates[Math.floor(Math.random() * plan.candidates.length)];
+    const tilesOf = (person: string) =>
+      pieces.filter((piece) => piece.person === person);
+
+    // The spin runs over everyone still eligible, so it isn't obvious who the
+    // smallest-territory rule will land on until it stops.
     randomizeIntervalRef.current = setInterval(() => {
-      const randomFloorPiece =
-        unrandomizedPieces[
-          Math.floor(Math.random() * unrandomizedPieces.length)
-        ];
-      if (randomFloorPiece) {
-        finalSelectedPieceRef.current = randomFloorPiece;
-        setSelectedFloorPiece(randomFloorPiece);
-      }
+      const person =
+        plan.eligible[Math.floor(Math.random() * plan.eligible.length)];
+      const tiles = tilesOf(person);
+      const randomFloorPiece = tiles[Math.floor(Math.random() * tiles.length)];
+      if (randomFloorPiece) setSelectedFloorPiece(randomFloorPiece);
     }, 250);
 
-    // Random duration between 4 and 6 seconds
-    const randomDuration = 2000 + Math.random() * 2000; // 4000-6000ms
+    // Random duration between 2 and 4 seconds
+    const randomDuration = 2000 + Math.random() * 2000;
 
-    // After random duration, stop the interval and mark the final piece as randomized
     randomizeTimeoutRef.current = setTimeout(() => {
       if (randomizeIntervalRef.current) {
         clearInterval(randomizeIntervalRef.current);
         randomizeIntervalRef.current = null;
       }
 
-      const finalPiece = finalSelectedPieceRef.current;
-      if (finalPiece) {
-        setIsRandomizing(false);
-        setGameDetails((prev) => {
-          return {
-            ...prev,
-            data:
-              prev?.data?.map((piece) => ({
-                ...piece,
-                hasPlayed:
-                  piece.person === finalPiece.person ? true : piece.hasPlayed,
-              })) ?? [],
-          };
-        });
-      }
+      const finalTiles = tilesOf(finalPerson);
+      const finalPiece =
+        finalTiles[Math.floor(Math.random() * finalTiles.length)];
+      finalSelectedPieceRef.current = finalPiece ?? null;
+      if (finalPiece) setSelectedFloorPiece(finalPiece);
+
+      setIsRandomizing(false);
+      setGameDetails((prev) => ({
+        ...prev,
+        data: markDrawn(prev?.data ?? [], finalPerson, plan.resetPool),
+      }));
     }, randomDuration);
   }, [gameDetails, setSelectedFloorPiece, setGameDetails]);
 
@@ -190,9 +199,19 @@ export function Projector() {
     loser: FloorData,
     newCategory: CategoryId
   ) => {
+    const pieces = gameDetails?.data ?? [];
+    // A defender who wins was never drawn; only the challenger counts as
+    // having had their turn. Applied to every tile the winner owns, since
+    // the flag is read per person.
+    const winnerPlayed = winnerHasPlayed(
+      pieces,
+      winner.person,
+      round?.challenger.person ?? winner.person
+    );
+
     const newWinnerPiece = {
       ...winner,
-      hasPlayed: true,
+      hasPlayed: winnerPlayed,
       category: newCategory,
     };
 
@@ -213,7 +232,9 @@ export function Projector() {
           return newWinnerPiece;
         }
 
-        return piece;
+        return piece.person === winner.person
+          ? { ...piece, hasPlayed: winnerPlayed }
+          : piece;
       }) ?? [];
 
     setGameDetails((prev) => {
