@@ -39,15 +39,26 @@ export type CommunityCategoryRecord = {
   publishedAt: string | null;
 };
 
-/** A record plus the caller's relationship to it. Never leaks `authorKey`. */
-export type CommunityCategoryView = CommunityCategoryRecord & {
+/** How the caller relates to a category. Worked out server-side per request. */
+export type CategoryAccess = {
   isOwner: boolean;
   /** Signed in with the admin secret -- see `lib/community/admin.ts`. */
   isAdmin: boolean;
-  /** Owner or admin: may replace images, drop items, or delete the category. */
-  canEdit: boolean;
-  myVote: -1 | 0 | 1;
+  /** Unlocked editing with the category's PIN -- see `lib/community/pin.ts`. */
+  isPinEditor: boolean;
 };
+
+/** A record plus the caller's relationship to it. Never leaks `authorKey`. */
+export type CommunityCategoryView = CommunityCategoryRecord &
+  CategoryAccess & {
+    /** Whether a PIN can unlock editing at all. Old categories have none. */
+    hasEditPin: boolean;
+    /** Owner, admin or PIN editor: may add, rename, re-picture or drop items. */
+    canEdit: boolean;
+    /** Owner or admin: may also delete the category or change its PIN. */
+    canManage: boolean;
+    myVote: -1 | 0 | 1;
+  };
 
 /** The trimmed shape the browse list needs -- no items, so no 50-image payload. */
 export type CommunityCategorySummary = {

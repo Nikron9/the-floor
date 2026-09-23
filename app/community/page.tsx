@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import BackLink from "@/app/components/BackLink";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import { useCommunityCategories } from "@/app/categories/useCommunityCategories";
@@ -153,8 +154,9 @@ export default function CommunityPage() {
       <div className="p-6 md:p-12 max-w-7xl mx-auto flex flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
+            <BackLink href="/categories">Kategorie</BackLink>
             <h1
-              className="text-4xl font-bold glow-text mb-2"
+              className="text-4xl font-bold glow-text mb-2 mt-2"
               style={{ color: "#00d4ff" }}
             >
               Kategorie społeczności

@@ -1,3 +1,4 @@
+import { accessTo } from "@/lib/community/access";
 import { repo, toView } from "@/lib/community/db";
 import { isAdmin } from "@/lib/community/adminSession";
 import { fail, handle, json, readJson } from "@/lib/community/http";
@@ -24,6 +25,6 @@ export async function POST(request: Request, { params }: Params) {
     const category = await repo().setHidden(id, body.hidden);
     if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
-    return json({ category: toView(category, 0, false, true) });
+    return json({ category: toView(category, 0, await accessTo(category)) });
   });
 }

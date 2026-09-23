@@ -1,12 +1,13 @@
+import { accessTo } from "@/lib/community/access";
 import { repo, toView } from "@/lib/community/db";
 import { fail, handle, json } from "@/lib/community/http";
-import { readKey } from "@/lib/community/identity";
 import { assertPublishable } from "@/lib/community/validate";
 
 type Params = { params: Promise<{ id: string }> };
 
 /**
- * Publishing is an explicit act by the author.
+ * Publishing is an explicit act by the author -- or by someone they gave the
+ * PIN to, which is the same decision made from another device.
  *
  * The previous attempt flipped `is_published` automatically the moment the last
  * image landed -- which meant a half-finished category went live on its own,
@@ -16,11 +17,11 @@ type Params = { params: Promise<{ id: string }> };
 export async function POST(_request: Request, { params }: Params) {
   return handle(async () => {
     const { id } = await params;
-    const key = await readKey();
     const category = await repo().get(id);
-
     if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
-    if (!key || category.authorKey !== key) {
+
+    const access = await accessTo(category);
+    if (!access.isOwner && !access.isPinEditor) {
       return fail("To nie jest twoja kategoria.", 403);
     }
 
@@ -36,6 +37,6 @@ export async function POST(_request: Request, { params }: Params) {
     const published = await repo().publish(id);
     if (!published) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
 
-    return json({ category: toView(published, 0, true) });
+    return json({ category: toView(published, 0, access) });
   });
 }

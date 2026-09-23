@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
+import BackLink from "@/app/components/BackLink";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import { useCommunityCategories } from "@/app/categories/useCommunityCategories";
@@ -88,7 +89,7 @@ export default function CommunityCategoryPage({
     }
   };
 
-  /** Owner or admin. Gone for good, images included. */
+  /** Owner or admin -- not a PIN editor. Gone for good, images included. */
   const onDelete = async () => {
     if (!category) return;
     if (!window.confirm(`Usunąć „${category.name}” wraz ze wszystkimi obrazkami? Tej operacji nie można cofnąć.`)) {
@@ -145,9 +146,7 @@ export default function CommunityCategoryPage({
       <div className="p-6 md:p-12 max-w-7xl mx-auto flex flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Kategorie społeczności
-            </Link>
+            <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
@@ -159,14 +158,19 @@ export default function CommunityCategoryPage({
               {category.status === "draft" ? " · szkic, nieopublikowana" : ""}
               {category.hiddenAt ? " · ukryta na listach" : ""}
               {category.isAdmin ? " · zalogowano jako admin" : ""}
+              {category.isPinEditor && !category.canManage
+                ? " · odblokowana PIN-em"
+                : ""}
             </p>
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            {category.canEdit && (
+            {/* Shown to everyone when a PIN can unlock it: the edit page
+                asks for the PIN before it shows anything editable. */}
+            {(category.canEdit || category.hasEditPin) && (
               <Link href={`/community/${category.id}/edit`}>
                 <FloorButton variant="rectangular" className="font-semibold">
-                  Edytuj
+                  {category.canEdit ? "Edytuj" : "Edytuj (PIN)"}
                 </FloorButton>
               </Link>
             )}
@@ -267,7 +271,7 @@ export default function CommunityCategoryPage({
                 {category.hiddenAt ? "Przywróć (czyści zgłoszenia)" : "Ukryj na listach"}
               </button>
             )}
-            {category.canEdit && (
+            {category.canManage && (
               <button
                 onClick={onDelete}
                 className="text-xs text-white/40 hover:text-red-300"

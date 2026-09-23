@@ -56,10 +56,17 @@ const parseAlternatives = (value: unknown): string[] => {
  * Duplicates are dropped rather than rejected -- the AI suggester occasionally
  * repeats itself, and making someone hunt for the collision is a worse
  * experience than quietly keeping the first one.
+ *
+ * Editing a saved category passes `rejectDuplicates`: there, a rename that
+ * collides with another item would otherwise make the renamed item vanish,
+ * picture and all, with no hint why.
  */
 export const parseItems = (
   value: unknown,
-  { existing = [] }: { existing?: CommunityItem[] } = {}
+  {
+    existing = [],
+    rejectDuplicates = false,
+  }: { existing?: CommunityItem[]; rejectDuplicates?: boolean } = {}
 ): CommunityItem[] => {
   if (!Array.isArray(value)) {
     throw new InvalidInput("Oczekiwano listy elementów.");
@@ -67,6 +74,7 @@ export const parseItems = (
 
   const byId = new Map(existing.map((item) => [item.id, item]));
   const seen = new Set<string>();
+  const usedIds = new Set<string>();
   const items: CommunityItem[] = [];
 
   for (const entry of value) {
@@ -80,14 +88,23 @@ export const parseItems = (
     }
 
     const key = name.toLowerCase();
-    if (seen.has(key)) continue;
+    if (seen.has(key)) {
+      if (rejectDuplicates) {
+        throw new InvalidInput(`Element „${name}” już jest w tej kategorii.`);
+      }
+      continue;
+    }
     seen.add(key);
 
     // Image fields are never taken from the request. They're only ever set by
     // the upload route, which is what stops someone pointing a published
-    // category at an arbitrary URL.
+    // category at an arbitrary URL. An id claimed twice only keeps its
+    // picture the first time, so two items can't end up sharing one.
     const previous =
-      typeof raw?.id === "string" ? byId.get(raw.id) : undefined;
+      typeof raw?.id === "string" && !usedIds.has(raw.id)
+        ? byId.get(raw.id)
+        : undefined;
+    if (previous) usedIds.add(previous.id);
 
     items.push({
       id: previous?.id ?? newId(),

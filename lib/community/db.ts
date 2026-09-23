@@ -6,6 +6,7 @@ import { neon } from "@neondatabase/serverless";
 import { LIMITS, NotConfigured, databaseUrl, isProduction } from "./config";
 import { newId, slugify } from "./ids";
 import type {
+  CategoryAccess,
   CommunityCategoryRecord,
   CommunityCategorySummary,
   CommunityCategoryView,
@@ -14,16 +15,33 @@ import type {
   ModerationRow,
 } from "./types";
 
-/** Same as the public record, plus the owner token the API must never leak. */
-export type StoredCategory = CommunityCategoryRecord & { authorKey: string };
+/**
+ * Same as the public record, plus what the API must never leak: the owner
+ * token and the PIN hash.
+ */
+export type StoredCategory = CommunityCategoryRecord & {
+  authorKey: string;
+  /** Null on categories made before edit PINs existed. */
+  editPinHash: string | null;
+};
 
 export type VoteDirection = -1 | 0 | 1;
+
+/** One claimed PIN attempt: where the window stands, and what to check against. */
+export type PinAttempt = {
+  /** Attempts in the current window, this one included. */
+  attempts: number;
+  windowStartedAt: string;
+  editPinHash: string | null;
+};
 
 export type Repo = {
   create(input: {
     name: string;
     items: CommunityItem[];
     authorKey: string;
+    /** Hashed already; see `lib/community/pin.ts`. Omitted means no PIN. */
+    editPinHash?: string | null;
   }): Promise<StoredCategory>;
   get(id: string): Promise<StoredCategory | undefined>;
   saveItems(id: string, items: CommunityItem[]): Promise<StoredCategory | undefined>;
@@ -49,6 +67,22 @@ export type Repo = {
    */
   setHidden(id: string, hidden: boolean): Promise<StoredCategory | undefined>;
   remove(id: string): Promise<void>;
+  /** Set or replace the edit PIN. Also clears the wrong-guess counter. */
+  setEditPin(id: string, editPinHash: string): Promise<StoredCategory | undefined>;
+  /**
+   * Count one PIN attempt against the category, before it's checked.
+   *
+   * Counting first, in one statement, is what makes the limit hold: checking
+   * "under the limit?" and recording a failure afterwards would let fifty
+   * parallel guesses all pass the check before any of them was recorded. A
+   * window that started before `windowStartedBefore` starts over at this one.
+   */
+  claimPinAttempt(
+    id: string,
+    windowStartedBefore: string
+  ): Promise<PinAttempt | undefined>;
+  /** After a right PIN: the next person to mistype it starts with a full budget. */
+  clearPinAttempts(id: string): Promise<void>;
   list(options: ListOptions): Promise<StoredCategory[]>;
   /**
    * Everything, for the admin: drafts and hidden categories included, the
@@ -88,7 +122,8 @@ const now = () => new Date().toISOString();
 const blankCategory = (
   name: string,
   items: CommunityItem[],
-  authorKey: string
+  authorKey: string,
+  editPinHash: string | null
 ): StoredCategory => ({
   id: newId(),
   name,
@@ -96,6 +131,7 @@ const blankCategory = (
   status: "draft",
   items,
   authorKey,
+  editPinHash,
   upvotes: 0,
   downvotes: 0,
   reportCount: 0,
@@ -105,15 +141,23 @@ const blankCategory = (
   publishedAt: null,
 });
 
-/** Strips `authorKey` and answers the questions the UI needs about you. */
+/** Strips the secrets and answers the questions the UI needs about you. */
 export const toView = (
   category: StoredCategory,
   myVote: VoteDirection,
-  isOwner: boolean,
-  isAdmin = false
+  { isOwner, isAdmin, isPinEditor }: CategoryAccess
 ): CommunityCategoryView => {
-  const { authorKey: _authorKey, ...rest } = category;
-  return { ...rest, myVote, isOwner, isAdmin, canEdit: isOwner || isAdmin };
+  const { authorKey: _authorKey, editPinHash, ...rest } = category;
+  return {
+    ...rest,
+    myVote,
+    isOwner,
+    isAdmin,
+    isPinEditor,
+    hasEditPin: Boolean(editPinHash),
+    canEdit: isOwner || isAdmin || isPinEditor,
+    canManage: isOwner || isAdmin,
+  };
 };
 
 export const toModerationRow = (category: StoredCategory): ModerationRow => ({
@@ -167,6 +211,7 @@ const fromRow = (row: Row): StoredCategory => ({
   status: row.status === "published" ? "published" : "draft",
   items: (row.items as CommunityItem[]) ?? [],
   authorKey: String(row.author_key),
+  editPinHash: row.edit_pin_hash ? String(row.edit_pin_hash) : null,
   upvotes: Number(row.upvotes ?? 0),
   downvotes: Number(row.downvotes ?? 0),
   reportCount: Number(row.report_count ?? 0),
@@ -182,12 +227,13 @@ const postgresRepo = (connectionString: string): Repo => {
   const sql = neon(connectionString);
 
   return {
-    async create({ name, items, authorKey }) {
-      const draft = blankCategory(name, items, authorKey);
+    async create({ name, items, authorKey, editPinHash = null }) {
+      const draft = blankCategory(name, items, authorKey, editPinHash);
       await sql`
-        insert into community_categories (id, name, slug, status, items, author_key)
+        insert into community_categories
+               (id, name, slug, status, items, author_key, edit_pin_hash)
         values (${draft.id}, ${draft.name}, ${draft.slug}, 'draft',
-                ${JSON.stringify(items)}::jsonb, ${authorKey})
+                ${JSON.stringify(items)}::jsonb, ${authorKey}, ${editPinHash})
       `;
       return draft;
     },
@@ -266,6 +312,61 @@ const postgresRepo = (connectionString: string): Repo => {
 
     async remove(id) {
       await sql`delete from community_categories where id = ${id}`;
+    },
+
+    async setEditPin(id, editPinHash) {
+      const rows = await sql`
+        update community_categories
+           set edit_pin_hash = ${editPinHash},
+               pin_attempts = 0,
+               pin_window_started_at = null,
+               updated_at = now()
+         where id = ${id}
+        returning *
+      `;
+      return rows[0] ? fromRow(rows[0]) : undefined;
+    },
+
+    async claimPinAttempt(id, windowStartedBefore) {
+      // Every right-hand side reads the row as it was, so both columns agree
+      // on whether this attempt opens a new window. The row lock serialises
+      // concurrent guesses, so each one gets its own count.
+      const rows = await sql`
+        update community_categories
+           set pin_attempts = case
+                 when pin_window_started_at is null
+                   or pin_window_started_at < ${windowStartedBefore}
+                 then 1
+                 else pin_attempts + 1
+               end,
+               pin_window_started_at = case
+                 when pin_window_started_at is null
+                   or pin_window_started_at < ${windowStartedBefore}
+                 then now()
+                 else pin_window_started_at
+               end
+         where id = ${id}
+        returning pin_attempts, pin_window_started_at, edit_pin_hash
+      `;
+      return rows[0]
+        ? {
+            attempts: Number(rows[0].pin_attempts),
+            windowStartedAt: new Date(
+              rows[0].pin_window_started_at as string
+            ).toISOString(),
+            editPinHash: rows[0].edit_pin_hash
+              ? String(rows[0].edit_pin_hash)
+              : null,
+          }
+        : undefined;
+    },
+
+    async clearPinAttempts(id) {
+      await sql`
+        update community_categories
+           set pin_attempts = 0, pin_window_started_at = null
+         where id = ${id}
+      `;
     },
 
     async list({ sort, limit, offset }) {
@@ -416,6 +517,8 @@ type DevFile = {
   categories: StoredCategory[];
   votes: Array<{ categoryId: string; voterKey: string; direction: -1 | 1 }>;
   reports: Array<{ categoryId: string; reporterKey: string; reason: string }>;
+  /** Wrong-PIN windows by category id. Absent from files written before PINs. */
+  pinAttempts?: Record<string, { attempts: number; windowStartedAt: string }>;
 };
 
 /**
@@ -430,7 +533,12 @@ const devRepo = (): Repo => {
 
   const read = async (): Promise<DevFile> => {
     try {
-      return JSON.parse(await readFile(file, "utf8")) as DevFile;
+      const data = JSON.parse(await readFile(file, "utf8")) as DevFile;
+      // Categories saved before PINs existed have no such field at all.
+      for (const category of data.categories) {
+        category.editPinHash = category.editPinHash ?? null;
+      }
+      return data;
     } catch {
       return { categories: [], votes: [], reports: [] };
     }
@@ -466,9 +574,9 @@ const devRepo = (): Repo => {
     data.categories.filter((c) => c.status === "published" && !c.hiddenAt);
 
   return {
-    create: ({ name, items, authorKey }) =>
+    create: ({ name, items, authorKey, editPinHash = null }) =>
       mutate((data) => {
-        const draft = blankCategory(name, items, authorKey);
+        const draft = blankCategory(name, items, authorKey, editPinHash);
         data.categories.push(draft);
         return draft;
       }),
@@ -529,6 +637,38 @@ const devRepo = (): Repo => {
         data.categories = data.categories.filter((c) => c.id !== id);
         data.votes = data.votes.filter((v) => v.categoryId !== id);
         data.reports = data.reports.filter((r) => r.categoryId !== id);
+        if (data.pinAttempts) delete data.pinAttempts[id];
+      }),
+
+    setEditPin: (id, editPinHash) =>
+      mutate((data) => {
+        const category = data.categories.find((c) => c.id === id);
+        if (!category) return undefined;
+        category.editPinHash = editPinHash;
+        category.updatedAt = now();
+        if (data.pinAttempts) delete data.pinAttempts[id];
+        return category;
+      }),
+
+    claimPinAttempt: (id, windowStartedBefore) =>
+      mutate((data) => {
+        const category = data.categories.find((c) => c.id === id);
+        if (!category) return undefined;
+
+        data.pinAttempts ??= {};
+        const previous = data.pinAttempts[id];
+        const current =
+          previous && previous.windowStartedAt >= windowStartedBefore
+            ? { ...previous, attempts: previous.attempts + 1 }
+            : { attempts: 1, windowStartedAt: now() };
+        data.pinAttempts[id] = current;
+
+        return { ...current, editPinHash: category.editPinHash };
+      }),
+
+    clearPinAttempts: (id) =>
+      mutate((data) => {
+        if (data.pinAttempts) delete data.pinAttempts[id];
       }),
 
     list: async ({ sort, limit, offset }) => {

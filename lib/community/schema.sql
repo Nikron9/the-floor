@@ -23,6 +23,18 @@ create table if not exists community_categories (
   published_at  timestamptz
 );
 
+-- The edit PIN (lib/community/pin.ts), added after the table first shipped --
+-- hence `alter` rather than columns above, so re-running this upgrades an
+-- existing database in place. Null on categories made before PINs existed:
+-- those stay editable by their author and the admin only.
+alter table community_categories
+  add column if not exists edit_pin_hash text;
+-- Wrong-PIN counter for a fixed window, so guessing is capped per category.
+alter table community_categories
+  add column if not exists pin_attempts integer not null default 0;
+alter table community_categories
+  add column if not exists pin_window_started_at timestamptz;
+
 -- Listings read published, unhidden categories ordered by score or recency.
 create index if not exists community_categories_browse
   on community_categories (status, hidden_at, published_at desc);

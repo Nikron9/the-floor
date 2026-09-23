@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import BackLink from "@/app/components/BackLink";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import type { ModerationRow } from "@/lib/community/types";
@@ -131,9 +132,7 @@ export default function CommunityAdminPage() {
       <FloorPageLayout>
         <div className="p-8 md:p-16 max-w-md mx-auto flex flex-col gap-6">
           <div>
-            <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Kategorie społeczności
-            </Link>
+            <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
@@ -184,9 +183,7 @@ export default function CommunityAdminPage() {
       <div className="p-6 md:p-12 max-w-7xl mx-auto flex flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Link href="/community" className="text-sm underline text-[#00d4ff]">
-              ← Kategorie społeczności
-            </Link>
+            <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}

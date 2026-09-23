@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import BackLink from "@/app/components/BackLink";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import ImageEditor from "@/app/components/community/ImageEditor";
@@ -43,6 +44,8 @@ export default function CreateCategoryPage() {
   const [phase, setPhase] = useState<"name" | "build">("name");
   const [name, setName] = useState("");
   const [manualList, setManualList] = useState("");
+  /** Chosen now, asked for later by anyone who wants to edit -- see lib/community/pin.ts. */
+  const [pin, setPin] = useState("");
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
 
@@ -151,11 +154,17 @@ export default function CreateCategoryPage() {
       setError("Najpierw dodaj elementy — po jednym w linii.");
       return;
     }
+    if (pin.length < LIMITS.editPinMinLength) {
+      setError(
+        `Ustaw PIN do edycji (${LIMITS.editPinMinLength}–${LIMITS.editPinMaxLength} cyfr).`
+      );
+      return;
+    }
 
     setWorking(true);
     setError("");
     try {
-      const draft = await createDraft(name.trim(), items);
+      const draft = await createDraft(name.trim(), items, pin);
       const created: Cell[] = draft.items.map((item) => ({
         item,
         status: "waiting" as CellStatus,
@@ -388,7 +397,19 @@ export default function CreateCategoryPage() {
             Kategoria trafiła do puli społeczności. Każdy może dodać ją do gry,
             a głosy zdecydują, jak wysoko znajdzie się na liście.
           </p>
+          <p className="text-white/60 text-sm">
+            Aby ją później poprawić — też z innego urządzenia — otwórz ją i
+            kliknij <strong className="text-white/80">Edytuj</strong>. Zapytamy
+            o PIN ustawiony przy tworzeniu, więc go zapamiętaj.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {categoryId && (
+              <Link href={`/community/${categoryId}`}>
+                <FloorButton variant="rectangular" className="font-semibold">
+                  Zobacz kategorię
+                </FloorButton>
+              </Link>
+            )}
             <Link href="/community">
               <FloorButton variant="rectangular" className="font-semibold">
                 Przeglądaj pulę
@@ -404,6 +425,7 @@ export default function CreateCategoryPage() {
                 setPhase("name");
                 setName("");
                 setManualList("");
+                setPin("");
                 setCells([]);
                 setCategoryId(null);
               }}
@@ -421,8 +443,9 @@ export default function CreateCategoryPage() {
       <FloorPageLayout>
         <div className="p-8 md:p-16 max-w-3xl mx-auto flex flex-col gap-6">
           <div>
+            <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
-              className="text-4xl font-bold glow-text mb-2"
+              className="text-4xl font-bold glow-text mb-2 mt-2"
               style={{ color: "#00d4ff" }}
             >
               Nowa kategoria społeczności
@@ -475,13 +498,39 @@ export default function CreateCategoryPage() {
             </p>
           </div>
 
+          <label className="flex flex-col gap-2">
+            <span className="font-semibold" style={{ color: "#00d4ff" }}>
+              PIN do edycji
+            </span>
+            <input
+              value={pin}
+              onChange={(event) => setPin(event.target.value.replace(/\D/g, ""))}
+              inputMode="numeric"
+              autoComplete="off"
+              pattern="\d*"
+              maxLength={LIMITS.editPinMaxLength}
+              placeholder={`${LIMITS.editPinMinLength}–${LIMITS.editPinMaxLength} cyfr`}
+              className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] tracking-widest max-w-xs"
+            />
+            <span className="text-white/50 text-sm">
+              Bez PIN-u nikt poza tobą nie zmieni tej kategorii. Z nim ty (także
+              z innego urządzenia) albo osoby, którym go podasz, możecie
+              dodawać, poprawiać i usuwać elementy. Zapamiętaj go — nie da się
+              go odczytać, można tylko ustawić nowy w edycji, w tej przeglądarce.
+            </span>
+          </label>
+
           {error && <p className="text-red-300">{error}</p>}
 
           <div className="flex flex-col sm:flex-row gap-4">
             <FloorButton
               variant="rectangular"
               className="font-semibold"
-              disabled={working || name.trim().length < 2}
+              disabled={
+                working ||
+                name.trim().length < 2 ||
+                pin.length < LIMITS.editPinMinLength
+              }
               onClick={onStart}
             >
               Znajdź obrazki
@@ -502,8 +551,9 @@ export default function CreateCategoryPage() {
       <div className="p-4 md:p-10 max-w-7xl mx-auto flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
+            <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
-              className="text-3xl font-bold glow-text"
+              className="text-3xl font-bold glow-text mt-2"
               style={{ color: "#00d4ff" }}
             >
               {name}
@@ -511,6 +561,18 @@ export default function CreateCategoryPage() {
             <p className="text-white/60 text-sm">
               Z obrazkiem: {withImages} z {cells.length}
               {autoFilling ? " · wciąż pobieram…" : ""}
+              {" · szkic zapisuje się na bieżąco"}
+              {categoryId && (
+                <>
+                  {" · "}
+                  <Link
+                    href={`/community/${categoryId}/edit`}
+                    className="underline text-[#00d4ff]"
+                  >
+                    link do dokończenia później
+                  </Link>
+                </>
+              )}
             </p>
           </div>
 

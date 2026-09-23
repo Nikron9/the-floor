@@ -1,8 +1,7 @@
 import { repo } from "@/lib/community/db";
 import { fail, handle, json } from "@/lib/community/http";
 import { imageKey } from "@/lib/community/ids";
-import { readKey } from "@/lib/community/identity";
-import { isAdmin } from "@/lib/community/adminSession";
+import { accessTo } from "@/lib/community/access";
 import { LIMITS } from "@/lib/community/config";
 import {
   fetchSourceImage,
@@ -30,18 +29,18 @@ type Params = { params: Promise<{ id: string }> };
  * pasted links go by link, so storage holds only pictures that exist nowhere
  * else: uploads, edits, and links the browser couldn't read.
  *
- * Owner or admin: the admin's whole job is replacing a picture that shouldn't
- * be there, and it goes through the same normalisation as everything else.
+ * Owner, admin or PIN editor: the admin's whole job is replacing a picture
+ * that shouldn't be there, and it goes through the same normalisation as
+ * everything else.
  */
 export async function POST(request: Request, { params }: Params) {
   return handle(async () => {
     const { id } = await params;
-    const key = await readKey();
     const category = await repo().get(id);
 
     if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
-    if ((!key || category.authorKey !== key) && !(await isAdmin())) {
-      return fail("To nie jest twoja kategoria.", 403);
+    if (!(await accessTo(category)).canEdit) {
+      return fail("Aby edytować tę kategorię, odblokuj ją PIN-em.", 403);
     }
 
     const form = await request.formData().catch(() => undefined);
@@ -139,16 +138,15 @@ export async function POST(request: Request, { params }: Params) {
   });
 }
 
-/** Detach an image without deleting the item. Owner or admin. */
+/** Detach an image without deleting the item. Owner, admin or PIN editor. */
 export async function DELETE(request: Request, { params }: Params) {
   return handle(async () => {
     const { id } = await params;
-    const key = await readKey();
     const category = await repo().get(id);
 
     if (!category) return fail("Nie ma kategorii o takim identyfikatorze.", 404);
-    if ((!key || category.authorKey !== key) && !(await isAdmin())) {
-      return fail("To nie jest twoja kategoria.", 403);
+    if (!(await accessTo(category)).canEdit) {
+      return fail("Aby edytować tę kategorię, odblokuj ją PIN-em.", 403);
     }
 
     const itemId = new URL(request.url).searchParams.get("itemId") ?? "";

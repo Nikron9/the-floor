@@ -13,11 +13,22 @@ import type {
   ModerationRow,
 } from "@/lib/community/types";
 
+/** A failed request, with the status kept so a page can tell 403 from 404. */
+export class ApiError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 /** The message from the API if it sent one, so the UI never says "Error 400". */
 const unwrap = async (response: Response) => {
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(body?.error ?? `Żądanie nie powiodło się (HTTP ${response.status})`);
+    throw new ApiError(
+      body?.error ?? `Żądanie nie powiodło się (HTTP ${response.status})`,
+      response.status
+    );
   }
   return body;
 };
@@ -39,13 +50,15 @@ export const suggestItems = (
 
 export const createDraft = (
   name: string,
-  items: DraftItemInput[]
+  items: DraftItemInput[],
+  pin: string
 ): Promise<{ id: string; name: string; items: CommunityItem[] }> =>
-  postJson("/api/community/categories", { name, items });
+  postJson("/api/community/categories", { name, items, pin });
 
 export const saveItems = (
   id: string,
-  items: Array<Pick<CommunityItem, "id" | "name" | "alternatives">>
+  // Items without an id are new; the server gives them one.
+  items: Array<Pick<CommunityItem, "name" | "alternatives"> & { id?: string }>
 ): Promise<{ category: CommunityCategoryView }> =>
   fetch(`/api/community/categories/${id}`, {
     method: "PATCH",
@@ -85,6 +98,30 @@ export const reportCategory = (
 
 export const deleteCategory = (id: string): Promise<{ deleted: boolean }> =>
   fetch(`/api/community/categories/${id}`, { method: "DELETE" }).then(unwrap);
+
+/* -------------------------------------------------------------- edit PIN */
+
+/** Trade the PIN for an edit cookie scoped to this one category. */
+export const unlockWithPin = (
+  id: string,
+  pin: string
+): Promise<{ unlocked: boolean }> =>
+  postJson(`/api/community/categories/${id}/pin`, { pin });
+
+/** Drop this device's PIN unlock. */
+export const lockEditing = (id: string): Promise<{ locked: boolean }> =>
+  fetch(`/api/community/categories/${id}/pin`, { method: "DELETE" }).then(unwrap);
+
+/** Owner or admin. Signs every PIN editor out. */
+export const changePin = (
+  id: string,
+  pin: string
+): Promise<{ category: CommunityCategoryView }> =>
+  fetch(`/api/community/categories/${id}/pin`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin }),
+  }).then(unwrap);
 
 /* ------------------------------------------------------------------ admin */
 

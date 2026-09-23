@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { LIMITS } from "@/lib/community/config";
 import type { CommunityItem } from "@/lib/community/types";
 
 export type CellStatus =
@@ -13,27 +14,68 @@ export type CellStatus =
   | "empty"
   | "error";
 
-/** One square of the grid: the item, its picture, and what to do about it. */
+/**
+ * One square of the grid: the item, its picture, and what to do about it.
+ *
+ * `onShuffle` only exists while building, where there are search results to
+ * step through; `onRename` only on a saved category, where the name is no
+ * longer a line in a textarea.
+ */
 export default function ItemCell({
   item,
   status,
   message,
-  canShuffle,
+  canShuffle = false,
   onShuffle,
   onSearch,
   onEdit,
   onRemove,
+  onRename,
 }: {
   item: CommunityItem;
   status: CellStatus;
   message?: string;
-  canShuffle: boolean;
-  onShuffle: () => void;
+  canShuffle?: boolean;
+  onShuffle?: () => void;
   onSearch: () => void;
   onEdit: () => void;
   onRemove: () => void;
+  /** Resolves when saved; rejecting keeps the form open to fix. */
+  onRename?: (name: string, alternatives: string[]) => Promise<void>;
 }) {
   const busy = status === "searching" || status === "uploading";
+
+  const [renaming, setRenaming] = useState(false);
+  const [draftName, setDraftName] = useState(item.name);
+  const [draftAlternatives, setDraftAlternatives] = useState("");
+  const [savingName, setSavingName] = useState(false);
+
+  const startRename = () => {
+    setDraftName(item.name);
+    setDraftAlternatives(item.alternatives.join(", "));
+    setRenaming(true);
+  };
+
+  const submitRename = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!onRename || !draftName.trim()) return;
+
+    setSavingName(true);
+    try {
+      await onRename(
+        draftName.trim(),
+        draftAlternatives
+          .split(",")
+          .map((alternative) => alternative.trim())
+          .filter(Boolean)
+      );
+      setRenaming(false);
+    } catch {
+      // The page shows why; the form stays open so it can be fixed.
+    } finally {
+      setSavingName(false);
+    }
+  };
 
   /**
    * Retry a freshly-uploaded image that isn't being served yet.
@@ -110,9 +152,68 @@ export default function ItemCell({
       </div>
 
       <div className="p-2 flex flex-col gap-2">
-        <p className="font-semibold text-sm text-white truncate" title={item.name}>
-          {item.name}
-        </p>
+        {renaming ? (
+          <form onSubmit={submitRename} className="flex flex-col gap-1">
+            <input
+              value={draftName}
+              onChange={(event) => setDraftName(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setRenaming(false);
+              }}
+              maxLength={LIMITS.maxItemNameLength}
+              aria-label="Nazwa elementu"
+              autoFocus
+              className="bg-gray-800 text-white text-sm px-2 py-1 rounded border border-[#00d4ff]/60 focus:outline-none focus:ring-1 focus:ring-[#00d4ff]"
+            />
+            <input
+              value={draftAlternatives}
+              onChange={(event) => setDraftAlternatives(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setRenaming(false);
+              }}
+              placeholder="Inne poprawne odpowiedzi, po przecinku"
+              aria-label="Inne poprawne odpowiedzi"
+              className="bg-gray-800 text-white text-[11px] px-2 py-1 rounded border border-white/20 focus:outline-none focus:ring-1 focus:ring-[#00d4ff]"
+            />
+            <div className="grid grid-cols-2 gap-1">
+              <button
+                type="submit"
+                disabled={savingName || !draftName.trim()}
+                className="text-[11px] py-1 rounded bg-[#00d4ff] text-black font-semibold disabled:opacity-40"
+              >
+                {savingName ? "Zapisuję…" : "Zapisz"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setRenaming(false)}
+                className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700"
+              >
+                Anuluj
+              </button>
+            </div>
+          </form>
+        ) : onRename ? (
+          <button
+            onClick={startRename}
+            disabled={busy}
+            title="Zmień nazwę lub inne poprawne odpowiedzi"
+            className="group flex items-center gap-1 text-left min-w-0 disabled:opacity-60"
+          >
+            <span className="font-semibold text-sm text-white truncate">
+              {item.name}
+            </span>
+            <span
+              aria-hidden="true"
+              className="text-white/40 text-xs group-hover:text-[#00d4ff]"
+            >
+              ✎
+            </span>
+          </button>
+        ) : (
+          <p className="font-semibold text-sm text-white truncate" title={item.name}>
+            {item.name}
+          </p>
+        )}
 
         {message && (
           <p
@@ -124,15 +225,17 @@ export default function ItemCell({
           </p>
         )}
 
-        <div className="grid grid-cols-3 gap-1">
-          <button
-            onClick={onShuffle}
-            disabled={busy || !canShuffle}
-            title="Spróbuj następnego wyniku wyszukiwania"
-            className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700 disabled:opacity-40"
-          >
-            Dalej
-          </button>
+        <div className={`grid gap-1 ${onShuffle ? "grid-cols-3" : "grid-cols-2"}`}>
+          {onShuffle && (
+            <button
+              onClick={onShuffle}
+              disabled={busy || !canShuffle}
+              title="Spróbuj następnego wyniku wyszukiwania"
+              className="text-[11px] py-1 rounded bg-gray-800 text-white/80 hover:bg-gray-700 disabled:opacity-40"
+            >
+              Dalej
+            </button>
+          )}
           <button
             onClick={onSearch}
             disabled={busy}

@@ -103,6 +103,11 @@ psql "$DATABASE_URL" -f lib/community/schema.sql
 No psql? Paste `lib/community/schema.sql` into the Neon console's SQL Editor.
 Re-running it is safe — every statement is `if not exists`.
 
+**Upgrading an existing database:** re-run it after pulling the edit-PIN
+change. It adds three columns to `community_categories` (`edit_pin_hash`,
+`pin_attempts`, `pin_window_started_at`); until they exist, creating a
+category fails.
+
 ```
 DATABASE_URL=postgres://...
 ```
@@ -256,6 +261,31 @@ What there is instead:
 Identity is a random key in an httpOnly cookie the server sets. It's not an
 account — someone determined can clear cookies and vote again — but a page
 can't claim to be a different voter, which is the part that matters.
+
+### The edit PIN
+
+The author's cookie ties a category to one browser, so every category also
+gets a PIN (4–8 digits), chosen on the create page. On any category page
+*Edytuj* asks for it, and whoever knows it can add items (straight into the
+picture picker), rename them, swap or crop pictures, remove items, and
+publish a draft. What a PIN can't do: delete the category, or change the PIN
+— those stay with the author and the admin, so a leaked PIN costs some
+pictures rather than the category. A published category also can't be
+trimmed below the publishing minimum by anyone but the admin.
+
+- Only a salted scrypt hash is stored (`lib/community/pin.ts`). Unlocking sets
+  an httpOnly cookie holding an HMAC of the category id keyed by that hash,
+  path-scoped to that category's API — no server secret needed, and it can't
+  be minted without the hash.
+- Five wrong guesses per category per 15 minutes, then everyone waits,
+  right PIN included. The attempt is counted *before* it's checked, in one
+  statement, so parallel guesses can't slip past the limit. For a 4-digit PIN
+  that's about ten days of nonstop guessing on average; the flip side is that
+  someone can keep a category's PIN locked out by guessing. The author's
+  cookie and the admin aren't affected by the lockout.
+- The author or admin can set a new PIN at the bottom of the edit page. That
+  signs every PIN editor out at once. Categories made before PINs existed
+  have none until their author or the admin sets one.
 
 ### The admin
 

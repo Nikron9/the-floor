@@ -53,6 +53,19 @@ export const LIMITS = {
   /** Reports needed before a category drops out of the listings automatically. */
   reportsBeforeAutoHide: 3,
 
+  /** The edit PIN chosen at creation -- see `lib/community/pin.ts`. */
+  editPinMinLength: 4,
+  editPinMaxLength: 8,
+
+  /**
+   * Wrong-PIN budget per category. Five tries every fifteen minutes puts a
+   * 4-digit PIN about ten days of nonstop guessing away on average, and costs
+   * whoever mistyped it a short wait. The counter lives on the category row,
+   * so it holds across serverless instances and parallel requests.
+   */
+  pinAttemptsPerWindow: 5,
+  pinAttemptWindowMinutes: 15,
+
   /**
    * How long an untouched draft survives before the cleanup job removes it and
    * its images.

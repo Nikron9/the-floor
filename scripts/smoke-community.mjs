@@ -55,10 +55,18 @@ const TINY =
 
 const items = Array.from({ length: 14 }, (_, i) => ({ name: `Snack ${i + 1}` }));
 
-// 1. Create
+// 1. Create. The edit PIN is required from the start.
+const PIN = "4821";
+const noPin = await author.json("/api/community/categories", "POST", {
+  name: "Smoke Test Snacks",
+  items,
+});
+check("create refused without a PIN", noPin.status === 400, noPin.body.error);
+
 const created = await author.json("/api/community/categories", "POST", {
   name: "Smoke Test Snacks",
   items,
+  pin: PIN,
 });
 check("create returns a draft", created.status === 201 && created.body.id, `status ${created.status}`);
 const id = created.body.id;
@@ -78,7 +86,7 @@ const tinyResult = await author.call(`/api/community/categories/${id}/images`, {
 });
 check(
   "rejects an image below the minimum edge",
-  tinyResult.status === 400 && /at least/.test(tinyResult.body.error ?? ""),
+  tinyResult.status === 400 && /co najmniej/.test(tinyResult.body.error ?? ""),
   tinyResult.body.error
 );
 
@@ -173,6 +181,117 @@ check(
   "never returns the author key",
   published.body.category && !("authorKey" in published.body.category)
 );
+check(
+  "never returns the PIN hash",
+  published.body.category && !("editPinHash" in published.body.category)
+);
+
+// 7b. The edit PIN
+const itemInputs = (category) =>
+  category.items.map((item) => ({ id: item.id, name: item.name, alternatives: item.alternatives }));
+
+const strangerView = await stranger.call(`/api/community/categories/${id}`);
+check(
+  "stranger sees that a PIN can unlock editing, and nothing more",
+  strangerView.body.category?.hasEditPin === true &&
+    strangerView.body.category?.canEdit === false &&
+    !("editPinHash" in strangerView.body.category)
+);
+
+const strangerPatch = await stranger.json(`/api/community/categories/${id}`, "PATCH", {
+  items: itemInputs(strangerView.body.category),
+});
+check("stranger cannot edit without the PIN", strangerPatch.status === 403, strangerPatch.body.error);
+
+const helper = makeClient("helper");
+const wrongPin = await helper.json(`/api/community/categories/${id}/pin`, "POST", { pin: "0000" });
+check("wrong PIN is refused", wrongPin.status === 403, wrongPin.body.error);
+
+const rightPin = await helper.json(`/api/community/categories/${id}/pin`, "POST", { pin: PIN });
+check("right PIN unlocks", rightPin.status === 200, rightPin.body.error);
+
+const helperView = await helper.call(`/api/community/categories/${id}`);
+check(
+  "PIN editor can edit but not manage",
+  helperView.body.category?.canEdit === true &&
+    helperView.body.category?.isPinEditor === true &&
+    helperView.body.category?.canManage === false
+);
+
+const withNew = await helper.json(`/api/community/categories/${id}`, "PATCH", {
+  items: [...itemInputs(helperView.body.category), { name: "Smoke Newcomer" }],
+});
+const newcomer = withNew.body.category?.items?.find((item) => item.name === "Smoke Newcomer");
+check("PIN editor can add an item", withNew.status === 200 && Boolean(newcomer), withNew.body.error);
+
+const collision = await helper.json(`/api/community/categories/${id}`, "PATCH", {
+  items: itemInputs(withNew.body.category).map((item) =>
+    item.id === newcomer?.id ? { ...item, name: withNew.body.category.items[0].name } : item
+  ),
+});
+check("a colliding rename is refused, not dropped", collision.status === 400, collision.body.error);
+
+const newcomerImage = new FormData();
+newcomerImage.append("itemId", newcomer?.id ?? "");
+newcomerImage.append("file", new Blob([bytes], { type: "image/jpeg" }), "image.jpg");
+newcomerImage.append("creditSource", "Uploaded");
+const helperUpload = await helper.call(`/api/community/categories/${id}/images`, {
+  method: "POST",
+  body: newcomerImage,
+});
+check("PIN editor can attach a picture", helperUpload.status === 200, helperUpload.body?.error ?? "ok");
+
+const gutted = await helper.json(`/api/community/categories/${id}`, "PATCH", {
+  items: itemInputs(withNew.body.category).slice(0, 3),
+});
+check(
+  "PIN editor cannot empty a published category below the minimum",
+  gutted.status === 400,
+  gutted.body.error
+);
+
+const withoutNew = await helper.json(`/api/community/categories/${id}`, "PATCH", {
+  items: itemInputs(withNew.body.category).filter((item) => item.id !== newcomer?.id),
+});
+check(
+  "PIN editor can remove an item",
+  withoutNew.status === 200 && withoutNew.body.category?.items?.length === EXPECTED_WITH_IMAGES,
+  withoutNew.body.error
+);
+
+const helperDelete = await helper.call(`/api/community/categories/${id}`, { method: "DELETE" });
+check("PIN editor cannot delete the category", helperDelete.status === 403, helperDelete.body.error);
+
+const helperRepin = await helper.json(`/api/community/categories/${id}/pin`, "PUT", { pin: "1111" });
+check("PIN editor cannot change the PIN", helperRepin.status === 403, helperRepin.body.error);
+
+// Parallel guesses, so a limit that checks before it counts would let them all through.
+const guesser = makeClient("guesser");
+const guesses = await Promise.all(
+  Array.from({ length: 10 }, () =>
+    guesser.json(`/api/community/categories/${id}/pin`, "POST", { pin: "0000" })
+  )
+);
+const refused = guesses.filter((g) => g.status === 403).length;
+const throttled = guesses.filter((g) => g.status === 429).length;
+// The helper's wrong guess above already spent one; the right one reset it.
+check("guessing is capped per window", refused === 5 && throttled === 5, `${refused} refused, ${throttled} throttled`);
+
+const lockedOut = await guesser.json(`/api/community/categories/${id}/pin`, "POST", { pin: PIN });
+check("even the right PIN waits out a lockout", lockedOut.status === 429, lockedOut.body.error);
+
+const repinned = await author.json(`/api/community/categories/${id}/pin`, "PUT", { pin: "135790" });
+check("author can change the PIN", repinned.status === 200, repinned.body.error);
+
+const afterRepin = await helper.call(`/api/community/categories/${id}`);
+check("changing the PIN signs PIN editors out", afterRepin.body.category?.canEdit === false);
+
+const newPinWorks = await guesser.json(`/api/community/categories/${id}/pin`, "POST", { pin: "135790" });
+check("the new PIN works, and clears the lockout", newPinWorks.status === 200, newPinWorks.body.error);
+
+await guesser.call(`/api/community/categories/${id}/pin`, { method: "DELETE" });
+const afterLock = await guesser.call(`/api/community/categories/${id}`);
+check("locking again ends PIN editing", afterLock.body.category?.canEdit === false);
 
 // 8. Listing
 const listed = await stranger.call("/api/community/categories?sort=new");

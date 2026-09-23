@@ -1,6 +1,7 @@
 import { repo, toSummary } from "@/lib/community/db";
 import { ensureKey, readKey } from "@/lib/community/identity";
 import { handle, json, readJson } from "@/lib/community/http";
+import { hashPin, parsePin } from "@/lib/community/pin";
 import { parseCategoryName, parseItems } from "@/lib/community/validate";
 
 /** Browse the published pool. */
@@ -37,15 +38,21 @@ export async function GET(request: Request) {
   });
 }
 
-/** Start a draft. Images get attached one at a time after this. */
+/**
+ * Start a draft. Images get attached one at a time after this.
+ *
+ * The edit PIN is chosen here and only here -- afterwards changing it takes
+ * the author or the admin, see `[id]/pin`.
+ */
 export async function POST(request: Request) {
   return handle(async () => {
     const body = await readJson(request);
     const name = parseCategoryName(body.name);
     const items = parseItems(body.items);
+    const editPinHash = hashPin(parsePin(body.pin));
 
     const authorKey = await ensureKey();
-    const created = await repo().create({ name, items, authorKey });
+    const created = await repo().create({ name, items, authorKey, editPinHash });
 
     return json({ id: created.id, name: created.name, items: created.items }, 201);
   });
