@@ -55,7 +55,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Nolan",
-    category: "Stany USA",
+    category: "Polskie potrawy",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -121,13 +121,13 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Beth",
-    category: "Reality show",
+    category: "Gry wideo",
     hasPlayed: false,
     isStillInTheGame: true,
   },
   {
     person: "Joey",
-    category: "Drużyny MLB",
+    category: "Polscy sportowcy",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -139,7 +139,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Aimee",
-    category: "Kody lotnisk",
+    category: "Flagi Europy",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -181,7 +181,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Andrea",
-    category: "Musicale z Broadwayu",
+    category: "Anime",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -193,7 +193,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Gabe",
-    category: "Komicy",
+    category: "Aplikacje",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -228,7 +228,6 @@ export type Category =
   | "Tabliczka mnożenia"
   | "Pokémony"
   | "Owoce"
-  | "Musicale z Broadwayu"
   | "Postacie Disneya"
   | "Gadżety kuchenne"
   | "Szuflada z rupieciami"
@@ -236,7 +235,6 @@ export type Category =
   | "Diwy popu"
   | "Atrakcje Chicago"
   | "Gry planszowe"
-  | "Stany USA"
   | "Postacie z Harry'ego Pottera"
   | "Kostiumy na Halloween"
   | "Superbohaterowie"
@@ -245,29 +243,21 @@ export type Category =
   | "Filmy"
   | "Książki"
   | "Filmy Disney Channel"
-  | "Kody lotnisk"
   | "Slogany reklamowe"
   | "Teksty Taylor Swift"
-  | "Reality show"
   | "The Office"
   | "Święto Dziękczynienia"
   | "Psy"
   | "Konie"
   | "Komedie romantyczne"
   | "Wesołe miasteczka"
-  | "Komicy"
   | "Jedzenie z jarmarku"
   | "Sławni, którzy zmarli przed 30"
   | "Sieci fast food"
   | "Lodówka"
   | "Garaż"
   | "Święta"
-  | "Drużyny MLB"
-  | "Drużyny NBA"
-  | "Drużyny NFL"
-  | "Drużyny NHL"
   | "Sporty"
-  | "Valorant"
   | "Anime"
   | "Minecraft"
   | "Flagi Europy"
@@ -276,6 +266,8 @@ export type Category =
   | "Aplikacje"
   | "Wyposażenie basenu"
   | "Gry wideo"
+  | "Polskie potrawy"
+  | "Polscy sportowcy"
   ;
 
 /**
@@ -1427,258 +1419,6 @@ const PokemonCategory: CategoryMetadata = {
     {
       name: "Magnemite",
       image: "magnemite.png",
-      alternatives: [],
-    },
-  ],
-};
-
-const BroadwayShowsCategory: CategoryMetadata = {
-  name: "Musicale z Broadwayu",
-  folder: "broadway-shows",
-  examples: [
-    {
-      name: "Król Lew",
-      image: "the-lion-king.png",
-      alternatives: ["The Lion King"],
-    },
-    {
-      name: "Aladyn",
-      image: "aladdin.jpg",
-      alternatives: ["Aladdin"],
-    },
-    {
-      name: "Piękna i Bestia",
-      image: "beauty-and-the-beast.jpg",
-      alternatives: ["Beauty and the Beast"],
-    },
-    {
-      name: "Kraina lodu",
-      image: "frozen.jpg",
-      alternatives: ["Frozen"],
-    },
-    {
-      name: "Hamilton",
-      image: "hamilton.png",
-      alternatives: [],
-    },
-    {
-      name: "Wicked",
-      image: "wicked.png",
-      alternatives: [],
-    },
-    {
-      name: "Upiór w operze",
-      image: "phantom-of-the-opera.jpg",
-      alternatives: ["Phantom of the Opera"],
-    },
-    {
-      name: "Nędznicy",
-      image: "les-misérables.jpg",
-      alternatives: ["Les Misérables"],
-    },
-    {
-      name: "Koty",
-      image: "cats.jpg",
-      alternatives: ["Cats"],
-    },
-    {
-      name: "Dźwięki muzyki",
-      image: "the-sound-of-music.jpg",
-      alternatives: ["The Sound of Music"],
-    },
-    {
-      name: "Rent",
-      image: "rent.png",
-      alternatives: [],
-    },
-    {
-      name: "Book of Mormon",
-      image: "book-of-mormon.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Dear Evan Hansen",
-      image: "dear-evan-hansen.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Wredne dziewczyny",
-      image: "mean-girls.jpg",
-      alternatives: ["Mean Girls"],
-    },
-    {
-      name: "Legalna blondynka",
-      image: "legally-blonde.jpg",
-      alternatives: ["Legally Blonde"],
-    },
-    {
-      name: "Shrek the Musical",
-      image: "shrek-the-musical.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Moulin Rouge",
-      image: "moulin-rouge.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Hairspray",
-      image: "hairspray.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jersey Boys",
-      image: "jersey-boys.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Six",
-      image: "six.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Hadestown",
-      image: "hadestown.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Spring Awakening",
-      image: "spring-awakening.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Avenue Q",
-      image: "avenue-q.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Beetlejuice",
-      image: "beetlejuice.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Matilda",
-      image: "matilda.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Tajemnice lasu",
-      image: "into-the-woods.png",
-      alternatives: ["Into the Woods"],
-    },
-    {
-      name: "Jesus Christ Superstar",
-      image: "jesus-christ-superstar.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Sweeney Todd",
-      image: "sweeney-todd.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kolor purpury",
-      image: "the-color-purple.jpg",
-      alternatives: ["The Color Purple"],
-    },
-    {
-      name: "Waitress",
-      image: "waitress.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kinky Boots",
-      image: "kinky-boots.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Anastasia",
-      image: "anastasia.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Heathers",
-      image: "heathers.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Spamalot",
-      image: "spamalot.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Fun Home",
-      image: "fun-home.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Next to Normal",
-      image: "next-to-normal.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Parade",
-      image: "parade.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Once",
-      image: "once.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Company",
-      image: "company.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Evita",
-      image: "evita.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Joseph and the Technicolor Dreamcoat",
-      image: "joseph-and-the-amazing-technicolor-dreamcoat.jpg",
-      alternatives: [],
-    },
-    {
-      name: "A Chorus Line",
-      image: "a-chorus-line.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Skrzypek na dachu",
-      image: "fiddler-on-the-roof.jpg",
-      alternatives: ["Fiddler on the Roof"],
-    },
-    {
-      name: "My Fair Lady",
-      image: "my-fair-lady.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Oklahoma!",
-      image: "oklahoma.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Hello, Dolly!",
-      image: "hello-dolly.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Oliver!",
-      image: "oliver.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Chicago",
-      image: "chicago.jpg",
-      alternatives: [],
-    },
-    {
-      name: "West Side Story",
-      image: "west-side-story.jpg",
       alternatives: [],
     },
   ],
@@ -3957,63 +3697,6 @@ const BoardGamesCategory: CategoryMetadata = {
   ],
 };
 
-const StatesCategory: CategoryMetadata = {
-  name: "Stany USA",
-  folder: "states",
-  examples: [
-    { name: "Kalifornia", image: "california.jpg", alternatives: ["California"] },
-    { name: "Teksas", image: "texas.jpg", alternatives: ["Texas"] },
-    { name: "Nowy Jork", image: "new-york.jpg", alternatives: ["New York"] },
-    { name: "Floryda", image: "florida.jpg", alternatives: ["Florida"] },
-    { name: "Illinois", image: "illinois.jpg", alternatives: [] },
-    { name: "Pensylwania", image: "pennsylvania.jpg", alternatives: ["Pennsylvania"] },
-    { name: "Ohio", image: "ohio.png", alternatives: [] },
-    { name: "Michigan", image: "michigan.jpg", alternatives: [] },
-    { name: "Georgia", image: "georgia.jpg", alternatives: [] },
-    { name: "Karolina Północna", image: "north-carolina.jpg", alternatives: ["North Carolina"] },
-    { name: "New Jersey", image: "new-jersey.jpg", alternatives: [] },
-    { name: "Wirginia", image: "virginia.jpg", alternatives: ["Virginia"] },
-    { name: "Waszyngton", image: "washington.jpg", alternatives: ["Washington"] },
-    { name: "Massachusetts", image: "massachusetts.png", alternatives: [] },
-    { name: "Tennessee", image: "tennessee.png", alternatives: [] },
-    { name: "Arizona", image: "arizona.jpg", alternatives: [] },
-    { name: "Indiana", image: "indiana.jpg", alternatives: [] },
-    { name: "Missouri", image: "missouri.jpg", alternatives: [] },
-    { name: "Maryland", image: "maryland.jpg", alternatives: [] },
-    { name: "Wisconsin", image: "wisconsin.jpg", alternatives: [] },
-    { name: "Kolorado", image: "colorado.jpg", alternatives: ["Colorado"] },
-    { name: "Minnesota", image: "minnesota.jpg", alternatives: [] },
-    { name: "Luizjana", image: "louisiana.jpg", alternatives: ["Louisiana"] },
-    { name: "Alabama", image: "alabama.jpg", alternatives: [] },
-    { name: "Kentucky", image: "kentucky.png", alternatives: [] },
-    { name: "Oregon", image: "oregon.jpg", alternatives: [] },
-    { name: "Oklahoma", image: "oklahoma.jpg", alternatives: [] },
-    { name: "Connecticut", image: "connecticut.jpg", alternatives: [] },
-    { name: "Iowa", image: "iowa.jpg", alternatives: [] },
-    { name: "Arkansas", image: "arkansas.jpg", alternatives: [] },
-    { name: "Missisipi", image: "mississippi.jpg", alternatives: ["Mississippi"] },
-    { name: "Kansas", image: "kansas.jpg", alternatives: [] },
-    { name: "Utah", image: "utah.jpg", alternatives: [] },
-    { name: "Nevada", image: "nevada.png", alternatives: [] },
-    { name: "Nowy Meksyk", image: "new-mexico.jpg", alternatives: ["New Mexico"] },
-    { name: "Wirginia Zachodnia", image: "west-virginia.jpg", alternatives: ["West Virginia"] },
-    { name: "Nebraska", image: "nebraska.jpg", alternatives: [] },
-    { name: "Idaho", image: "idaho.jpg", alternatives: [] },
-    { name: "Maine", image: "maine.jpg", alternatives: [] },
-    { name: "Montana", image: "montana.jpg", alternatives: [] },
-    { name: "Alaska", image: "alaska.jpg", alternatives: [] },
-    { name: "Dakota Południowa", image: "south-dakota.jpg", alternatives: ["South Dakota"] },
-    { name: "Dakota Północna", image: "north-dakota.jpg", alternatives: ["North Dakota"] },
-    { name: "Vermont", image: "vermont.jpg", alternatives: [] },
-    { name: "Rhode Island", image: "rhode-island.jpg", alternatives: [] },
-    { name: "Delaware", image: "delaware.jpg", alternatives: [] },
-    { name: "Hawaje", image: "hawaii.jpg", alternatives: ["Hawaii"] },
-    { name: "New Hampshire", image: "new-hampshire.jpg", alternatives: [] },
-    { name: "Karolina Południowa", image: "south-carolina.jpg", alternatives: ["South Carolina"] },
-    { name: "Wyoming", image: "wyoming.jpg", alternatives: [] },
-  ],
-};
-
 const HarryPotterCharactersCategory: CategoryMetadata = {
   name: "Postacie z Harry'ego Pottera",
   folder: "harry-potter-characters",
@@ -5803,258 +5486,6 @@ const DisneyChannelOriginalMoviesCategory: CategoryMetadata = {
   ],
 };
 
-const AirportCodesCategory: CategoryMetadata = {
-  name: "Kody lotnisk",
-  folder: "airport-codes",
-  examples: [
-    {
-      name: "John F. Kennedy International Airport",
-      text: "JFK",
-      alternatives: ["John F. Kennedy International Airport"],
-    },
-    {
-      name: "Los Angeles International Airport",
-      text: "LAX",
-      alternatives: ["Los Angeles International Airport"],
-    },
-    {
-      name: "Hartsfield–Jackson Atlanta International Airport",
-      text: "ATL",
-      alternatives: ["Hartsfield–Jackson Atlanta International Airport"],
-    },
-    {
-      name: "O'Hare International Airport",
-      text: "ORD",
-      alternatives: ["O'Hare International Airport"],
-    },
-    {
-      name: "Dallas/Fort Worth International Airport",
-      text: "DFW",
-      alternatives: ["Dallas/Fort Worth International Airport"],
-    },
-    {
-      name: "Denver International Airport",
-      text: "DEN",
-      alternatives: ["Denver International Airport"],
-    },
-    {
-      name: "Orlando International Airport",
-      text: "MCO",
-      alternatives: ["Orlando International Airport"],
-    },
-    {
-      name: "Harry Reid International Airport (Las Vegas)",
-      text: "LAS",
-      alternatives: ["Harry Reid International Airport (Las Vegas)"],
-    },
-    {
-      name: "Charlotte Douglas International Airport",
-      text: "CLT",
-      alternatives: ["Charlotte Douglas International Airport"],
-    },
-    {
-      name: "Miami International Airport",
-      text: "MIA",
-      alternatives: ["Miami International Airport"],
-    },
-    {
-      name: "Seattle–Tacoma International Airport",
-      text: "SEA",
-      alternatives: ["Seattle–Tacoma International Airport"],
-    },
-    {
-      name: "San Francisco International Airport",
-      text: "SFO",
-      alternatives: ["San Francisco International Airport"],
-    },
-    {
-      name: "Newark Liberty International Airport",
-      text: "EWR",
-      alternatives: ["Newark Liberty International Airport"],
-    },
-    {
-      name: "Phoenix Sky Harbor International Airport",
-      text: "PHX",
-      alternatives: ["Phoenix Sky Harbor International Airport"],
-    },
-    {
-      name: "George Bush Intercontinental Airport (Houston)",
-      text: "IAH",
-      alternatives: ["George Bush Intercontinental Airport (Houston)"],
-    },
-    {
-      name: "Logan International Airport (Boston)",
-      text: "BOS",
-      alternatives: ["Logan International Airport (Boston)"],
-    },
-    {
-      name: "Fort Lauderdale–Hollywood International Airport",
-      text: "FLL",
-      alternatives: ["Fort Lauderdale–Hollywood International Airport"],
-    },
-    {
-      name: "Minneapolis–Saint Paul International Airport",
-      text: "MSP",
-      alternatives: ["Minneapolis–Saint Paul International Airport"],
-    },
-    {
-      name: "LaGuardia Airport",
-      text: "LGA",
-      alternatives: ["LaGuardia Airport"],
-    },
-    {
-      name: "Baltimore/Washington International Airport",
-      text: "BWI",
-      alternatives: ["Baltimore/Washington International Airport"],
-    },
-    {
-      name: "Tampa International Airport",
-      text: "TPA",
-      alternatives: ["Tampa International Airport"],
-    },
-    {
-      name: "Portland International Airport",
-      text: "PDX",
-      alternatives: ["Portland International Airport"],
-    },
-    {
-      name: "Detroit Metropolitan Wayne County Airport",
-      text: "DTW",
-      alternatives: ["Detroit Metropolitan Wayne County Airport"],
-    },
-    {
-      name: "San Diego International Airport",
-      text: "SAN",
-      alternatives: ["San Diego International Airport"],
-    },
-    {
-      name: "Salt Lake City International Airport",
-      text: "SLC",
-      alternatives: ["Salt Lake City International Airport"],
-    },
-    {
-      name: "Philadelphia International Airport",
-      text: "PHL",
-      alternatives: ["Philadelphia International Airport"],
-    },
-    {
-      name: "Austin–Bergstrom International Airport",
-      text: "AUS",
-      alternatives: ["Austin–Bergstrom International Airport"],
-    },
-    {
-      name: "Washington Dulles International Airport",
-      text: "IAD",
-      alternatives: ["Washington Dulles International Airport"],
-    },
-    {
-      name: "Chicago Midway International Airport",
-      text: "MDW",
-      alternatives: ["Chicago Midway International Airport"],
-    },
-    {
-      name: "Nashville International Airport",
-      text: "BNA",
-      alternatives: ["Nashville International Airport"],
-    },
-    {
-      name: "Raleigh–Durham International Airport",
-      text: "RDU",
-      alternatives: ["Raleigh–Durham International Airport"],
-    },
-    {
-      name: "San Jose International Airport",
-      text: "SJC",
-      alternatives: ["San Jose International Airport"],
-    },
-    {
-      name: "Sacramento International Airport",
-      text: "SMF",
-      alternatives: ["Sacramento International Airport"],
-    },
-    {
-      name: "St. Louis Lambert International Airport",
-      text: "STL",
-      alternatives: ["St. Louis Lambert International Airport"],
-    },
-    {
-      name: "Milwaukee Mitchell International Airport",
-      text: "MKE",
-      alternatives: ["Milwaukee Mitchell International Airport"],
-    },
-    {
-      name: "Louis Armstrong New Orleans International Airport",
-      text: "MSY",
-      alternatives: ["Louis Armstrong New Orleans International Airport"],
-    },
-    {
-      name: "John Glenn Columbus International Airport",
-      text: "CMH",
-      alternatives: ["John Glenn Columbus International Airport"],
-    },
-    {
-      name: "Palm Beach International Airport",
-      text: "PBI",
-      alternatives: ["Palm Beach International Airport"],
-    },
-    {
-      name: "Reno–Tahoe International Airport",
-      text: "RNO",
-      alternatives: ["Reno–Tahoe International Airport"],
-    },
-    {
-      name: "Bradley International Airport (Hartford)",
-      text: "BDL",
-      alternatives: ["Bradley International Airport (Hartford)"],
-    },
-    {
-      name: "Indianapolis International Airport",
-      text: "IND",
-      alternatives: ["Indianapolis International Airport"],
-    },
-    {
-      name: "Will Rogers World Airport (Oklahoma City)",
-      text: "OKC",
-      alternatives: ["Will Rogers World Airport (Oklahoma City)"],
-    },
-    {
-      name: "San Antonio International Airport",
-      text: "SAT",
-      alternatives: ["San Antonio International Airport"],
-    },
-    {
-      name: "Louisville Muhammad Ali International Airport",
-      text: "SDF",
-      alternatives: ["Louisville Muhammad Ali International Airport"],
-    },
-    {
-      name: "Buffalo Niagara International Airport",
-      text: "BUF",
-      alternatives: ["Buffalo Niagara International Airport"],
-    },
-    {
-      name: "Norfolk International Airport",
-      text: "ORF",
-      alternatives: ["Norfolk International Airport"],
-    },
-    {
-      name: "Birmingham–Shuttlesworth International Airport",
-      text: "BHM",
-      alternatives: ["Birmingham–Shuttlesworth International Airport"],
-    },
-    {
-      name: "Omaha Eppley Airfield",
-      text: "OMA",
-      alternatives: ["Omaha Eppley Airfield"],
-    },
-    {
-      name: "Dayton International Airport",
-      text: "DAY",
-      alternatives: ["Dayton International Airport"],
-    },
-  ],
-};
-
 const BrandSlogansCategory: CategoryMetadata = {
   name: "Slogany reklamowe",
   folder: "brand-slogans",
@@ -6556,132 +5987,6 @@ const TaylorSwiftLyricsCategory: CategoryMetadata = {
       text: "Two headlights shine through the _______ night and I will get you, get you alone",
       alternatives: ["Treacherous"],
     },
-  ],
-};
-
-const RealityTvShowsCategory: CategoryMetadata = {
-  name: "Reality show",
-  folder: "reality-tv-shows",
-  examples: [
-    { name: "Survivor", image: "survivor.jpg", alternatives: [] },
-    { name: "The Bachelor", image: "the-bachelor.jpg", alternatives: [] },
-    { name: "American Idol", image: "american-idol.jpg", alternatives: [] },
-    { name: "The Voice", image: "the-voice.jpg", alternatives: [] },
-    { name: "Big Brother", image: "big-brother.jpg", alternatives: [] },
-    {
-      name: "The Bachelorette",
-      image: "the-bachelorette.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Keeping Up with the Kardashians",
-      image: "keeping-up-with-the-kardashians.jpg",
-      alternatives: [],
-    },
-    // {
-    //   name: "The Real Housewives of Beverly Hills",
-    //   image: "the-real-housewives-of-beverly-hills.jpg",
-    //   alternatives: [],
-    // },
-    {
-      name: "The Real Housewives of New York City",
-      image: "the-real-housewives-of-new-york-city.jpg",
-      alternatives: [],
-    },
-    {
-      name: "RuPaul's Drag Race",
-      image: "rupauls-drag-race.jpg",
-      alternatives: [],
-    },
-    {
-      name: "The Amazing Race",
-      image: "the-amazing-race.jpg",
-      alternatives: [],
-    },
-    { name: "Top Chef", image: "top-chef.jpg", alternatives: [] },
-    { name: "MasterChef", image: "masterchef.jpg", alternatives: [] },
-    { name: "Hell's Kitchen", image: "hells-kitchen.jpg", alternatives: [] },
-    {
-      name: "The Great British Bake Off",
-      image: "the-great-british-bake-off.jpg",
-      alternatives: [],
-    },
-    { name: "Love Island", image: "love-island.jpg", alternatives: [] },
-    { name: "Queer Eye", image: "queer-eye.jpg", alternatives: [] },
-    { name: "Jersey Shore", image: "jersey-shore.jpg", alternatives: [] },
-    { name: "Shark Tank", image: "shark-tank.jpg", alternatives: [] },
-    { name: "Project Runway", image: "project-runway.jpg", alternatives: [] },
-    { name: "Dance Moms", image: "dance-moms.jpg", alternatives: [] },
-    {
-      name: "So You Think You Can Dance",
-      image: "so-you-think-you-can-dance.jpg",
-      alternatives: [],
-    },
-    {
-      name: "America's Next Top Model",
-      image: "americas-next-top-model.jpg",
-      alternatives: [],
-    },
-    { name: "The Real World", image: "the-real-world.jpg", alternatives: [] },
-    {
-      name: "Married at First Sight",
-      image: "married-at-first-sight.jpg",
-      alternatives: [],
-    },
-    { name: "The Circle", image: "the-circle.jpg", alternatives: [] },
-    {
-      name: "Too Hot to Handle",
-      image: "too-hot-to-handle.jpg",
-      alternatives: [],
-    },
-    { name: "Love Is Blind", image: "love-is-blind.jpg", alternatives: [] },
-    {
-      name: "Vanderpump Rules",
-      image: "vanderpump-rules.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Dancing with the Stars",
-      image: "dancing-with-the-stars.jpg",
-      alternatives: [],
-    },
-    { name: "Catfish", image: "catfish.jpg", alternatives: [] },
-    {
-      name: "Undercover Boss",
-      image: "undercover-boss.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kitchen Nightmares",
-      image: "kitchen-nightmares.jpg",
-      alternatives: [],
-    },
-    { name: "Fear Factor", image: "fear-factor.jpg", alternatives: [] },
-    { name: "Wife Swap", image: "wife-swap.jpg", alternatives: [] },
-    { name: "Bar Rescue", image: "bar-rescue.jpg", alternatives: [] },
-    { name: "Pawn Stars", image: "pawn-stars.jpg", alternatives: [] },
-    { name: "Storage Wars", image: "storage-wars.jpg", alternatives: [] },
-    {
-      name: "The Simple Life",
-      image: "the-simple-life.jpg",
-      alternatives: [],
-    },
-    { name: "The Osbournes", image: "the-osbournes.jpg", alternatives: [] },
-    { name: "The Hills", image: "the-hills.jpg", alternatives: [] },
-    { name: "Laguna Beach", image: "laguna-beach.jpg", alternatives: [] },
-    {
-      name: "My Super Sweet 16",
-      image: "my-super-sweet-16.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Deadliest Catch",
-      image: "deadliest-catch.jpg",
-      alternatives: [],
-    },
-    { name: "Ink Master", image: "ink-master.jpg", alternatives: [] },
-    { name: "Below Deck", image: "below-deck.jpg", alternatives: [] },
-    { name: "90 Day Fiancé", image: "90-day-fiance.jpg", alternatives: [] },
   ],
 };
 
@@ -7473,268 +6778,6 @@ const AmusementParksCategory: CategoryMetadata = {
       name: "Ekipa techniczna",
       image: "maintenance-crew.jpg",
       alternatives: ["Maintenance Crew"],
-    },
-  ],
-};
-
-const ComediansCategory: CategoryMetadata = {
-  name: "Komicy",
-  folder: "comedians",
-  examples: [
-    {
-      name: "Jerry Seinfeld",
-      image: "jerry-seinfeld.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Chris Rock",
-      image: "chris-rock.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Dave Chappelle",
-      image: "dave-chappelle.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kevin Hart",
-      image: "kevin-hart.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ellen Degeneres",
-      image: "ellen-degeneres.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Conan O'Brien",
-      image: "conan-obrien.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jimmy Fallon",
-      image: "jimmy-fallon.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jimmy Kimmel",
-      image: "jimmy-kimmel.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Stephen Colbert",
-      image: "stephen-colbert.jpg",
-      alternatives: [],
-    },
-    {
-      name: "John Oliver",
-      image: "john-oliver.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Trevor Noah",
-      image: "trevor-noah.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Seth Meyers",
-      image: "seth-meyers.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jay Leno",
-      image: "jay-leno.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Steve Martin",
-      image: "steve-martin.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Tina Fey",
-      image: "tina-fey.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Amy Poehler",
-      image: "amy-poehler.jpg",
-      alternatives: [],
-    },
-    {
-      name: "John Mulaney",
-      image: "john-mulaney.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bo Burnham",
-      image: "bo-burnham.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jim Gaffigan",
-      image: "jim-gaffigan.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Patton Oswalt",
-      image: "patton-oswalt.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bill Hader",
-      image: "bill-hader.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jordan Peele",
-      image: "jordan-peele.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Keegan Michael Key",
-      image: "keegan-michael-key.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kenan Thompson",
-      image: "kenan-thompson.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kristen Wiig",
-      image: "kristen-wiig.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Melissa Mccarthy",
-      image: "melissa-mccarthy.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kate Mckinnon",
-      image: "kate-mckinnon.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ali Wong",
-      image: "ali-wong.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Iliza Shlesinger",
-      image: "iliza-shlesinger.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Gabriel Iglesias",
-      image: "gabriel-iglesias.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Hasan Minhaj",
-      image: "hasan-minhaj.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Nate Bargatze",
-      image: "nate-bargatze.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Taylor Tomlinson",
-      image: "taylor-tomlinson.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Nicole Byer",
-      image: "nicole-byer.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bowen Yang",
-      image: "bowen-yang.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Fortune Feimster",
-      image: "fortune-feimster.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Fred Armisen",
-      image: "fred-armisen.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Martin Short",
-      image: "martin-short.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Mike Birbiglia",
-      image: "mike-birbiglia.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Marc Maron",
-      image: "marc-maron.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Brian Regan",
-      image: "brian-regan.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Demetri Martin",
-      image: "demetri-martin.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Russell Peters",
-      image: "russell-peters.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ronny Chieng",
-      image: "ronny-chieng.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Phoebe Robinson",
-      image: "phoebe-robinson.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Katherine Ryan",
-      image: "katherine-ryan.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Maria Bamford",
-      image: "maria-bamford.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Wanda Sykes",
-      image: "wanda-sykes.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Brian Posehn",
-      image: "brian-posehn.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Tig Notaro",
-      image: "tig-notaro.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Reggie Watts",
-      image: "reggie-watts.jpg",
-      alternatives: [],
     },
   ],
 };
@@ -8667,323 +7710,6 @@ const FridgeCategory: CategoryMetadata = {
   ],
 };
 
-const ValorantCategory: CategoryMetadata = {
-  name: "Valorant",
-  folder: "valorant",
-  examples: [
-    {
-      name: "Brimstone",
-      image: "brimstone.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Phantom",
-      image: "phantom.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Shorty",
-      image: "shorty.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Gekko",
-      image: "gekko.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Sunset",
-      image: "sunset.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Miks",
-      image: "miks.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Lotus",
-      image: "lotus.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Skye",
-      image: "skye.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Icebox",
-      image: "icebox.jpg",
-      alternatives: [],
-    },
-    {
-      name: "KAY/O",
-      image: "kayo.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Neon",
-      image: "neon.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Cypher",
-      image: "cypher.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ascent",
-      image: "ascent.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bucky",
-      image: "bucky.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ares",
-      image: "ares.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Stinger",
-      image: "stinger.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Marshal",
-      image: "marshal.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Guardian",
-      image: "guardian.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Killjoy",
-      image: "killjoy.jpg",
-      alternatives: ["KJ"],
-    },
-    {
-      name: "Abyss",
-      image: "abyss.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Omen",
-      image: "omen.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Haven",
-      image: "haven.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Viper",
-      image: "viper.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Sova",
-      image: "sova.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bind",
-      image: "bind.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Vandal",
-      image: "vandal.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bulldog",
-      image: "bulldog.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Waylay",
-      image: "waylay.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Bandit",
-      image: "bandit.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Judge",
-      image: "judge.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Reyna",
-      image: "reyna.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Veto",
-      image: "veto.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Odin",
-      image: "odin.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Split",
-      image: "split.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Breach",
-      image: "breach.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Frenzy",
-      image: "frenzy.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Fracture",
-      image: "fracture.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Sage",
-      image: "sage.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Vyse",
-      image: "vyse.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Pearl",
-      image: "pearl.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Outlaw",
-      image: "outlaw.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Corrode",
-      image: "corrode.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Raze",
-      image: "raze.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Iso",
-      image: "iso.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Operator",
-      image: "operator.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Yoru",
-      image: "yoru.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Chamber",
-      image: "chamber.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Tejo",
-      image: "tejo.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Astra",
-      image: "astra.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Melee",
-      image: "melee.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Spectre",
-      image: "spectre.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Ghost",
-      image: "ghost.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Clove",
-      image: "clove.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Fade",
-      image: "fade.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Breeze",
-      image: "breeze.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Jett",
-      image: "jett.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Harbor",
-      image: "harbor.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Phoenix",
-      image: "phoenix.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Sheriff",
-      image: "sheriff.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Summit",
-      image: "summit.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Classic",
-      image: "classic.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Deadlock",
-      image: "deadlock.jpg",
-      alternatives: [],
-    },
-  ],
-};
-
 const GarageCategory: CategoryMetadata = {
   name: "Garaż",
   folder: "garage",
@@ -9409,223 +8135,6 @@ const HolidaysCategory: CategoryMetadata = {
       name: "Dzień Drzewa",
       image: "arbor-day.jpg",
       alternatives: ["Arbor Day"],
-    },
-  ],
-};
-
-const MlbTeamsCategory: CategoryMetadata = {
-  name: "Drużyny MLB",
-  folder: "mlb-teams",
-  examples: [
-    {
-      name: "New York Yankees",
-      image: "new-york-yankees.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Boston Red Sox",
-      image: "boston-red-sox.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Los Angeles Dodgers",
-      image: "los-angeles-dodgers.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Chicago Cubs",
-      image: "chicago-cubs.jpg",
-      alternatives: [],
-    },
-    {
-      name: "San Francisco Giants",
-      image: "san-francisco-giants.jpg",
-      alternatives: [],
-    },
-    {
-      name: "St Louis Cardinals",
-      image: "st-louis-cardinals.png",
-      alternatives: [],
-    },
-    {
-      name: "Atlanta Braves",
-      image: "atlanta-braves.png",
-      alternatives: [],
-    },
-    {
-      name: "Houston Astros",
-      image: "houston-astros.png",
-      alternatives: [],
-    },
-    {
-      name: "New York Mets",
-      image: "new-york-mets.png",
-      alternatives: [],
-    },
-    {
-      name: "Philadelphia Phillies",
-      image: "philadelphia-phillies.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Chicago White Sox",
-      image: "chicago-white-sox.png",
-      alternatives: [],
-    },
-    {
-      name: "Detroit Tigers",
-      image: "detroit-tigers.png",
-      alternatives: [],
-    },
-    {
-      name: "Cincinnati Reds",
-      image: "cincinnati-reds.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Cleveland Guardians",
-      image: "cleveland-guardians.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Minnesota Twins",
-      image: "minnesota-twins.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Kansas City Royals",
-      image: "kansas-city-royals.png",
-      alternatives: [],
-    },
-    {
-      name: "Baltimore Orioles",
-      image: "baltimore-orioles.png",
-      alternatives: [],
-    },
-    {
-      name: "Texas Rangers",
-      image: "texas-rangers.png",
-      alternatives: [],
-    },
-    {
-      name: "Seattle Mariners",
-      image: "seattle-mariners.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Toronto Blue Jays",
-      image: "toronto-blue-jays.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Oakland Athletics",
-      image: "oakland-athletics.png",
-      alternatives: [],
-    },
-    {
-      name: "Milwaukee Brewers",
-      image: "milwaukee-brewers.png",
-      alternatives: [],
-    },
-    {
-      name: "San Diego Padres",
-      image: "san-diego-padres.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Colorado Rockies",
-      image: "colorado-rockies.png",
-      alternatives: [],
-    },
-    {
-      name: "Arizona Diamondbacks",
-      image: "arizona-diamondbacks.png",
-      alternatives: [],
-    },
-    {
-      name: "Tampa Bay Rays",
-      image: "tampa-bay-rays.png",
-      alternatives: [],
-    },
-    {
-      name: "Miami Marlins",
-      image: "miami-marlins.png",
-      alternatives: [],
-    },
-    {
-      name: "Los Angeles Angels",
-      image: "los-angeles-angels.png",
-      alternatives: [],
-    },
-    {
-      name: "Pittsburgh Pirates",
-      image: "pittsburgh-pirates.png",
-      alternatives: [],
-    },
-    {
-      name: "Washington Nationals",
-      image: "washington-nationals.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Brooklyn Dodgers",
-      image: "brooklyn-dodgers.png",
-      alternatives: [],
-    },
-    {
-      name: "New York Giants",
-      image: "new-york-giants.png",
-      alternatives: [],
-    },
-    {
-      name: "Montreal Expos",
-      image: "montreal-expos.jpg",
-      alternatives: [],
-    },
-    {
-      name: "St Louis Browns",
-      image: "st-louis-browns.png",
-      alternatives: [],
-    },
-    {
-      name: "Philadelphia Athletics",
-      image: "philadelphia-athletics.png",
-      alternatives: [],
-    },
-    {
-      name: "Kansas City Athletics",
-      image: "kansas-city-athletics.png",
-      alternatives: [],
-    },
-    {
-      name: "Milwaukee Braves",
-      image: "milwaukee-braves.png",
-      alternatives: [],
-    },
-    {
-      name: "Boston Braves",
-      image: "boston-braves.png",
-      alternatives: [],
-    },
-    {
-      name: "Cleveland Naps",
-      image: "cleveland-naps.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Seattle Pilots",
-      image: "seattle-pilots.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Pittsburgh Rebels",
-      image: "pittsburgh-rebels.jpg",
-      alternatives: [],
-    },
-    {
-      name: "Washington Senators",
-      image: "washington-senators.png",
-      alternatives: [],
     },
   ],
 };
@@ -10089,6 +8598,142 @@ const PoolEquipmentCategory: CategoryMetadata = {
   ],
 };
 
+/**
+ * Photos from Wikimedia Commons, scaled to 1600px. Most are CC BY / CC BY-SA,
+ * which require crediting the author -- see public/credits/polish-dishes.txt
+ * (served at /credits/polish-dishes.txt) and scripts/polish-dishes-sources.json.
+ */
+const PolishDishesCategory: CategoryMetadata = {
+  name: "Polskie potrawy",
+  folder: "polish-dishes",
+  examples: [
+    { name: "Babka", image: "babka.jpg", alternatives: ["Babka piaskowa", "Babka marmurkowa"] },
+    { name: "Barszcz z uszkami", image: "barszcz-z-uszkami.jpg", alternatives: ["Barszcz czerwony", "Barszcz", "Uszka"] },
+    { name: "Biała kiełbasa", image: "biala-kielbasa.jpg", alternatives: ["Kiełbasa biała"] },
+    { name: "Bigos", image: "bigos.jpg", alternatives: ["Kapusta myśliwska"] },
+    { name: "Chłodnik", image: "chlodnik.jpg", alternatives: ["Chłodnik litewski", "Zimna zupa"] },
+    { name: "Czernina", image: "czernina.jpg", alternatives: ["Czarnina", "Czarna polewka"] },
+    { name: "Fasolka po bretońsku", image: "fasolka-po-bretonsku.jpg", alternatives: ["Fasolka"] },
+    { name: "Faworki", image: "faworki.jpg", alternatives: ["Chruściki", "Chrust"] },
+    { name: "Golonka", image: "golonka.jpg", alternatives: ["Golonka pieczona", "Golonka z kapustą"] },
+    { name: "Gołąbki", image: "golabki.jpg", alternatives: [] },
+    { name: "Groch z kapustą", image: "groch-z-kapusta.jpg", alternatives: ["Kapusta z grochem"] },
+    { name: "Grochówka", image: "grochowka.jpg", alternatives: ["Zupa grochowa"] },
+    { name: "Kapuśniak", image: "kapusniak.jpg", alternatives: ["Zupa z kapusty"] },
+    { name: "Karpatka", image: "karpatka.jpg", alternatives: [] },
+    { name: "Kartacze", image: "kartacze.jpg", alternatives: ["Cepeliny"] },
+    { name: "Kaszanka", image: "kaszanka.jpg", alternatives: ["Krupniok", "Kiszka"] },
+    { name: "Kiełbasa krakowska", image: "kielbasa-krakowska.jpg", alternatives: ["Krakowska"] },
+    { name: "Kluski leniwe", image: "kluski-leniwe.jpg", alternatives: ["Leniwe", "Pierogi leniwe"] },
+    { name: "Kluski śląskie", image: "kluski-slaskie.jpg", alternatives: ["Kluski z dziurką", "Gumiklyjzy"] },
+    { name: "Knedle ze śliwkami", image: "knedle-ze-sliwkami.jpg", alternatives: ["Knedle"] },
+    { name: "Kogel-mogel", image: "kogel-mogel.jpg", alternatives: ["Kogiel-mogiel"] },
+    { name: "Kopytka", image: "kopytka.jpg", alternatives: [] },
+    { name: "Kotlet schabowy", image: "kotlet-schabowy.jpg", alternatives: ["Schabowy", "Schabowe"] },
+    { name: "Kremówka", image: "kremowka.jpg", alternatives: ["Kremówka papieska", "Napoleonka"] },
+    { name: "Kutia", image: "kutia.jpg", alternatives: ["Kucja"] },
+    { name: "Kwaśnica", image: "kwasnica.jpg", alternatives: ["Kwaśnica góralska"] },
+    { name: "Makowiec", image: "makowiec.jpg", alternatives: ["Strucla makowa"] },
+    { name: "Mazurek", image: "mazurek.jpg", alternatives: ["Mazurek wielkanocny"] },
+    { name: "Mizeria", image: "mizeria.jpg", alternatives: ["Sałatka z ogórków"] },
+    { name: "Naleśniki", image: "nalesniki.jpg", alternatives: ["Naleśniki z serem"] },
+    { name: "Obwarzanek krakowski", image: "obwarzanek-krakowski.jpg", alternatives: ["Obwarzanek", "Precel"] },
+    { name: "Ogórki kiszone", image: "ogorki-kiszone.jpg", alternatives: ["Kiszone ogórki", "Ogórki kwaszone"] },
+    { name: "Oscypek", image: "oscypek.jpg", alternatives: ["Oscypki", "Ser góralski"] },
+    { name: "Pasztet", image: "pasztet.jpg", alternatives: [] },
+    { name: "Pańska skórka", image: "panska-skorka.jpg", alternatives: [] },
+    { name: "Pierniki toruńskie", image: "pierniki-torunskie.jpg", alternatives: ["Pierniki", "Piernik"] },
+    { name: "Pierogi", image: "pierogi.jpg", alternatives: ["Pierogi ruskie"] },
+    { name: "Placki ziemniaczane", image: "placki-ziemniaczane.jpg", alternatives: ["Placki", "Placki kartoflane"] },
+    { name: "Pyry z gzikiem", image: "pyry-z-gzikiem.jpg", alternatives: ["Gzik", "Ziemniaki z gzikiem"] },
+    { name: "Pyzy", image: "pyzy.jpg", alternatives: ["Pyzy z mięsem"] },
+    { name: "Pączki", image: "paczki.jpg", alternatives: ["Pączek"] },
+    { name: "Racuchy", image: "racuchy.jpg", alternatives: ["Racuszki", "Placuszki"] },
+    { name: "Rogal świętomarciński", image: "rogal-swietomarcinski.jpg", alternatives: ["Rogal marciński", "Rogal"] },
+    { name: "Rosół", image: "rosol.jpg", alternatives: ["Rosół z makaronem"] },
+    { name: "Ryba po grecku", image: "ryba-po-grecku.jpg", alternatives: [] },
+    { name: "Sałatka jarzynowa", image: "salatka-jarzynowa.jpg", alternatives: ["Sałatka warzywna", "Sałatka ziemniaczana"] },
+    { name: "Sernik", image: "sernik.jpg", alternatives: ["Sernik krakowski"] },
+    { name: "Szarlotka", image: "szarlotka.jpg", alternatives: ["Jabłecznik", "Ciasto z jabłkami"] },
+    { name: "Tatar", image: "tatar.jpg", alternatives: ["Befsztyk tatarski", "Tatar wołowy"] },
+    { name: "Zapiekanka", image: "zapiekanka.jpg", alternatives: [] },
+    { name: "Zupa ogórkowa", image: "zupa-ogorkowa.jpg", alternatives: ["Ogórkowa"] },
+    { name: "Zupa pomidorowa", image: "zupa-pomidorowa.jpg", alternatives: ["Pomidorowa"] },
+    { name: "Żurek", image: "zurek.jpg", alternatives: ["Żur", "Żurek w chlebie"] },
+  ],
+};
+
+/**
+ * Portraits from Wikimedia Commons, scaled to 1600px. Credits in
+ * public/credits/polish-athletes.txt (served at /credits/polish-athletes.txt).
+ */
+const PolishAthletesCategory: CategoryMetadata = {
+  name: "Polscy sportowcy",
+  folder: "polish-athletes",
+  examples: [
+    { name: "Maria Andrejczyk", image: "maria-andrejczyk.jpg", alternatives: ["Andrejczyk"] },
+    { name: "Andrzej Bargiel", image: "andrzej-bargiel.jpg", alternatives: ["Bargiel"] },
+    { name: "Leszek Blanik", image: "leszek-blanik.jpg", alternatives: ["Blanik"] },
+    { name: "Zbigniew Boniek", image: "zbigniew-boniek.jpg", alternatives: ["Boniek"] },
+    { name: "Artur Boruc", image: "artur-boruc.jpg", alternatives: ["Boruc"] },
+    { name: "Jan Błachowicz", image: "jan-blachowicz.jpg", alternatives: ["Błachowicz"] },
+    { name: "Jakub Błaszczykowski", image: "jakub-blaszczykowski.jpg", alternatives: ["Błaszczykowski", "Kuba"] },
+    { name: "Matty Cash", image: "matty-cash.jpg", alternatives: ["Cash"] },
+    { name: "Kazimierz Deyna", image: "kazimierz-deyna.jpg", alternatives: ["Deyna"] },
+    { name: "Jerzy Dudek", image: "jerzy-dudek.jpg", alternatives: ["Dudek"] },
+    { name: "Sofia Ennaoui", image: "sofia-ennaoui.jpg", alternatives: ["Ennaoui"] },
+    { name: "Paweł Fajdek", image: "pawel-fajdek.jpg", alternatives: ["Fajdek"] },
+    { name: "Mateusz Gamrot", image: "mateusz-gamrot.jpg", alternatives: ["Gamrot"] },
+    { name: "Kamil Glik", image: "kamil-glik.jpg", alternatives: ["Glik"] },
+    { name: "Tomasz Gollob", image: "tomasz-gollob.jpg", alternatives: ["Gollob"] },
+    { name: "Marcin Gortat", image: "marcin-gortat.jpg", alternatives: ["Gortat"] },
+    { name: "Andrzej Gołota", image: "andrzej-golota.jpg", alternatives: ["Gołota"] },
+    { name: "Hubert Hurkacz", image: "hubert-hurkacz.jpg", alternatives: ["Hurkacz", "Hubi"] },
+    { name: "Otylia Jędrzejczak", image: "otylia-jedrzejczak.jpg", alternatives: ["Jędrzejczak"] },
+    { name: "Joanna Jędrzejczyk", image: "joanna-jedrzejczyk.jpg", alternatives: ["Jędrzejczyk"] },
+    { name: "Robert Korzeniowski", image: "robert-korzeniowski.jpg", alternatives: ["Korzeniowski"] },
+    { name: "Justyna Kowalczyk", image: "justyna-kowalczyk.jpg", alternatives: ["Kowalczyk"] },
+    { name: "Władysław Kozakiewicz", image: "wladyslaw-kozakiewicz.jpg", alternatives: ["Kozakiewicz"] },
+    { name: "Adam Kszczot", image: "adam-kszczot.jpg", alternatives: ["Kszczot"] },
+    { name: "Dawid Kubacki", image: "dawid-kubacki.jpg", alternatives: ["Kubacki"] },
+    { name: "Robert Kubica", image: "robert-kubica.jpg", alternatives: ["Kubica"] },
+    { name: "Bartosz Kurek", image: "bartosz-kurek.jpg", alternatives: ["Kurek"] },
+    { name: "Michał Kwiatkowski", image: "michal-kwiatkowski.jpg", alternatives: ["Kwiatkowski"] },
+    { name: "Grzegorz Lato", image: "grzegorz-lato.jpg", alternatives: ["Lato"] },
+    { name: "Robert Lewandowski", image: "robert-lewandowski.jpg", alternatives: ["Lewandowski", "Lewy"] },
+    { name: "Marcin Lewandowski", image: "marcin-lewandowski.jpg", alternatives: ["Lewandowski"] },
+    { name: "Wilfredo León", image: "wilfredo-leon.jpg", alternatives: ["León"] },
+    { name: "Magda Linette", image: "magda-linette.jpg", alternatives: ["Linette"] },
+    { name: "Włodzimierz Lubański", image: "wlodzimierz-lubanski.jpg", alternatives: ["Lubański"] },
+    { name: "Tomasz Majewski", image: "tomasz-majewski.jpg", alternatives: ["Majewski"] },
+    { name: "Rafał Majka", image: "rafal-majka.jpg", alternatives: ["Majka"] },
+    { name: "Szymon Marciniak", image: "szymon-marciniak.jpg", alternatives: ["Marciniak"] },
+    { name: "Adam Małysz", image: "adam-malysz.jpg", alternatives: ["Małysz", "Orzeł z Wisły"] },
+    { name: "Dariusz Michalczewski", image: "dariusz-michalczewski.jpg", alternatives: ["Michalczewski", "Tiger"] },
+    { name: "Arkadiusz Milik", image: "arkadiusz-milik.jpg", alternatives: ["Milik"] },
+    { name: "Aleksandra Mirosław", image: "aleksandra-miroslaw.jpg", alternatives: ["Mirosław"] },
+    { name: "Katarzyna Niewiadoma", image: "katarzyna-niewiadoma.jpg", alternatives: ["Niewiadoma"] },
+    { name: "Łukasz Piszczek", image: "lukasz-piszczek.jpg", alternatives: ["Piszczek"] },
+    { name: "Krzysztof Piątek", image: "krzysztof-piatek.jpg", alternatives: ["Piątek"] },
+    { name: "Mariusz Pudzianowski", image: "mariusz-pudzianowski.jpg", alternatives: ["Pudzianowski", "Pudzian"] },
+    { name: "Agnieszka Radwańska", image: "agnieszka-radwanska.jpg", alternatives: ["Radwańska"] },
+    { name: "Jeremy Sochan", image: "jeremy-sochan.jpg", alternatives: ["Sochan"] },
+    { name: "Kamil Stoch", image: "kamil-stoch.jpg", alternatives: ["Stoch"] },
+    { name: "Ewa Swoboda", image: "ewa-swoboda.jpg", alternatives: ["Swoboda"] },
+    { name: "Wojciech Szczęsny", image: "wojciech-szczesny.jpg", alternatives: ["Szczęsny"] },
+    { name: "Irena Szewińska", image: "irena-szewinska.jpg", alternatives: ["Szewińska"] },
+    { name: "Jan Tomaszewski", image: "jan-tomaszewski.jpg", alternatives: ["Tomaszewski"] },
+    { name: "Krzysztof Wielicki", image: "krzysztof-wielicki.jpg", alternatives: ["Wielicki"] },
+    { name: "Mariusz Wlazły", image: "mariusz-wlazly.jpg", alternatives: ["Wlazły"] },
+    { name: "Anita Włodarczyk", image: "anita-wlodarczyk.jpg", alternatives: ["Włodarczyk"] },
+    { name: "Maja Włoszczowska", image: "maja-wloszczowska.jpg", alternatives: ["Włoszczowska"] },
+    { name: "Piotr Zieliński", image: "piotr-zielinski.jpg", alternatives: ["Zieliński"] },
+    { name: "Bartosz Zmarzlik", image: "bartosz-zmarzlik.jpg", alternatives: ["Zmarzlik"] },
+    { name: "Iga Świątek", image: "iga-swiatek.jpg", alternatives: ["Świątek"] },
+    { name: "Piotr Żyła", image: "piotr-zyla.jpg", alternatives: ["Żyła"] },
+  ],
+};
+
 const VideoGamesCategory: CategoryMetadata = {
   name: "Gry wideo",
   folder: "video-games",
@@ -10306,121 +8951,6 @@ const VideoGamesCategory: CategoryMetadata = {
   ],
 };
 
-const NflTeamsCategory: CategoryMetadata = {
-  name: "Drużyny NFL",
-  folder: "nfl-teams",
-  examples: [
-    { name: "Dallas Cowboys", image: "dallas-cowboys.png", alternatives: ["Cowboys"] },
-    { name: "New England Patriots", image: "new-england-patriots.png", alternatives: ["Patriots"] },
-    { name: "Pittsburgh Steelers", image: "pittsburgh-steelers.png", alternatives: ["Steelers"] },
-    { name: "Kansas City Chiefs", image: "kansas-city-chiefs.png", alternatives: ["Chiefs"] },
-    { name: "San Francisco 49ers", image: "san-francisco-49ers.png", alternatives: ["49ers", "Niners"] },
-    { name: "Green Bay Packers", image: "green-bay-packers.png", alternatives: ["Packers"] },
-    { name: "Miami Dolphins", image: "miami-dolphins.png", alternatives: ["Dolphins"] },
-    { name: "Las Vegas Raiders", image: "las-vegas-raiders.png", alternatives: ["Raiders"] },
-    { name: "Philadelphia Eagles", image: "philadelphia-eagles.png", alternatives: ["Eagles"] },
-    { name: "New York Giants", image: "new-york-giants.png", alternatives: ["Giants"] },
-    { name: "Buffalo Bills", image: "buffalo-bills.png", alternatives: ["Bills"] },
-    { name: "Minnesota Vikings", image: "minnesota-vikings.png", alternatives: ["Vikings"] },
-    { name: "Seattle Seahawks", image: "seattle-seahawks.png", alternatives: ["Seahawks"] },
-    { name: "Los Angeles Rams", image: "los-angeles-rams.png", alternatives: ["Rams"] },
-    { name: "Tampa Bay Buccaneers", image: "tampa-bay-buccaneers.png", alternatives: ["Buccaneers", "Bucs"] },
-    { name: "Denver Broncos", image: "denver-broncos.png", alternatives: ["Broncos"] },
-    { name: "Chicago Bears", image: "chicago-bears.png", alternatives: ["Bears"] },
-    { name: "New Orleans Saints", image: "new-orleans-saints.png", alternatives: ["Saints"] },
-    { name: "Detroit Lions", image: "detroit-lions.png", alternatives: ["Lions"] },
-    { name: "Cincinnati Bengals", image: "cincinnati-bengals.png", alternatives: ["Bengals"] },
-    { name: "Baltimore Ravens", image: "baltimore-ravens.png", alternatives: ["Ravens"] },
-    { name: "Atlanta Falcons", image: "atlanta-falcons.png", alternatives: ["Falcons"] },
-    { name: "Los Angeles Chargers", image: "los-angeles-chargers.png", alternatives: ["Chargers"] },
-    { name: "New York Jets", image: "new-york-jets.png", alternatives: ["Jets"] },
-    { name: "Carolina Panthers", image: "carolina-panthers.png", alternatives: ["Panthers"] },
-    { name: "Houston Texans", image: "houston-texans.png", alternatives: ["Texans"] },
-    { name: "Cleveland Browns", image: "cleveland-browns.png", alternatives: ["Browns"] },
-    { name: "Arizona Cardinals", image: "arizona-cardinals.png", alternatives: ["Cardinals"] },
-    { name: "Jacksonville Jaguars", image: "jacksonville-jaguars.png", alternatives: ["Jaguars"] },
-    { name: "Indianapolis Colts", image: "indianapolis-colts.png", alternatives: ["Colts"] },
-    { name: "Tennessee Titans", image: "tennessee-titans.png", alternatives: ["Titans"] },
-    { name: "Washington Commanders", image: "washington-commanders.png", alternatives: ["Commanders"] },
-  ],
-};
-
-const NbaTeamsCategory: CategoryMetadata = {
-  name: "Drużyny NBA",
-  folder: "nba-teams",
-  examples: [
-    { name: "Los Angeles Lakers", image: "los-angeles-lakers.png", alternatives: ["Lakers"] },
-    { name: "Chicago Bulls", image: "chicago-bulls.png", alternatives: ["Bulls"] },
-    { name: "Golden State Warriors", image: "golden-state-warriors.png", alternatives: ["Warriors", "Golden State"] },
-    { name: "Boston Celtics", image: "boston-celtics.png", alternatives: ["Celtics"] },
-    { name: "Toronto Raptors", image: "toronto-raptors.png", alternatives: ["Raptors"] },
-    { name: "Miami Heat", image: "miami-heat.png", alternatives: ["Heat"] },
-    { name: "New York Knicks", image: "new-york-knicks.png", alternatives: ["Knicks"] },
-    { name: "Brooklyn Nets", image: "brooklyn-nets.png", alternatives: ["Nets"] },
-    { name: "Dallas Mavericks", image: "dallas-mavericks.png", alternatives: ["Mavericks", "Mavs"] },
-    { name: "Phoenix Suns", image: "phoenix-suns.png", alternatives: ["Suns"] },
-    { name: "Milwaukee Bucks", image: "milwaukee-bucks.png", alternatives: ["Bucks"] },
-    { name: "Philadelphia 76ers", image: "philadelphia-76ers.png", alternatives: ["76ers", "Sixers"] },
-    { name: "Cleveland Cavaliers", image: "cleveland-cavaliers.png", alternatives: ["Cavaliers", "Cavs"] },
-    { name: "Denver Nuggets", image: "denver-nuggets.png", alternatives: ["Nuggets"] },
-    { name: "Houston Rockets", image: "houston-rockets.png", alternatives: ["Rockets"] },
-    { name: "Detroit Pistons", image: "detroit-pistons.png", alternatives: ["Pistons"] },
-    { name: "San Antonio Spurs", image: "san-antonio-spurs.png", alternatives: ["Spurs"] },
-    { name: "Oklahoma City Thunder", image: "oklahoma-city-thunder.png", alternatives: ["Thunder", "OKC"] },
-    { name: "Atlanta Hawks", image: "atlanta-hawks.png", alternatives: ["Hawks"] },
-    { name: "Minnesota Timberwolves", image: "minnesota-timberwolves.png", alternatives: ["Timberwolves", "Wolves"] },
-    { name: "Portland Trail Blazers", image: "portland-trail-blazers.png", alternatives: ["Trail Blazers", "Blazers"] },
-    { name: "New Orleans Pelicans", image: "new-orleans-pelicans.png", alternatives: ["Pelicans"] },
-    { name: "Charlotte Hornets", image: "charlotte-hornets.png", alternatives: ["Hornets"] },
-    { name: "Sacramento Kings", image: "sacramento-kings.png", alternatives: ["Kings"] },
-    { name: "Indiana Pacers", image: "indiana-pacers.png", alternatives: ["Pacers"] },
-    { name: "Orlando Magic", image: "orlando-magic.png", alternatives: ["Magic"] },
-    { name: "Utah Jazz", image: "utah-jazz.png", alternatives: ["Jazz"] },
-    { name: "Washington Wizards", image: "washington-wizards.png", alternatives: ["Wizards"] },
-    { name: "Memphis Grizzlies", image: "memphis-grizzlies.png", alternatives: ["Grizzlies"] },
-    { name: "Los Angeles Clippers", image: "los-angeles-clippers.png", alternatives: ["Clippers"] },
-  ],
-};
-
-const NhlTeamsCategory: CategoryMetadata = {
-  name: "Drużyny NHL",
-  folder: "nhl-teams",
-  examples: [
-    { name: "Montreal Canadiens", image: "montreal-canadiens.png", alternatives: ["Canadiens", "Habs"] },
-    { name: "Toronto Maple Leafs", image: "toronto-maple-leafs.png", alternatives: ["Maple Leafs", "Leafs"] },
-    { name: "Boston Bruins", image: "boston-bruins.png", alternatives: ["Bruins"] },
-    { name: "Chicago Blackhawks", image: "chicago-blackhawks.png", alternatives: ["Blackhawks"] },
-    { name: "Detroit Red Wings", image: "detroit-red-wings.png", alternatives: ["Red Wings"] },
-    { name: "New York Rangers", image: "new-york-rangers.png", alternatives: ["Rangers"] },
-    { name: "Pittsburgh Penguins", image: "pittsburgh-penguins.png", alternatives: ["Penguins"] },
-    { name: "Philadelphia Flyers", image: "philadelphia-flyers.png", alternatives: ["Flyers"] },
-    { name: "Edmonton Oilers", image: "edmonton-oilers.png", alternatives: ["Oilers"] },
-    { name: "Vancouver Canucks", image: "vancouver-canucks.png", alternatives: ["Canucks"] },
-    { name: "Calgary Flames", image: "calgary-flames.png", alternatives: ["Flames"] },
-    { name: "Winnipeg Jets", image: "winnipeg-jets.png", alternatives: ["Jets"] },
-    { name: "New Jersey Devils", image: "new-jersey-devils.png", alternatives: ["Devils"] },
-    { name: "Colorado Avalanche", image: "colorado-avalanche.png", alternatives: ["Avalanche", "Avs"] },
-    { name: "Los Angeles Kings", image: "los-angeles-kings.png", alternatives: ["Kings"] },
-    { name: "Dallas Stars", image: "dallas-stars.png", alternatives: ["Stars"] },
-    { name: "Minnesota Wild", image: "minnesota-wild.png", alternatives: ["Wild"] },
-    { name: "Tampa Bay Lightning", image: "tampa-bay-lightning.png", alternatives: ["Lightning", "Bolts"] },
-    { name: "Florida Panthers", image: "florida-panthers.png", alternatives: ["Panthers"] },
-    { name: "Vegas Golden Knights", image: "vegas-golden-knights.png", alternatives: ["Golden Knights", "Knights"] },
-    { name: "Seattle Kraken", image: "seattle-kraken.png", alternatives: ["Kraken"] },
-    { name: "Nashville Predators", image: "nashville-predators.png", alternatives: ["Predators", "Preds"] },
-    { name: "Carolina Hurricanes", image: "carolina-hurricanes.png", alternatives: ["Hurricanes", "Canes"] },
-    { name: "New York Islanders", image: "new-york-islanders.png", alternatives: ["Islanders", "Isles"] },
-    { name: "Washington Capitals", image: "washington-capitals.png", alternatives: ["Capitals", "Caps"] },
-    { name: "St. Louis Blues", image: "st-louis-blues.png", alternatives: ["Blues"] },
-    { name: "San Jose Sharks", image: "san-jose-sharks.png", alternatives: ["Sharks"] },
-    { name: "Ottawa Senators", image: "ottawa-senators.png", alternatives: ["Senators", "Sens"] },
-    { name: "Buffalo Sabres", image: "buffalo-sabres.png", alternatives: ["Sabres"] },
-    { name: "Anaheim Ducks", image: "anaheim-ducks.png", alternatives: ["Ducks"] },
-    { name: "Columbus Blue Jackets", image: "columbus-blue-jackets.png", alternatives: ["Blue Jackets", "Jackets"] },
-    { name: "Utah Mammoth", image: "utah-mammoth.png", alternatives: ["Mammoth"] },
-  ],
-};
-
 // const ChilisCategory: CategoryMetadata = {
 //   name: "Chilis",
 //   folder: "chilis",
@@ -10428,17 +8958,14 @@ const NhlTeamsCategory: CategoryMetadata = {
 // };
 
 export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
-  "Kody lotnisk": AirportCodesCategory,
   "Wesołe miasteczka": AmusementParksCategory,
   "Owoce": FruitsCategory,
   "Aplikacje": AppsCategory,
   "Gry planszowe": BoardGamesCategory,
   "Książki": BooksCategory,
   "Slogany reklamowe": BrandSlogansCategory,
-  "Musicale z Broadwayu": BroadwayShowsCategory,
   "Atrakcje Chicago": ChicagoTouristStuffCategory,
   "Panoramy miast": CitySkylinesCategory,
-  "Komicy": ComediansCategory,
   "Filmy Disney Channel": DisneyChannelOriginalMoviesCategory,
   "Postacie Disneya": DisneyCharactersCategory,
   "Psy": DogsCategory,
@@ -10455,26 +8982,21 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Gadżety kuchenne": KitchenGadgetsCategory,
   "Pranie": LaundryCategory,
   "Matematyka": MathCategory,
-  "Drużyny MLB": MlbTeamsCategory,
   "Filmy": MoviesCategory,
-  "Drużyny NBA": NbaTeamsCategory,
-  "Drużyny NFL": NflTeamsCategory,
-  "Drużyny NHL": NhlTeamsCategory,
   "Diwy popu": PopDivasCategory,
   "Pokémony": PokemonCategory,
   "Wyposażenie basenu": PoolEquipmentCategory,
-  "Reality show": RealityTvShowsCategory,
   "Komedie romantyczne": RomComsCategory,
   "Kostiumy na Halloween": SpiritHalloweenCatalogueCategory,
   "Sporty": SportsCategory,
-  "Stany USA": StatesCategory,
   "Superbohaterowie": SuperherosCategory,
   "Teksty Taylor Swift": TaylorSwiftLyricsCategory,
   "The Office": TheOfficeCategory,
   "Święto Dziękczynienia": ThanksgivingCategory,
   "Postacie z gier wideo": VideoGameCharactersCategory,
   "Gry wideo": VideoGamesCategory,
-  "Valorant": ValorantCategory,
+  "Polskie potrawy": PolishDishesCategory,
+  "Polscy sportowcy": PolishAthletesCategory,
   "Tabliczka mnożenia": TimesTablesCategory,
   "Anime": AnimeCategory,
   "Minecraft": MinecraftCategory,

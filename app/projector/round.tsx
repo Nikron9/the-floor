@@ -32,7 +32,15 @@ export enum REVEAL_STATE {
  * transition for a fraction of the bytes.
  */
 const KEEP_BEHIND = 1;
-const KEEP_AHEAD = 3;
+const KEEP_AHEAD = 5;
+
+/**
+ * Pictures fetched as soon as the round is picked, before anyone presses
+ * start. The 3-2-1 countdown is otherwise dead time, and without this the
+ * first picture only starts downloading once the clock is already running.
+ * Deliberately not the whole category -- see the note above on 75 MB rounds.
+ */
+const PRELOAD_AT_START = KEEP_AHEAD + 1;
 
 export default function Round({
   category,
@@ -100,6 +108,22 @@ export default function Round({
 
     return rawExamples;
   }, [rawExamples, searchParams]);
+
+  // Warm the browser cache for the opening pictures while the host is still
+  // on the countdown. The <img> tags mounted later hit the cache instead of
+  // the network. Keeping references stops the requests being collected.
+  const preloadedRef = useRef<HTMLImageElement[]>([]);
+  useEffect(() => {
+    preloadedRef.current = examples
+      .slice(0, PRELOAD_AT_START)
+      .flatMap((example) => ("src" in example ? [example.src] : []))
+      .map((src) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = src;
+        return image;
+      });
+  }, [examples]);
 
   useEffect(() => {
     revealExampleNameRef.current = revealExampleName;
