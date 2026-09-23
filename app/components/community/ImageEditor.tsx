@@ -89,7 +89,7 @@ export default function ImageEditor({
       context.rect(0, 0, view.width, view.height);
       context.rect(crop.x, crop.y, crop.w, crop.h);
       context.fill("evenodd");
-      context.strokeStyle = "#00d4ff";
+      context.strokeStyle = "#3aa6ff";
       context.lineWidth = Math.max(2, view.width / 400);
       context.strokeRect(crop.x, crop.y, crop.w, crop.h);
       context.restore();
@@ -333,11 +333,11 @@ export default function ImageEditor({
       onClick={onClose}
     >
       <div
-        className="bg-gray-950 border-2 border-[#00d4ff] rounded-lg w-full max-w-4xl max-h-[92vh] flex flex-col"
+        className="bg-gray-950 border-2 border-neon rounded-lg w-full max-w-4xl max-h-[92vh] flex flex-col"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="p-4 border-b border-[#00d4ff]/40 flex items-center justify-between gap-4">
-          <h3 className="text-xl font-bold" style={{ color: "#00d4ff" }}>
+        <div className="p-4 border-b border-neon/40 flex items-center justify-between gap-4">
+          <h3 className="text-xl font-bold" style={{ color: "var(--color-neon)" }}>
             Edycja „{itemName}”
           </h3>
           <button
@@ -357,7 +357,7 @@ export default function ImageEditor({
               {/* Stays mounted while loading: the image's onload writes
                   straight to this canvas, so the ref has to already exist. */}
               {!ready && (
-                <p className="text-[#00d4ff] animate-pulse absolute">
+                <p className="text-neon animate-pulse absolute">
                   Wczytywanie obrazka…
                 </p>
               )}
@@ -375,11 +375,11 @@ export default function ImageEditor({
           )}
         </div>
 
-        <div className="p-4 border-t border-[#00d4ff]/40 flex flex-col gap-3">
+        <div className="p-4 border-t border-neon/40 flex flex-col gap-3">
           {error && ready && <p className="text-red-300 text-sm">{error}</p>}
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex rounded overflow-hidden border border-[#00d4ff]/60">
+            <div className="flex rounded overflow-hidden border border-neon/60">
               {(["erase", "crop"] as const).map((option) => (
                 <button
                   key={option}
@@ -389,7 +389,7 @@ export default function ImageEditor({
                   }}
                   className={`px-4 py-2 text-sm font-semibold ${
                     tool === option
-                      ? "bg-[#00d4ff] text-black"
+                      ? "bg-neon text-black"
                       : "bg-gray-800 text-white/80"
                   }`}
                 >

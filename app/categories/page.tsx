@@ -46,7 +46,7 @@ export default function CategoriesPage() {
           <div className="flex flex-row items-center justify-between mb-4">
             <h2
               className="text-4xl font-bold glow-text"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               {CATEGORY_METADATA[selectedCategory].name}
             </h2>
@@ -60,9 +60,9 @@ export default function CategoriesPage() {
           </div>
 
           {/* Category Info */}
-          <div className="bg-gray-900/50 p-4 rounded-lg border-2 border-[#00d4ff] mb-6">
+          <div className="neon-panel p-4 mb-6">
             <p className="text-white">
-              <span className="font-semibold" style={{ color: "#00d4ff" }}>
+              <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
                 Liczba przykładów:
               </span>{" "}
               {examples.length}
@@ -81,7 +81,7 @@ export default function CategoriesPage() {
               return (
                 <div
                   key={index}
-                  className="bg-gray-900/50 p-6 rounded-lg border-2 border-[#00d4ff] flex flex-col gap-4"
+                  className="neon-panel p-6 flex flex-col gap-4"
                 >
                   {isTextExample ? (
                     <div className="flex flex-col gap-3">
@@ -98,7 +98,7 @@ export default function CategoriesPage() {
                             <p className="text-sm text-white/60">
                                 <span
                                 className="font-semibold"
-                                style={{ color: "#ff6b35" }}
+                                style={{ color: "var(--color-gold)" }}
                                 >
                                 Alternatives:
                                 </span>{" "}
@@ -129,7 +129,7 @@ export default function CategoriesPage() {
                           <p className="text-sm text-white/60">
                             <span
                               className="font-semibold"
-                              style={{ color: "#ff6b35" }}
+                              style={{ color: "var(--color-gold)" }}
                             >
                               Alternatives:
                             </span>{" "}
@@ -154,7 +154,7 @@ export default function CategoriesPage() {
         {/* Header */}
         <h1
           className="text-4xl font-bold mb-4 glow-text"
-          style={{ color: "#00d4ff" }}
+          style={{ color: "var(--color-neon)" }}
         >
           Kategorie
         </h1>
@@ -166,7 +166,7 @@ export default function CategoriesPage() {
             placeholder="Szukaj kategorii..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-black"
+            className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
             style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
           />
         </div>
@@ -197,7 +197,7 @@ export default function CategoriesPage() {
                   <span className="text-center">{categoryData.name}</span>
                   <span
                     className="text-xs font-normal"
-                    style={{ color: "#00d4ff" }}
+                    style={{ color: "var(--color-neon)" }}
                   >
                     przykłady: {categoryData.examples.length}
                   </span>
@@ -208,7 +208,7 @@ export default function CategoriesPage() {
         </div>
 
         {/* Back Button */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t-2 border-[#00d4ff]/30">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t-2 border-neon/30">
           <FloorButton
             variant="rectangular"
             className="font-semibold"

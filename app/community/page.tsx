@@ -157,14 +157,14 @@ export default function CommunityPage() {
             <BackLink href="/categories">Kategorie</BackLink>
             <h1
               className="text-4xl font-bold glow-text mb-2 mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Kategorie społeczności
             </h1>
             <p className="text-white/70">
               Tworzone przez społeczność, więc jakość bywa różna. Są trzymane
               osobno od{" "}
-              <Link href="/categories" className="underline text-[#00d4ff]">
+              <Link href="/categories" className="underline text-neon">
                 wbudowanych kategorii
               </Link>
               , które są przygotowane ręcznie. Głosuj na dobre i zgłaszaj te,
@@ -186,7 +186,7 @@ export default function CommunityPage() {
               onClick={() => setSort(option)}
               className={`px-4 py-2 text-sm font-semibold rounded ${
                 sort === option
-                  ? "bg-[#00d4ff] text-black"
+                  ? "bg-neon text-black"
                   : "bg-gray-800 text-white/70 hover:bg-gray-700"
               }`}
             >
@@ -206,7 +206,7 @@ export default function CommunityPage() {
             <p className="text-yellow-200">{error}</p>
             <p className="text-sm">
               Reszta gry działa normalnie —{" "}
-              <Link href="/categories" className="underline text-[#00d4ff]">
+              <Link href="/categories" className="underline text-neon">
                 wbudowane kategorie
               </Link>{" "}
               nie potrzebują niczego z tego.
@@ -218,7 +218,7 @@ export default function CommunityPage() {
           <div className="text-white/60 py-16 text-center flex flex-col gap-3">
             <p>Nic tu jeszcze nie ma.</p>
             <p>
-              <Link href="/community/create" className="underline text-[#00d4ff]">
+              <Link href="/community/create" className="underline text-neon">
                 Utwórz pierwszą.
               </Link>
             </p>
@@ -243,7 +243,7 @@ export default function CommunityPage() {
             return (
               <div
                 key={category.id}
-                className="bg-gray-900/60 border-2 border-[#00d4ff]/40 rounded-lg overflow-hidden flex flex-col"
+                className="neon-panel overflow-hidden flex flex-col"
               >
                 <div className="grid grid-cols-4 gap-px bg-black/40 h-24">
                   {category.previewImageUrls.map((url) => (
@@ -261,7 +261,7 @@ export default function CommunityPage() {
                   <div>
                     <Link
                       href={`/community/${category.id}`}
-                      className="text-xl font-bold text-white hover:text-[#00d4ff]"
+                      className="text-xl font-bold text-white hover:text-neon"
                     >
                       {category.name}
                     </Link>
@@ -278,7 +278,7 @@ export default function CommunityPage() {
                       aria-label="Głos za"
                       className={`px-2 py-1 rounded text-sm disabled:opacity-30 ${
                         category.myVote === 1
-                          ? "bg-[#00d4ff] text-black"
+                          ? "bg-neon text-black"
                           : "bg-gray-800 text-white/70 hover:bg-gray-700"
                       }`}
                     >
@@ -313,7 +313,7 @@ export default function CommunityPage() {
                       <button
                         onClick={() => onAdd(category)}
                         disabled={pending === category.id}
-                        className="text-sm px-3 py-1 rounded bg-[#00d4ff] text-black font-semibold disabled:opacity-50"
+                        className="text-sm px-3 py-1 rounded bg-neon text-black font-semibold disabled:opacity-50"
                       >
                         {pending === category.id ? "Dodawanie…" : "Dodaj do mojej gry"}
                       </button>
@@ -355,7 +355,7 @@ export default function CommunityPage() {
           <p className="text-white/60 text-sm border-t border-white/10 pt-4">
             Kategorie społeczności wczytane w tej przeglądarce:{" "}
             {Object.keys(mine).length}. Pojawią się na liście kategorii w{" "}
-            <Link href="/presenter" className="underline text-[#00d4ff]">
+            <Link href="/presenter" className="underline text-neon">
               panelu prowadzącego
             </Link>
             .

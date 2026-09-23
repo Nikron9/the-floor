@@ -133,7 +133,7 @@ export default function CommunityCategoryPage({
       <FloorPageLayout>
         <div className="p-20 text-center flex flex-col gap-4">
           <p className="text-red-300">{error}</p>
-          <Link href="/community" className="underline text-[#00d4ff]">
+          <Link href="/community" className="underline text-neon">
             Wróć do puli
           </Link>
         </div>
@@ -149,7 +149,7 @@ export default function CommunityCategoryPage({
             <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               {category.name}
             </h1>
@@ -200,7 +200,7 @@ export default function CommunityCategoryPage({
           {category.items.map((item) => (
             <div
               key={item.id}
-              className="bg-gray-900/60 border border-[#00d4ff]/40 rounded-lg overflow-hidden"
+              className="neon-panel overflow-hidden"
             >
               <div className="aspect-square bg-black flex items-center justify-center">
                 {item.imageUrl ? (
@@ -229,7 +229,7 @@ export default function CommunityCategoryPage({
         </div>
 
         <div className="border-t border-white/10 pt-6 flex flex-col gap-3">
-          <h2 className="text-lg font-bold" style={{ color: "#00d4ff" }}>
+          <h2 className="text-lg font-bold" style={{ color: "var(--color-neon)" }}>
             Źródła obrazków
           </h2>
           <ul className="text-xs text-white/50 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">

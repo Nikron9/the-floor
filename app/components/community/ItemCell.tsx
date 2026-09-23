@@ -109,7 +109,7 @@ export default function ItemCell({
       : item.imageUrl;
 
   return (
-    <div className="bg-gray-900/60 border border-[#00d4ff]/40 rounded-lg overflow-hidden flex flex-col">
+    <div className="neon-panel overflow-hidden flex flex-col">
       <div className="relative aspect-square bg-black flex items-center justify-center">
         {src ? (
           <img
@@ -134,7 +134,7 @@ export default function ItemCell({
 
         {busy && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-            <span className="text-[#00d4ff] text-sm animate-pulse">
+            <span className="text-neon text-sm animate-pulse">
               {status === "searching" ? "Szukam…" : "Zapisuję…"}
             </span>
           </div>
@@ -163,7 +163,7 @@ export default function ItemCell({
               maxLength={LIMITS.maxItemNameLength}
               aria-label="Nazwa elementu"
               autoFocus
-              className="bg-gray-800 text-white text-sm px-2 py-1 rounded border border-[#00d4ff]/60 focus:outline-none focus:ring-1 focus:ring-[#00d4ff]"
+              className="bg-gray-800 text-white text-sm px-2 py-1 rounded border border-neon/60 focus:outline-none focus:ring-1 focus:ring-neon"
             />
             <input
               value={draftAlternatives}
@@ -173,13 +173,13 @@ export default function ItemCell({
               }}
               placeholder="Inne poprawne odpowiedzi, po przecinku"
               aria-label="Inne poprawne odpowiedzi"
-              className="bg-gray-800 text-white text-[11px] px-2 py-1 rounded border border-white/20 focus:outline-none focus:ring-1 focus:ring-[#00d4ff]"
+              className="bg-gray-800 text-white text-[11px] px-2 py-1 rounded border border-white/20 focus:outline-none focus:ring-1 focus:ring-neon"
             />
             <div className="grid grid-cols-2 gap-1">
               <button
                 type="submit"
                 disabled={savingName || !draftName.trim()}
-                className="text-[11px] py-1 rounded bg-[#00d4ff] text-black font-semibold disabled:opacity-40"
+                className="text-[11px] py-1 rounded bg-neon text-black font-semibold disabled:opacity-40"
               >
                 {savingName ? "Zapisuję…" : "Zapisz"}
               </button>
@@ -204,7 +204,7 @@ export default function ItemCell({
             </span>
             <span
               aria-hidden="true"
-              className="text-white/40 text-xs group-hover:text-[#00d4ff]"
+              className="text-white/40 text-xs group-hover:text-neon"
             >
               ✎
             </span>

@@ -135,7 +135,7 @@ export default function CommunityAdminPage() {
             <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Administrator
             </h1>
@@ -144,7 +144,7 @@ export default function CommunityAdminPage() {
           {session.configured ? (
             <form onSubmit={onSignIn} className="flex flex-col gap-4">
               <label className="flex flex-col gap-2">
-                <span className="font-semibold" style={{ color: "#00d4ff" }}>
+                <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
                   Hasło administratora
                 </span>
                 <input
@@ -153,7 +153,7 @@ export default function CommunityAdminPage() {
                   onChange={(event) => setSecret(event.target.value)}
                   autoComplete="current-password"
                   autoFocus
-                  className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+                  className="bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
                 />
               </label>
               {error && <p className="text-red-300">{error}</p>}
@@ -169,7 +169,7 @@ export default function CommunityAdminPage() {
           ) : (
             <p className="text-white/70">
               To wdrożenie nie ma administratora. Ustaw{" "}
-              <code className="text-[#00d4ff]">COMMUNITY_ADMIN_SECRET</code> w
+              <code className="text-neon">COMMUNITY_ADMIN_SECRET</code> w
               zmiennych środowiskowych i wdróż ponownie, aby go dodać.
             </p>
           )}
@@ -186,7 +186,7 @@ export default function CommunityAdminPage() {
             <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Administrator
             </h1>
@@ -222,7 +222,7 @@ export default function CommunityAdminPage() {
                     ? "border-red-400/60"
                     : row.reportCount > 0
                       ? "border-yellow-300/60"
-                      : "border-[#00d4ff]/40"
+                      : "border-neon/40"
                 }`}
               >
                 <div className="grid grid-cols-4 gap-px bg-black/40 sm:w-64 shrink-0">
@@ -241,7 +241,7 @@ export default function CommunityAdminPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/community/${row.id}`}
-                      className="text-lg font-bold text-white hover:text-[#00d4ff]"
+                      className="text-lg font-bold text-white hover:text-neon"
                     >
                       {row.name}
                     </Link>
@@ -264,7 +264,7 @@ export default function CommunityAdminPage() {
                   <div className="flex gap-2 flex-wrap">
                     <Link
                       href={`/community/${row.id}/edit`}
-                      className="text-sm px-3 py-1 rounded bg-[#00d4ff] text-black font-semibold"
+                      className="text-sm px-3 py-1 rounded bg-neon text-black font-semibold"
                     >
                       Edytuj
                     </Link>

@@ -390,7 +390,7 @@ export default function CreateCategoryPage() {
     return (
       <FloorPageLayout>
         <div className="p-8 md:p-20 max-w-2xl mx-auto flex flex-col gap-6 text-center">
-          <h1 className="text-4xl font-bold glow-text" style={{ color: "#00d4ff" }}>
+          <h1 className="text-4xl font-bold glow-text" style={{ color: "var(--color-neon)" }}>
             „{name}” jest już dostępna
           </h1>
           <p className="text-white/80">
@@ -446,7 +446,7 @@ export default function CreateCategoryPage() {
             <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-4xl font-bold glow-text mb-2 mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Nowa kategoria społeczności
             </h1>
@@ -456,7 +456,7 @@ export default function CreateCategoryPage() {
           </div>
 
           <label className="flex flex-col gap-2">
-            <span className="font-semibold" style={{ color: "#00d4ff" }}>
+            <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
               Nazwa kategorii
             </span>
             <input
@@ -464,13 +464,13 @@ export default function CreateCategoryPage() {
               onChange={(event) => setName(event.target.value)}
               maxLength={LIMITS.maxCategoryNameLength}
               placeholder="Przekąski ze stacji benzynowej"
-              className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+              className="bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
             />
           </label>
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-4 flex-wrap">
-              <span className="font-semibold" style={{ color: "#00d4ff" }}>
+              <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
                 Elementy — po jednym w linii
               </span>
               {capabilities.aiSuggestions && (
@@ -489,7 +489,7 @@ export default function CreateCategoryPage() {
               onChange={(event) => setManualList(event.target.value)}
               rows={12}
               placeholder={"Hot dog\nZapiekanka\nBatonik"}
-              className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff] font-mono text-sm"
+              className="bg-gray-800 text-white p-3 rounded-md border-2 border-neon/60 focus:outline-none focus:ring-2 focus:ring-neon font-mono text-sm"
             />
             <p className="text-white/50 text-sm">
               elementy: {parseManual().length} · do publikacji potrzeba co
@@ -499,7 +499,7 @@ export default function CreateCategoryPage() {
           </div>
 
           <label className="flex flex-col gap-2">
-            <span className="font-semibold" style={{ color: "#00d4ff" }}>
+            <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
               PIN do edycji
             </span>
             <input
@@ -510,7 +510,7 @@ export default function CreateCategoryPage() {
               pattern="\d*"
               maxLength={LIMITS.editPinMaxLength}
               placeholder={`${LIMITS.editPinMinLength}–${LIMITS.editPinMaxLength} cyfr`}
-              className="bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] tracking-widest max-w-xs"
+              className="bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon tracking-widest max-w-xs"
             />
             <span className="text-white/50 text-sm">
               Bez PIN-u nikt poza tobą nie zmieni tej kategorii. Z nim ty (także
@@ -554,7 +554,7 @@ export default function CreateCategoryPage() {
             <BackLink href="/community">Kategorie społeczności</BackLink>
             <h1
               className="text-3xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               {name}
             </h1>
@@ -567,7 +567,7 @@ export default function CreateCategoryPage() {
                   {" · "}
                   <Link
                     href={`/community/${categoryId}/edit`}
-                    className="underline text-[#00d4ff]"
+                    className="underline text-neon"
                   >
                     link do dokończenia później
                   </Link>

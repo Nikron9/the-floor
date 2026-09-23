@@ -34,7 +34,7 @@ type CellState = { status: CellStatus; message?: string };
 type Item = CommunityCategoryView["items"][number];
 
 const inputClass =
-  "bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]";
+  "bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon";
 
 const messageOf = (caught: unknown, fallback: string) =>
   caught instanceof Error ? caught.message : fallback;
@@ -376,7 +376,7 @@ export default function EditCategoryPage({
       <FloorPageLayout>
         <div className="p-20 text-center flex flex-col gap-4">
           <p className="text-red-300">{error}</p>
-          <Link href="/community" className="underline text-[#00d4ff]">
+          <Link href="/community" className="underline text-neon">
             Wróć do puli
           </Link>
         </div>
@@ -396,7 +396,7 @@ export default function EditCategoryPage({
             </BackLink>
             <h1
               className="text-4xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               {category ? `Edycja „${category.name}”` : "Edycja kategorii"}
             </h1>
@@ -415,7 +415,7 @@ export default function EditCategoryPage({
                 ustawionym przy tworzeniu kategorii.
               </p>
               <label className="flex flex-col gap-2">
-                <span className="font-semibold" style={{ color: "#00d4ff" }}>
+                <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
                   PIN
                 </span>
                 <input
@@ -466,7 +466,7 @@ export default function EditCategoryPage({
             <BackLink href={`/community/${id}`}>Wróć do kategorii</BackLink>
             <h1
               className="text-3xl font-bold glow-text mt-2"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Edycja „{category.name}”
             </h1>
@@ -527,7 +527,7 @@ export default function EditCategoryPage({
 
         <form
           onSubmit={onAddItem}
-          className="flex flex-col sm:flex-row gap-2 bg-gray-900/60 border border-[#00d4ff]/40 rounded-lg p-3"
+          className="neon-panel flex flex-col sm:flex-row gap-2 p-3"
         >
           <input
             value={newItemName}
@@ -536,7 +536,7 @@ export default function EditCategoryPage({
             placeholder={full ? "Kategoria jest pełna" : "Nowy element, np. Zapiekanka"}
             aria-label="Nazwa nowego elementu"
             disabled={full}
-            className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-md border border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff] disabled:opacity-50"
+            className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-md border border-neon/60 focus:outline-none focus:ring-2 focus:ring-neon disabled:opacity-50"
           />
           <FloorButton
             type="submit"
@@ -586,7 +586,7 @@ export default function EditCategoryPage({
             onSubmit={onChangePin}
             className="border-t border-white/10 pt-6 flex flex-col gap-3 max-w-md"
           >
-            <h2 className="text-lg font-bold" style={{ color: "#00d4ff" }}>
+            <h2 className="text-lg font-bold" style={{ color: "var(--color-neon)" }}>
               PIN do edycji
             </h2>
             <p className="text-white/60 text-sm">
@@ -606,7 +606,7 @@ export default function EditCategoryPage({
                 }
                 placeholder={`${LIMITS.editPinMinLength}–${LIMITS.editPinMaxLength} cyfr`}
                 aria-label="Nowy PIN"
-                className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-md border border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff] tracking-widest"
+                className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-md border border-neon/60 focus:outline-none focus:ring-2 focus:ring-neon tracking-widest"
               />
               <FloorButton
                 type="submit"

@@ -48,8 +48,8 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
 
 function CodeBlock({ children }: { children: string }) {
   return (
-    <pre className="bg-gray-950 border-2 border-[#00d4ff]/40 rounded-md p-4 overflow-x-auto text-sm md:text-base">
-      <code className="text-[#00d4ff] font-mono whitespace-pre">{children}</code>
+    <pre className="bg-gray-950 border-2 border-neon/40 rounded-md p-4 overflow-x-auto text-sm md:text-base">
+      <code className="text-neon font-mono whitespace-pre">{children}</code>
     </pre>
   );
 }
@@ -84,13 +84,13 @@ export default function ContributeCategoriesPage() {
                 <li>Zrób forka repozytorium na GitHubie</li>
                 <li>
                   Dodaj pliki obrazków do{" "}
-                  <code className="text-[#00d4ff] font-mono">
+                  <code className="text-neon font-mono">
                     public/images/&lt;twój-folder&gt;/
                   </code>
                 </li>
                 <li>
                   Dodaj wpis kategorii w{" "}
-                  <code className="text-[#00d4ff] font-mono">app/data.ts</code>
+                  <code className="text-neon font-mono">app/data.ts</code>
                 </li>
                 <li>Otwórz pull request</li>
               </ol>
@@ -103,7 +103,7 @@ export default function ContributeCategoriesPage() {
               <p className="mb-4">
                 Wrzuć pliki obrazków (najlepiej PNG, JPG lub WEBP) do nowego
                 folderu w{" "}
-                <code className="text-[#00d4ff] font-mono">public/images/</code>
+                <code className="text-neon font-mono">public/images/</code>
                 . Nazwa folderu powinna być pisana małymi literami w stylu kebab-case.
               </p>
               <CodeBlock>{`public/images/sea-creatures/
@@ -122,25 +122,25 @@ export default function ContributeCategoriesPage() {
               </h2>
               <p className="mb-4">
                 W pliku{" "}
-                <code className="text-[#00d4ff] font-mono">app/data.ts</code>,
+                <code className="text-neon font-mono">app/data.ts</code>,
                 utwórz nową stałą{" "}
-                <code className="text-[#00d4ff] font-mono">CategoryMetadata</code>.
+                <code className="text-neon font-mono">CategoryMetadata</code>.
                 Każdy przykład ma pole{" "}
-                <code className="text-[#00d4ff] font-mono">name</code>{" "}
+                <code className="text-neon font-mono">name</code>{" "}
                 (odpowiedź), zasób (nazwę pliku w{" "}
-                <code className="text-[#00d4ff] font-mono">image</code> lub
-                tekst w <code className="text-[#00d4ff] font-mono">text</code>)
+                <code className="text-neon font-mono">image</code> lub
+                tekst w <code className="text-neon font-mono">text</code>)
                 oraz tablicę{" "}
-                <code className="text-[#00d4ff] font-mono">alternatives</code>{" "}
+                <code className="text-neon font-mono">alternatives</code>{" "}
                 z akceptowanymi alternatywnymi odpowiedziami.
               </p>
 
-              <p className="mt-4 mb-2 font-semibold" style={{ color: "#00d4ff" }}>
+              <p className="mt-4 mb-2 font-semibold" style={{ color: "var(--color-neon)" }}>
                 Kategoria obrazkowa:
               </p>
               <CodeBlock>{IMAGE_EXAMPLE_SNIPPET}</CodeBlock>
 
-              <p className="mt-4 mb-2 font-semibold" style={{ color: "#00d4ff" }}>
+              <p className="mt-4 mb-2 font-semibold" style={{ color: "var(--color-neon)" }}>
                 Kategoria tekstowa (bez obrazków):
               </p>
               <CodeBlock>{TEXT_EXAMPLE_SNIPPET}</CodeBlock>
@@ -152,9 +152,9 @@ export default function ContributeCategoriesPage() {
               </h2>
               <p className="mb-4">
                 Dodaj swoją kategorię do unii typu{" "}
-                <code className="text-[#00d4ff] font-mono">Category</code> oraz do
+                <code className="text-neon font-mono">Category</code> oraz do
                 rekordu{" "}
-                <code className="text-[#00d4ff] font-mono">
+                <code className="text-neon font-mono">
                   CATEGORY_METADATA
                 </code>{" "}
                 na końcu pliku.
@@ -168,7 +168,7 @@ export default function ContributeCategoriesPage() {
               </h2>
               <p className="mb-4">
                 Wypchnij swoją gałąź do forka i otwórz PR do gałęzi{" "}
-                <code className="text-[#00d4ff] font-mono">main</code>. W opisie
+                <code className="text-neon font-mono">main</code>. W opisie
                 PR podaj nazwę kategorii i krótki opis przykładów. Przejrzymy go
                 i scalimy.
               </p>

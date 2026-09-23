@@ -2,6 +2,7 @@
 
 import FloorPageLayout from "./components/FloorPageLayout";
 import FloorButton from "./components/FloorButton";
+import FloorLogo from "./components/FloorLogo";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -9,11 +10,11 @@ export default function HomePage() {
     <FloorPageLayout>
       <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-8 md:p-20">
         <div className="max-w-3xl w-full flex flex-col items-center text-center gap-10">
-          <div>
-            <h1 className="text-6xl md:text-8xl font-black metallic-text mb-4">
-              THE FLOOR
+          <div className="flex flex-col items-center gap-6">
+            <h1>
+              <FloorLogo size="lg" />
             </h1>
-            <p className="text-2xl md:text-3xl glow-text">
+            <p className="text-xl md:text-2xl glow-text uppercase tracking-[0.2em]">
               Fanowska gra online
             </p>
           </div>

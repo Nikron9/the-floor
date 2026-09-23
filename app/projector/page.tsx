@@ -13,10 +13,12 @@ import { useCommunityCategories } from "../categories/useCommunityCategories";
 import classNames from "classnames";
 import { PROJECTOR_MESSAGE_TYPE } from "../presenter/page";
 import Round from "./round";
+import { boardLayout, neighbourIndices } from "./boardLayout";
 import { useLocalStorage } from "usehooks-ts";
 import confetti from "canvas-confetti";
 import FloorPageLayout from "../components/FloorPageLayout";
 import FloorButton from "../components/FloorButton";
+import FloorLogo from "../components/FloorLogo";
 
 interface Round {
   category: CategoryId;
@@ -150,6 +152,9 @@ export function Projector() {
     };
   }, [onRestart, onRandomize]);
 
+  const pieceCount = gameDetails?.data?.length ?? 0;
+  const layout = useMemo(() => boardLayout(pieceCount), [pieceCount]);
+
   const highlightedFloorPieceCategories = useMemo(() => {
     const allSelectedFloorPieces =
       gameDetails?.data
@@ -170,14 +175,15 @@ export function Projector() {
         getHighlightedFloorPieceCategories(
           index,
           selectedFloorPiece?.person ?? "",
-          gameDetails?.data ?? []
+          gameDetails?.data ?? [],
+          layout.cols
         )
       )
       // Filter out selected piece if it's in the highlighted categories
       .filter((category) => category !== selectedFloorPiece?.category);
 
     return highlightedFloorPieceCategories;
-  }, [selectedFloorPiece, gameDetails]);
+  }, [selectedFloorPiece, gameDetails, layout.cols]);
 
   const onSelectOrMerge = (
     winner: FloorData,
@@ -287,8 +293,11 @@ export function Projector() {
   if (whoIsRemaining.size === 1) {
     return (
       <FloorPageLayout>
-        <div className="flex flex-col items-center justify-center h-full text-white text-9xl font-bold w-full">
-          <p className="text-center">{Array.from(whoIsRemaining)[0]} wygrywa!</p>
+        <div className="flex flex-col items-center justify-center min-h-screen gap-12 text-white w-full">
+          <FloorLogo size="md" />
+          <p className="text-center text-9xl font-black metallic-text">
+            {Array.from(whoIsRemaining)[0]} wygrywa!
+          </p>
         </div>
       </FloorPageLayout>
     );
@@ -307,7 +316,29 @@ export function Projector() {
 
   return (
     <FloorPageLayout>
-      <div className="grid grid-cols-4 grid-rows-9 h-full p-20 w-full">
+      <div className="h-screen w-full flex flex-col gap-5 px-16 py-6">
+        <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-6">
+          <div />
+          <FloorLogo size="sm" />
+          <div className="flex justify-end">
+            {selectedFloorPiece && (
+              <SelectedPlayerCard
+                person={selectedFloorPiece.person}
+                isRandomizing={isRandomizing}
+              />
+            )}
+          </div>
+        </header>
+        <div
+          className="grid gap-3 flex-1 min-h-0"
+          style={{
+            gridTemplateColumns: `repeat(${layout.cols}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
+            // Lets the tile text scale with the tile: fewer rows, bigger names.
+            ["--board-rows" as string]: layout.rows,
+            ["--board-cols" as string]: layout.cols,
+          }}
+        >
         {gameDetails?.data?.map((floorPiece: FloorData, index: number) => {
           const isSameCategoryAndPerson =
             selectedFloorPiece?.category === floorPiece.category &&
@@ -320,6 +351,7 @@ export function Projector() {
           return (
             <FloorPiece
               key={floorPiece.category + "-" + index}
+              number={index + 1}
               floorPiece={floorPiece}
               categoryName={categoryDisplayName(
                 floorPiece.category,
@@ -333,12 +365,40 @@ export function Projector() {
             />
           );
         })}
+        </div>
       </div>
     </FloorPageLayout>
   );
 }
 
+/** Top-right card naming whoever the randomiser landed on. */
+function SelectedPlayerCard({
+  person,
+  isRandomizing,
+}: {
+  person: string;
+  isRandomizing: boolean;
+}) {
+  return (
+    <div className="neon-panel flex items-center gap-4 pl-4 pr-8 py-3 min-w-[280px]">
+      <div className="w-14 h-14 shrink-0 rounded-full border-2 border-neon grid place-items-center shadow-[0_0_14px_rgba(58,166,255,0.7)]">
+        <svg viewBox="0 0 24 24" className="w-8 h-8 fill-neon-bright" aria-hidden="true">
+          <circle cx="12" cy="8" r="4.2" />
+          <path d="M3.5 21c0-4.7 3.8-8 8.5-8s8.5 3.3 8.5 8z" />
+        </svg>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-sm text-white/70">
+          {isRandomizing ? "Losowanie…" : "Wylosowany gracz"}
+        </span>
+        <span className="text-3xl font-bold leading-tight">{person}</span>
+      </div>
+    </div>
+  );
+}
+
 function FloorPiece({
+  number,
   floorPiece,
   categoryName,
   isSelected,
@@ -347,6 +407,8 @@ function FloorPiece({
   onSelect,
   selectedFloorPiece,
 }: {
+  /** 1-based position on the board, shown in the tile's corner. */
+  number: number;
   floorPiece: FloorData;
   /** Display name for the tile's category -- ids are opaque for community ones. */
   categoryName: string;
@@ -367,19 +429,19 @@ function FloorPiece({
 
   return (
     <button
-      className={classNames(
-        "flex flex-col items-center justify-center border border-white font-bold h-20 min-h-20",
-        {
-          "bg-blue-100 text-black": isSelected,
-          "bg-blue-400": isHighlighted,
-          "text-white": !isSelected && !isHighlighted,
-          "border-yellow-500 border-2": isHighlighted,
-        }
-      )}
+      className={classNames("neon-tile font-bold min-h-0 px-2", {
+        "neon-tile--selected": isSelected,
+        "neon-tile--highlight": isHighlighted && !isSelected,
+      })}
       onClick={onClick}
     >
-      <p>{floorPiece.person}</p>
-      {(isSelected || isHighlighted) && !isRandomizing && <p>{categoryName}</p>}
+      <span className="neon-tile-number">{number}</span>
+      <p className="neon-tile-name leading-tight truncate max-w-full">{floorPiece.person}</p>
+      {(isSelected || isHighlighted) && !isRandomizing && (
+        <p className="neon-tile-category font-semibold tracking-[0.12em] opacity-90 truncate max-w-full">
+          {categoryName}
+        </p>
+      )}
     </button>
   );
 }
@@ -387,38 +449,12 @@ function FloorPiece({
 const getHighlightedFloorPieceCategories = (
   selectedIndex: number,
   selectedPerson: string,
-  floorPieces: FloorData[]
-): string[] => {
-  if (selectedIndex === -1) return [];
-
-  const COLS = 4;
-  const adjacentIndices: number[] = [];
-
-  // Above
-  if (selectedIndex >= COLS) {
-    adjacentIndices.push(selectedIndex - COLS);
-  }
-
-  // Below
-  if (selectedIndex < floorPieces.length - COLS) {
-    adjacentIndices.push(selectedIndex + COLS);
-  }
-
-  // Left (check we're not on the left edge)
-  if (selectedIndex % COLS !== 0) {
-    adjacentIndices.push(selectedIndex - 1);
-  }
-
-  // Right (check we're not on the right edge)
-  if (selectedIndex % COLS !== COLS - 1) {
-    adjacentIndices.push(selectedIndex + 1);
-  }
-
-  return adjacentIndices
+  floorPieces: FloorData[],
+  cols: number
+): string[] =>
+  neighbourIndices(selectedIndex, floorPieces.length, cols)
     .filter((index) => floorPieces[index]?.person !== selectedPerson)
-    .map((index) => floorPieces[index])
-    .map((piece) => piece?.category);
-};
+    .map((index) => floorPieces[index]?.category);
 
 export default function ProjectorPage({ params }: { params: Promise<any> }) {
   return (

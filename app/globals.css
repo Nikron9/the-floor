@@ -1,19 +1,41 @@
 @import "tailwindcss";
 
+/*
+ * Visual language: a TV-studio floor at night. Deep navy, glassy tiles edged
+ * in neon blue, gold for "this one matters" (hover, the tiles you can
+ * challenge, the logo), and a bright blue fill for the tile that's selected.
+ *
+ * Colours live in @theme so Tailwind utilities pick them up: `text-neon`,
+ * `border-neon/40`, `bg-gold`. The grays are remapped to navy, which is what
+ * turns every existing `bg-gray-900` panel into part of the same set.
+ */
+@theme {
+  --color-neon: #3aa6ff;
+  --color-neon-bright: #8fd3ff;
+  --color-neon-deep: #0b5fe0;
+  --color-gold: #ffc83d;
+  --color-gold-deep: #f59e0b;
+  --color-navy: #040c2c;
+
+  --color-gray-500: #3a4a7a;
+  --color-gray-600: #26386b;
+  --color-gray-700: #1a2b5c;
+  --color-gray-800: #0f1f4d;
+  --color-gray-900: #0a1640;
+}
+
 :root {
-  --background: #000000;
+  --background: #020824;
   --foreground: #ffffff;
-  --electric-blue: #00a8ff;
-  --electric-blue-dark: #0078d4;
-  --electric-blue-light: #4dd0e1;
-  --orange-accent: #ff6b35;
-  --orange-glow: #ff8c42;
-  --grid-blue: #00d4ff;
-  --dark-blue: #000428;
-  /* Three shades of blue for grid pattern */
-  --blue-standard: rgb(0, 0, 75);
-  --blue-darker: rgb(0, 0, 60);
-  --blue-lighter: rgb(0, 0, 90);
+  --neon: var(--color-neon);
+  --gold: var(--color-gold);
+  --tile-fill: linear-gradient(180deg, rgba(24, 70, 170, 0.5) 0%, rgba(6, 22, 70, 0.78) 100%);
+  --tile-glow: 0 0 10px rgba(58, 166, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 18px rgba(58, 166, 255, 0.16);
+  --gold-glow: 0 0 14px rgba(255, 200, 61, 0.75), 0 0 32px rgba(255, 200, 61, 0.35),
+    inset 0 0 16px rgba(255, 200, 61, 0.18);
+  --blue-glow: 0 0 22px rgba(58, 166, 255, 0.9), 0 0 48px rgba(58, 166, 255, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 body {
@@ -23,60 +45,210 @@ body {
   min-height: 100vh;
 }
 
-/* Grid pattern background with alternating blue shades */
+::selection {
+  background: rgba(58, 166, 255, 0.45);
+}
+
+/* ------------------------------------------------------------ backdrop */
+
+/*
+ * The studio: a glow from above, a floor grid receding into the distance and
+ * violet light pillars at the edges. All CSS, so it costs nothing to load and
+ * scales to any projector.
+ */
 .grid-background {
-  background-color: var(--blue-standard);
-  /* Use SVG pattern to create large squares with 3 alternating shades */
-  background-image: 
-    url("data:image/svg+xml,%3Csvg width='360' height='360' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='360' height='360' patternUnits='userSpaceOnUse'%3E%3Crect width='120' height='120' fill='rgb(0,0,75)'/%3E%3Crect x='120' width='120' height='120' fill='rgb(0,0,60)'/%3E%3Crect x='240' width='120' height='120' fill='rgb(0,0,90)'/%3E%3Crect y='120' width='120' height='120' fill='rgb(0,0,60)'/%3E%3Crect x='120' y='120' width='120' height='120' fill='rgb(0,0,90)'/%3E%3Crect x='240' y='120' width='120' height='120' fill='rgb(0,0,75)'/%3E%3Crect y='240' width='120' height='120' fill='rgb(0,0,90)'/%3E%3Crect x='120' y='240' width='120' height='120' fill='rgb(0,0,75)'/%3E%3Crect x='240' y='240' width='120' height='120' fill='rgb(0,0,60)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E");
-  background-size: 360px 360px;
-  background-repeat: repeat;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(58, 140, 255, 0.38), transparent 70%),
+    radial-gradient(ellipse 90% 35% at 50% 105%, rgba(30, 90, 255, 0.3), transparent 70%),
+    linear-gradient(180deg, #030b2e 0%, #051340 45%, #020824 100%);
 }
 
-/* Glowing text effect */
+.grid-background::before {
+  content: "";
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: -10%;
+  height: 60%;
+  background-image:
+    linear-gradient(rgba(70, 150, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70, 150, 255, 0.2) 1px, transparent 1px);
+  background-size: 90px 90px;
+  transform: perspective(700px) rotateX(62deg);
+  transform-origin: bottom center;
+  -webkit-mask-image: linear-gradient(to top, black 10%, transparent 85%);
+  mask-image: linear-gradient(to top, black 10%, transparent 85%);
+}
+
+.grid-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(130, 90, 255, 0.35) 0, rgba(58, 120, 255, 0.12) 2.5%, transparent 7%),
+    linear-gradient(270deg, rgba(130, 90, 255, 0.35) 0, rgba(58, 120, 255, 0.12) 2.5%, transparent 7%);
+}
+
+/* ---------------------------------------------------------------- text */
+
 .glow-text {
-  text-shadow: 
-    0 0 4px var(--electric-blue)
+  text-shadow: 0 0 6px rgba(58, 166, 255, 0.85), 0 0 18px rgba(58, 166, 255, 0.35);
 }
 
-/* Metallic gold text effect for logo */
+/* Gold logo lettering. */
 .metallic-text {
   background: linear-gradient(
     180deg,
-    #ffd700 0%,
-    #ffed4e 20%,
-    #ffd700 40%,
-    #d4af37 60%,
-    #b8860b 80%,
-    #8b6914 100%
+    #fffbe0 0%,
+    #ffe27a 28%,
+    #ffc83d 50%,
+    #f59e0b 72%,
+    #b45309 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Multiple text shadows for metallic depth and specular highlights */
-  text-shadow: 
-    /* Specular highlight on top */
-    0 -1px 2px rgba(255, 255, 255, 0.4),
-    /* Depth shadows */
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    0 3px 6px rgba(0, 0, 0, 0.2),
-    /* Subtle gold glow */
-    0 0 8px rgba(255, 215, 0, 0.2);
   font-weight: 900;
-  letter-spacing: 0.05em;
-  position: relative;
-  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.15));
+  letter-spacing: 0.04em;
+  filter: drop-shadow(0 0 10px rgba(255, 190, 40, 0.55)) drop-shadow(0 2px 0 rgba(120, 60, 0, 0.8));
 }
 
-/* Floor tile button styles */
+/* The hex-ended plate the logo sits on. */
+.logo-badge {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.9;
+  padding: 0.35em 1.4em 0.4em;
+  background: linear-gradient(180deg, rgba(20, 50, 130, 0.85), rgba(4, 14, 50, 0.95));
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+}
+
+.logo-badge-frame {
+  display: inline-block;
+  padding: 2px;
+  background: linear-gradient(180deg, #8fd3ff, #3aa6ff 50%, #0b5fe0);
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+  filter: drop-shadow(0 0 14px rgba(58, 166, 255, 0.8));
+}
+
+/* ------------------------------------------------------------ surfaces */
+
+/* A glass panel: cards, forms, info boxes. */
+.neon-panel {
+  background: linear-gradient(180deg, rgba(18, 50, 130, 0.45), rgba(5, 16, 52, 0.72));
+  border: 1.5px solid rgba(58, 166, 255, 0.7);
+  border-radius: 14px;
+  box-shadow: var(--tile-glow);
+  backdrop-filter: blur(6px);
+}
+
+/* A board tile. */
+.neon-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(58, 166, 255, 0.8);
+  background: var(--tile-fill);
+  box-shadow: var(--tile-glow);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.neon-tile-number {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/*
+ * Tile text scales with the tile: whichever of its height (rows) or width
+ * (columns, room for ~9 letters) runs out first sets the size.
+ */
+.neon-tile-name {
+  font-size: clamp(
+    1.05rem,
+    min(calc(70vh / var(--board-rows, 9) / 5), calc(88vw / var(--board-cols, 4) / 9)),
+    3rem
+  );
+}
+
+.neon-tile-category {
+  font-size: clamp(
+    0.7rem,
+    min(calc(70vh / var(--board-rows, 9) / 11), calc(88vw / var(--board-cols, 4) / 20)),
+    1.35rem
+  );
+}
+
+/* The tile a host picked: bright blue, lit from inside. */
+.neon-tile--selected {
+  background: linear-gradient(180deg, #4db0ff 0%, #1677f2 55%, #0b5fe0 100%);
+  border-color: #cfeaff;
+  box-shadow: var(--blue-glow);
+  transform: scale(1.03);
+  z-index: 1;
+}
+
+/* Tiles that can be challenged from the selected one: gold. */
+.neon-tile--highlight {
+  border: 2px solid var(--color-gold);
+  background: linear-gradient(180deg, rgba(70, 55, 20, 0.6), rgba(22, 16, 6, 0.8));
+  box-shadow: var(--gold-glow);
+  cursor: pointer;
+}
+
+.neon-tile--highlight:hover {
+  background: linear-gradient(180deg, rgba(110, 85, 25, 0.7), rgba(40, 28, 8, 0.85));
+}
+
+/* Form fields. Applied globally so every input matches without a class. */
+/* In the base layer, so a utility class on a field still wins. */
+@layer base {
+  input[type="text"],
+  input[type="search"],
+  input[type="url"],
+  input[type="number"],
+  input[type="password"],
+  input:not([type]),
+  textarea,
+  select {
+    background-color: rgba(6, 20, 64, 0.85);
+    border-color: rgba(58, 166, 255, 0.75);
+    color: #fff;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(180, 205, 255, 0.45);
+  }
+}
+
+/* ------------------------------------------------------------- buttons */
+
 .btn-glow {
   position: relative;
   transition: all 0.2s ease;
-  background-color: var(--blue-standard);
-  border: 2px solid white;
-  border-radius: 0;
+  background: var(--tile-fill);
+  border: 1.5px solid rgba(58, 166, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: var(--tile-glow);
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,8 +260,8 @@ body {
 /* Square floor tile buttons */
 .btn-glow.square {
   aspect-ratio: 1;
-  min-width: 120px;
-  min-height: 120px;
+  min-width: 140px;
+  min-height: 140px;
 }
 
 /* Rectangular buttons (for smaller action buttons) */
@@ -101,40 +273,77 @@ body {
 }
 
 .btn-glow:hover:not(:disabled) {
-  border-color: #ffd700;
-  box-shadow: 
-    0 0 15px rgba(255, 215, 0, 0.8),
-    0 0 25px rgba(255, 215, 0, 0.6),
-    0 0 35px rgba(255, 215, 0, 0.4);
+  border-color: var(--color-gold);
+  color: #fff4cf;
+  box-shadow: var(--gold-glow);
 }
 
 .btn-glow:active:not(:disabled),
 .btn-glow.active:not(:disabled) {
-  background-color: #ffd700;
-  border-color: #ffd700;
-  color: #000;
-  box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.9),
-    0 0 30px rgba(255, 215, 0, 0.7),
-    0 0 40px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(180deg, #4db0ff 0%, #1677f2 55%, #0b5fe0 100%);
+  border-color: #cfeaff;
+  color: #fff;
+  box-shadow: var(--blue-glow);
 }
 
 .btn-glow:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .btn-orange {
-  background: var(--orange-accent);
-  box-shadow: 
-    0 0 10px rgba(255, 107, 53, 0.5),
-    0 0 20px rgba(255, 107, 53, 0.3);
+  background: linear-gradient(180deg, #ffd66b, #f59e0b);
+  color: #1a1000;
+  box-shadow: 0 0 12px rgba(255, 200, 61, 0.6);
 }
 
 .btn-orange:hover {
-  box-shadow: 
-    0 0 20px rgba(255, 107, 53, 0.8),
-    0 0 30px rgba(255, 107, 53, 0.6);
+  box-shadow: 0 0 22px rgba(255, 200, 61, 0.9);
+}
+
+/* ------------------------------------------------------ round screen */
+
+/* Name and timer plates during a duel. State modifiers mirror the game. */
+.neon-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1.5px solid rgba(58, 166, 255, 0.85);
+  background: var(--tile-fill);
+  box-shadow: var(--tile-glow);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.neon-plate--active {
+  border: 2px solid var(--color-gold);
+  box-shadow: var(--gold-glow);
+}
+
+.neon-plate--idle {
+  opacity: 0.55;
+  filter: saturate(0.4);
+}
+
+.neon-plate--bad {
+  border-color: #ff5a6e;
+  background: linear-gradient(180deg, rgba(200, 30, 60, 0.75), rgba(90, 8, 24, 0.9));
+  box-shadow: 0 0 20px rgba(255, 70, 100, 0.8), inset 0 0 16px rgba(255, 90, 110, 0.3);
+}
+
+.neon-plate--done {
+  border-color: #5cffb0;
+  background: linear-gradient(180deg, rgba(20, 150, 90, 0.7), rgba(4, 60, 36, 0.9));
+  box-shadow: 0 0 20px rgba(60, 255, 160, 0.7), inset 0 0 16px rgba(80, 255, 170, 0.25);
+}
+
+/* The stage the pictures are shown on: white so any image reads, neon frame. */
+.round-stage {
+  background: #fff;
+  border-radius: 16px;
+  border: 3px solid var(--color-neon);
+  box-shadow: 0 0 24px rgba(58, 166, 255, 0.7), 0 0 60px rgba(58, 166, 255, 0.3);
 }
 
 /* Circular glow effect */
@@ -143,14 +352,20 @@ body {
 }
 
 .circle-glow::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 2px solid var(--orange-glow);
-  box-shadow: 
-    0 0 10px var(--orange-glow),
-    0 0 20px var(--orange-glow),
-    inset 0 0 10px var(--orange-glow);
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 0 10px var(--color-gold), 0 0 20px var(--color-gold),
+    inset 0 0 10px var(--color-gold);
   opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-tile,
+  .btn-glow,
+  .neon-plate {
+    transition: none;
+  }
 }

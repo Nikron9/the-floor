@@ -330,7 +330,7 @@ export default function Round({
     return (
       <FloorPageLayout>
         <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-10 text-center">
-          <p className="text-6xl font-bold text-yellow-500">
+          <p className="text-6xl font-black metallic-text">
             Kategoria niedostępna
           </p>
           <p className="text-2xl text-white/80">
@@ -346,7 +346,7 @@ export default function Round({
     return (
       <FloorPageLayout>
         <div className="flex items-center justify-center w-full h-full">
-          <p className="text-[12rem] font-bold text-yellow-500 text-center">
+          <p className="text-[12rem] font-black metallic-text text-center">
             {countdown !== null ? countdown : "THE FLOOR"}
           </p>
         </div>
@@ -357,7 +357,7 @@ export default function Round({
   return (
     <FloorPageLayout>
       <div className="p-10 relative w-full h-full">
-        <div className="flex flex-col items-center justify-center bg-white h-[75vh] mx-auto rounded-lg p-4">
+        <div className="round-stage flex flex-col items-center justify-center h-[75vh] mx-auto p-4">
           <RoundDisplay
             examples={examples}
             selectedExampleIndex={selectedExampleIndex}
@@ -367,11 +367,12 @@ export default function Round({
           <div className="flex flex-row gap-2 w-full justify-between p-2">
             <div
               className={classNames(
-                "bg-blue-500 outline outline-4 outline-yellow-500 px-6 py-3 transform skew-x-[15deg] flex items-center justify-center min-w-[120px] min-h-[60px] rounded",
+                "neon-plate px-8 py-3 transform skew-x-[15deg] min-w-[160px] min-h-[60px]",
                 {
-                  "bg-red-500": currentTurn === "challenger" && isBad,
-                  "bg-gray-500": currentTurn !== "challenger" && !isFinished,
-                  "bg-green-500": currentTurn !== "challenger" && isFinished,
+                  "neon-plate--active": currentTurn === "challenger" && !isBad,
+                  "neon-plate--bad": currentTurn === "challenger" && isBad,
+                  "neon-plate--idle": currentTurn !== "challenger" && !isFinished,
+                  "neon-plate--done": currentTurn !== "challenger" && isFinished,
                 }
               )}
             >
@@ -381,11 +382,12 @@ export default function Round({
             </div>
             <div
               className={classNames(
-                "bg-blue-500 outline outline-4 outline-yellow-500 px-6 py-3 transform skew-x-[-15deg] flex items-center justify-center min-w-[120px] min-h-[60px] rounded",
+                "neon-plate px-8 py-3 transform skew-x-[-15deg] min-w-[160px] min-h-[60px]",
                 {
-                  "bg-red-500": currentTurn === "defender" && isBad,
-                  "bg-gray-500": currentTurn !== "defender" && !isFinished,
-                  "bg-green-500": currentTurn !== "defender" && isFinished,
+                  "neon-plate--active": currentTurn === "defender" && !isBad,
+                  "neon-plate--bad": currentTurn === "defender" && isBad,
+                  "neon-plate--idle": currentTurn !== "defender" && !isFinished,
+                  "neon-plate--done": currentTurn !== "defender" && isFinished,
                 }
               )}
             >
@@ -397,13 +399,12 @@ export default function Round({
           <div className="flex flex-row gap-2 w-full px-4">
             <div
               className={classNames(
-                "bg-blue-600 px-6 py-4 rounded flex items-center justify-center min-w-[120px]",
+                "neon-plate px-6 py-4 min-w-[140px]",
                 {
-                  "outline outline-4 outline-yellow-500":
-                    currentTurn === "challenger",
-                  "bg-green-500": currentTurn !== "challenger" && isFinished,
-                  "bg-red-500": currentTurn === "challenger" && isBad,
-                  "bg-gray-500": currentTurn !== "challenger" && !isFinished,
+                  "neon-plate--active": currentTurn === "challenger" && !isBad,
+                  "neon-plate--done": currentTurn !== "challenger" && isFinished,
+                  "neon-plate--bad": currentTurn === "challenger" && isBad,
+                  "neon-plate--idle": currentTurn !== "challenger" && !isFinished,
                 }
               )}
             >
@@ -413,9 +414,9 @@ export default function Round({
             </div>
             <div
               className={classNames(
-                "flex-1 bg-blue-600 px-6 py-4 rounded flex items-center justify-center",
+                "neon-plate flex-1 px-6 py-4",
                 {
-                  "bg-red-500": isBad,
+                  "neon-plate--bad": isBad,
                 }
               )}
             >
@@ -427,13 +428,12 @@ export default function Round({
             </div>
             <div
               className={classNames(
-                "bg-blue-600 px-6 py-4 rounded flex items-center justify-center min-w-[120px]",
+                "neon-plate px-6 py-4 min-w-[140px]",
                 {
-                  "outline outline-4 outline-yellow-500":
-                    currentTurn === "defender",
-                  "bg-green-500": currentTurn !== "defender" && isFinished,
-                  "bg-red-500": currentTurn === "defender" && isBad,
-                  "bg-gray-500": currentTurn !== "defender" && !isFinished,
+                  "neon-plate--active": currentTurn === "defender" && !isBad,
+                  "neon-plate--done": currentTurn !== "defender" && isFinished,
+                  "neon-plate--bad": currentTurn === "defender" && isBad,
+                  "neon-plate--idle": currentTurn !== "defender" && !isFinished,
                 }
               )}
             >

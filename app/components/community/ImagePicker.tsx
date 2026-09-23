@@ -108,12 +108,12 @@ export default function ImagePicker({
       onClick={onClose}
     >
       <div
-        className="bg-gray-950 border-2 border-[#00d4ff] rounded-lg w-full max-w-5xl max-h-[90vh] flex flex-col"
+        className="bg-gray-950 border-2 border-neon rounded-lg w-full max-w-5xl max-h-[90vh] flex flex-col"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="p-4 border-b border-[#00d4ff]/40 flex flex-col gap-3">
+        <div className="p-4 border-b border-neon/40 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-4">
-            <h3 className="text-xl font-bold" style={{ color: "#00d4ff" }}>
+            <h3 className="text-xl font-bold" style={{ color: "var(--color-neon)" }}>
               Wybierz obrazek dla „{itemName}”
             </h3>
             <button
@@ -133,7 +133,7 @@ export default function ImagePicker({
                 if (event.key === "Enter") run(query, source);
               }}
               placeholder="Szukana fraza"
-              className="flex-1 bg-gray-800 text-white p-2 rounded border border-[#00d4ff]/60 focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+              className="flex-1 bg-gray-800 text-white p-2 rounded border border-neon/60 focus:outline-none focus:ring-2 focus:ring-neon"
             />
             <select
               value={source}
@@ -142,7 +142,7 @@ export default function ImagePicker({
                 setSource(next);
                 run(query, next);
               }}
-              className="bg-gray-800 text-white p-2 rounded border border-[#00d4ff]/60"
+              className="bg-gray-800 text-white p-2 rounded border border-neon/60"
             >
               {Object.entries(SOURCE_LABELS)
                 .filter(([value]) => value !== "web" || webSearchAvailable)
@@ -193,7 +193,7 @@ export default function ImagePicker({
               <button
                 key={result.id}
                 onClick={() => onPick(result)}
-                className="group relative bg-gray-900 rounded overflow-hidden border-2 border-transparent hover:border-[#00d4ff] focus:border-[#00d4ff] focus:outline-none"
+                className="group relative bg-gray-900 rounded overflow-hidden border-2 border-transparent hover:border-neon focus:border-neon focus:outline-none"
                 title={result.title}
               >
                 <img
@@ -211,7 +211,7 @@ export default function ImagePicker({
           </div>
         </div>
 
-        <div className="p-4 border-t border-[#00d4ff]/40 flex flex-col sm:flex-row gap-2">
+        <div className="p-4 border-t border-neon/40 flex flex-col sm:flex-row gap-2">
           <input
             value={pastedUrl}
             onChange={(event) => setPastedUrl(event.target.value)}
@@ -221,7 +221,7 @@ export default function ImagePicker({
               }
             }}
             placeholder="…albo wklej adres URL obrazka"
-            className="flex-1 bg-gray-800 text-white p-2 rounded border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+            className="flex-1 bg-gray-800 text-white p-2 rounded border border-white/20 focus:outline-none focus:ring-2 focus:ring-neon"
           />
           <FloorButton
             variant="rectangular"

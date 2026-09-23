@@ -11,6 +11,7 @@ import {
 import { useCommunityCategories } from "../categories/useCommunityCategories";
 import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
+import FloorLogo from "../components/FloorLogo";
 import FloorPageLayout from "../components/FloorPageLayout";
 import { useLocalStorage } from "usehooks-ts";
 import Link from "next/link";
@@ -330,7 +331,7 @@ export default function PresenterPage({
         <div className="p-8 md:p-20 flex flex-col gap-6 w-full max-w-7xl mx-auto">
           <h3
             className="text-4xl font-bold mb-4 glow-text"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "var(--color-neon)" }}
           >
             Ustawienia gry
           </h3>
@@ -344,16 +345,16 @@ export default function PresenterPage({
               placeholder="Szukaj graczy lub kategorii..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-black"
+              className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
               style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
             />
           </div>
 
           {/* Add New Player Form */}
-          <div className="bg-gray-900/50 p-6 rounded-lg border-2 border-[#00d4ff] mb-6">
+          <div className="neon-panel p-6 mb-6">
             <h4
               className="text-2xl font-bold mb-4 glow-text"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Dodaj nowego gracza
             </h4>
@@ -363,7 +364,7 @@ export default function PresenterPage({
                 placeholder="Imię gracza"
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}
-                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAddPlayer();
                 }}
@@ -373,7 +374,7 @@ export default function PresenterPage({
                 onChange={(e) =>
                   setNewPlayerCategory(e.target.value || undefined)
                 }
-                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
               >
                 <option value="">Wybierz kategorię...</option>
                 {getAvailableCategories().map(({ id, name, source }) => (
@@ -399,7 +400,7 @@ export default function PresenterPage({
           <div className="flex flex-col gap-4 mb-6">
             <h4
               className="text-2xl font-bold glow-text"
-              style={{ color: "#00d4ff" }}
+              style={{ color: "var(--color-neon)" }}
             >
               Gracze ({gameDetails.data.length})
             </h4>
@@ -418,7 +419,7 @@ export default function PresenterPage({
                   return (
                     <div
                       key={actualIndex}
-                      className="bg-gray-900/50 p-4 rounded-lg border-2 border-[#00d4ff] flex flex-col gap-3"
+                      className="neon-panel p-4 flex flex-col gap-3"
                     >
                       {isEditing ? (
                         <>
@@ -426,7 +427,7 @@ export default function PresenterPage({
                             type="text"
                             value={editPlayerName}
                             onChange={(e) => setEditPlayerName(e.target.value)}
-                            className="bg-gray-800 text-white p-2 rounded-md border border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+                            className="bg-gray-800 text-white p-2 rounded-md border border-neon focus:outline-none focus:ring-2 focus:ring-neon"
                             onKeyDown={(e) => {
                               if (e.key === "Enter")
                                 handleUpdatePlayer(actualIndex);
@@ -438,7 +439,7 @@ export default function PresenterPage({
                             onChange={(e) =>
                               setEditPlayerCategory(e.target.value || undefined)
                             }
-                            className="bg-gray-800 text-white p-2 rounded-md border border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]"
+                            className="bg-gray-800 text-white p-2 rounded-md border border-neon focus:outline-none focus:ring-2 focus:ring-neon"
                           >
                             {getAvailableCategories(player.category).map(
                               ({ id, name, source }) => (
@@ -475,7 +476,7 @@ export default function PresenterPage({
                             </p>
                             <p
                               className="text-sm font-semibold"
-                              style={{ color: "#00d4ff" }}
+                              style={{ color: "var(--color-neon)" }}
                             >
                               {categoryDisplayName(
                                 player.category,
@@ -509,7 +510,7 @@ export default function PresenterPage({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4 border-t-2 border-[#00d4ff]/30">
+          <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4 border-t-2 border-neon/30">
             <FloorButton
               variant="rectangular"
               className="font-bold text-lg w-full sm:w-auto"
@@ -546,19 +547,19 @@ export default function PresenterPage({
         <div className="p-8 md:p-20 flex flex-col gap-6">
           <h3
             className="text-4xl font-bold mb-6 glow-text"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "var(--color-neon)" }}
           >
             Pojedyncza runda
           </h3>
           {desktopPlayWarning}
           <label className="text-xl font-bold flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center mb-4">
-            <span className="glow-text" style={{ color: "#00d4ff" }}>
+            <span className="glow-text" style={{ color: "var(--color-neon)" }}>
               Kategoria:
             </span>
             <select
               onChange={(e) => setDemoDetails({ category: e.target.value })}
               value={demoDetails?.category}
-              className="w-full sm:w-auto bg-gray-900 text-white p-3 rounded-md border-2 border-[#00d4ff] focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-black"
+              className="w-full sm:w-auto bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
               style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
             >
               {listSelectableCategories(communityCategories).map(
@@ -598,7 +599,7 @@ export default function PresenterPage({
         <div className="p-8 md:p-20 flex flex-col gap-6">
           <h3
             className="text-4xl font-bold mb-6 glow-text"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "var(--color-neon)" }}
           >
             Szczegóły rundy
           </h3>
@@ -663,34 +664,34 @@ export default function PresenterPage({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div
-              className="flex flex-col gap-4 bg-gray-900/50 p-6 rounded-lg border-2 border-[#00d4ff]"
+              className="neon-panel flex flex-col gap-4 p-6"
               style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
             >
               <p className="text-xl text-white">
                 Aktualna odpowiedź:{" "}
                 <span
                   className="font-bold glow-text"
-                  style={{ color: "#00d4ff" }}
+                  style={{ color: "var(--color-neon)" }}
                 >
                   {roundDetails.example?.name}
                 </span>
               </p>
               <p className="text-lg text-white">
                 Przykład nr:{" "}
-                <span className="font-bold" style={{ color: "#00d4ff" }}>
+                <span className="font-bold" style={{ color: "var(--color-neon)" }}>
                   {roundDetails.exampleIndex}
                 </span>
               </p>
               <p className="text-lg text-white">
                 Liczba przykładów:{" "}
-                <span className="font-bold" style={{ color: "#00d4ff" }}>
+                <span className="font-bold" style={{ color: "var(--color-neon)" }}>
                   {examples?.length}
                 </span>
               </p>
 
               <p className="text-lg text-white">
                 Alternatywy:{" "}
-                <span className="font-semibold" style={{ color: "#ff6b35" }}>
+                <span className="font-semibold" style={{ color: "var(--color-gold)" }}>
                   {roundDetails.example?.alternatives.join(", ")}
                 </span>
               </p>
@@ -716,7 +717,7 @@ export default function PresenterPage({
 
             {roundDetails.category && (
               <div
-                className="text-lg text-white max-h-[45vh] bg-gray-900/50 p-6 rounded-lg border-2 border-[#00d4ff]"
+                className="neon-panel text-lg text-white max-h-[45vh] p-6"
                 style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
               >
                 <RoundDisplay
@@ -738,7 +739,7 @@ export default function PresenterPage({
         <div className="p-8 md:p-20 flex flex-col gap-6 max-w-3xl mx-auto">
           <h3
             className="text-4xl font-bold mb-2 glow-text"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "var(--color-neon)" }}
           >
             Wznowić trwającą grę?
           </h3>
@@ -787,7 +788,7 @@ export default function PresenterPage({
         <div className="p-8 md:p-20 flex flex-col gap-6">
           <h3
             className="text-4xl font-bold mb-6 glow-text"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "var(--color-neon)" }}
           >
             Trwająca gra
           </h3>
@@ -830,10 +831,10 @@ export default function PresenterPage({
         {desktopPlayWarning}
         {/* Logo-style title */}
         <div className="text-center mb-8">
-          <div className="text-5xl sm:text-7xl md:text-9xl font-black metallic-text mb-4">
-            THE FLOOR
-          </div>
-          <div className="text-base sm:text-lg md:text-2xl text-white/80 font-light mt-4">
+          <h1 className="flex justify-center">
+            <FloorLogo size="lg" />
+          </h1>
+          <div className="text-base sm:text-lg md:text-2xl text-white/80 font-light mt-6 uppercase tracking-[0.2em]">
             Zagraj w The Floor w domu
           </div>
         </div>
