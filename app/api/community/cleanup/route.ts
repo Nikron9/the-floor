@@ -2,6 +2,7 @@ import { LIMITS, isProduction } from "@/lib/community/config";
 import { repo } from "@/lib/community/db";
 import { fail, handle, json } from "@/lib/community/http";
 import { imageStore } from "@/lib/community/storage";
+import { curatedRepo } from "@/lib/curated/overrides";
 
 /**
  * The job that keeps the storage claim honest.
@@ -70,6 +71,8 @@ export async function GET(request: Request) {
     // already accounted for. If this throws we never reach the delete loop,
     // which is the point: a partial set would make live images look orphaned.
     const referenced = await database.allImageKeys();
+    // Picture replacements in the built-in categories share the same store.
+    for (const key of await curatedRepo().allImageKeys()) referenced.add(key);
     const objects = await store.list();
 
     const graceCutoff = Date.now() - LIMITS.orphanGraceHours * 60 * 60 * 1000;

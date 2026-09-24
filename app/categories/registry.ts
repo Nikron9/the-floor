@@ -46,6 +46,15 @@ export type ResolvedCategory = {
  * absolute image URLs, so it can be dropped into a game and replayed later
  * without another round trip to the API.
  */
+/**
+ * Picture replacements for curated categories, made in the app and kept in
+ * the database so deploys don't overwrite them: `{ [folder]: { [image]: src } }`.
+ * See lib/curated/overrides.ts and useCuratedOverrides.
+ */
+export type CuratedOverrides = Readonly<
+  Record<string, Readonly<Record<string, string>>>
+>;
+
 export type CommunityCategory = {
   id: string;
   name: string;
@@ -136,7 +145,8 @@ export const isTextExample = (
 
 const resolveCuratedExample = (
   folder: string,
-  example: ImageExample | TextExample
+  example: ImageExample | TextExample,
+  overrides: CuratedOverrides
 ): ResolvedExample => {
   if ("text" in example) {
     return {
@@ -149,11 +159,15 @@ const resolveCuratedExample = (
   return {
     name: example.name,
     alternatives: example.alternatives,
-    src: `/images/${folder}/${example.image}`,
+    src:
+      overrides[folder]?.[example.image] ?? `/images/${folder}/${example.image}`,
   };
 };
 
-export const resolveCuratedCategory = (id: Category): ResolvedCategory => {
+export const resolveCuratedCategory = (
+  id: Category,
+  overrides: CuratedOverrides = {}
+): ResolvedCategory => {
   const meta = CATEGORY_METADATA[id];
 
   return {
@@ -161,7 +175,7 @@ export const resolveCuratedCategory = (id: Category): ResolvedCategory => {
     name: meta.name,
     source: "curated",
     examples: (meta.examples as Array<ImageExample | TextExample>).map(
-      (example) => resolveCuratedExample(meta.folder, example)
+      (example) => resolveCuratedExample(meta.folder, example, overrides)
     ),
   };
 };
@@ -186,13 +200,14 @@ export const resolveCommunityCategory = (
  */
 export const resolveCategory = (
   id: CategoryId | undefined,
-  community: Readonly<Record<string, CommunityCategory>> = {}
+  community: Readonly<Record<string, CommunityCategory>> = {},
+  curatedOverrides: CuratedOverrides = {}
 ): ResolvedCategory | undefined => {
   if (!id) return undefined;
 
   const curated = canonicalCategoryId(id);
   if (isCuratedCategoryId(curated)) {
-    return resolveCuratedCategory(curated);
+    return resolveCuratedCategory(curated, curatedOverrides);
   }
 
   const found =

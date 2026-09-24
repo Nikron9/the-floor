@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CategoryId, FloorData } from "../data";
 import { resolveCategory, type ResolvedExample } from "../categories/registry";
 import { useCommunityCategories } from "../categories/useCommunityCategories";
+import { useCuratedOverrides } from "../categories/useCuratedOverrides";
 import {
   PRESENTER_MESSAGE_TYPE,
   PROJECTOR_MESSAGE_TYPE,
@@ -59,9 +60,10 @@ export default function Round({
 }) {
   const { categories: communityCategories, ready: categoriesReady } =
     useCommunityCategories();
+  const curatedOverrides = useCuratedOverrides();
   const resolved = useMemo(
-    () => resolveCategory(category, communityCategories),
-    [category, communityCategories]
+    () => resolveCategory(category, communityCategories, curatedOverrides),
+    [category, communityCategories, curatedOverrides]
   );
   const rawExamples = useMemo(() => resolved?.examples ?? [], [resolved]);
   // One send-only channel for the lifetime of the component. Constructing it

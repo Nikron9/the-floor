@@ -73,3 +73,27 @@ create table if not exists community_images (
   body         bytea       not null,
   created_at   timestamptz not null default now()
 );
+
+-- Picture replacements for the built-in categories (lib/curated/overrides.ts).
+-- Kept here rather than in public/images so they survive every deploy.
+create table if not exists curated_image_overrides (
+  folder        text        not null,
+  image         text        not null,
+  image_url     text        not null,
+  image_key     text,
+  width         integer,
+  height        integer,
+  credit        jsonb,
+  -- SHA-256 of the shipped file when it was replaced, to flag later changes.
+  original_hash text,
+  updated_at    timestamptz not null default now(),
+  primary key (folder, image)
+);
+
+-- One row: the shared edit PIN for the built-in categories.
+create table if not exists curated_settings (
+  id                    smallint    primary key default 1 check (id = 1),
+  edit_pin_hash         text,
+  pin_attempts          integer     not null default 0,
+  pin_window_started_at timestamptz
+);

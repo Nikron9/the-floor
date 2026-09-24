@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import BackLink from "@/app/components/BackLink";
+import CuratedAdminPanel from "@/app/components/community/CuratedAdminPanel";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import type { ModerationRow } from "@/lib/community/types";
@@ -203,6 +204,12 @@ export default function CommunityAdminPage() {
             Wyloguj się
           </button>
         </div>
+
+        <CuratedAdminPanel />
+
+        <h2 className="text-2xl font-bold" style={{ color: "var(--color-neon)" }}>
+          Kategorie społeczności
+        </h2>
 
         {error && <p className="text-yellow-200 text-sm">{error}</p>}
 

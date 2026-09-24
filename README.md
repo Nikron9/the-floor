@@ -105,6 +105,16 @@ npm run build   # production build
 CI runs both on every pull request, deliberately on Linux so casing bugs
 surface there instead of in production.
 
+## Replacing pictures in built-in categories
+
+`/categories` → a category → **Podmień obrazki** lets the admin, or anyone with
+the shared PIN (set in `/community/admin`), replace a picture with the same
+search / link / upload / editor tools as community categories. Replacements are
+stored in Postgres (`curated_image_overrides`, see `lib/community/schema.sql`)
+and layered over `public/images/` at runtime, so deploys never overwrite them.
+If a later deploy changes a replaced file, the replacement still wins and the
+admin page flags it. Code: `lib/curated/`, `app/api/curated/`.
+
 ## Community categories
 
 Adding a category the way above means a pull request, which is the right

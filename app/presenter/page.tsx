@@ -9,6 +9,7 @@ import {
   type ResolvedExample,
 } from "../categories/registry";
 import { useCommunityCategories } from "../categories/useCommunityCategories";
+import { useCuratedOverrides } from "../categories/useCuratedOverrides";
 import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
 import FloorLogo from "../components/FloorLogo";
@@ -74,6 +75,7 @@ export default function PresenterPage({
   const [debugExamples, setDebugExamples] = useState<ResolvedExample[]>();
 
   const { categories: communityCategories } = useCommunityCategories();
+  const curatedOverrides = useCuratedOverrides();
 
   const desktopPlayWarning = (
     <div
@@ -98,8 +100,11 @@ export default function PresenterPage({
       return debugExamples;
     }
 
-    return resolveCategory(roundDetails.category, communityCategories)?.examples ?? [];
-  }, [roundDetails?.category, debugExamples, communityCategories]);
+    return (
+      resolveCategory(roundDetails.category, communityCategories, curatedOverrides)
+        ?.examples ?? []
+    );
+  }, [roundDetails?.category, debugExamples, communityCategories, curatedOverrides]);
 
   const channel = new BroadcastChannel("the-floor-projector");
 

@@ -10,6 +10,7 @@ import {
 import FloorPageLayout from "../components/FloorPageLayout";
 import FloorButton from "../components/FloorButton";
 import Link from "next/link";
+import { useCuratedOverrides } from "./useCuratedOverrides";
 
 export default function CategoriesPage() {
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
@@ -17,6 +18,7 @@ export default function CategoriesPage() {
     Category | undefined
   >(undefined);
   const [searchQuery, setSearchQuery] = useState("");
+  const curatedOverrides = useCuratedOverrides();
 
   // Filter categories based on search query, by the name shown on screen
   const filteredCategories = (Object.keys(CATEGORY_METADATA) as Category[])
@@ -50,13 +52,22 @@ export default function CategoriesPage() {
             >
               {CATEGORY_METADATA[selectedCategory].name}
             </h2>
-            <FloorButton
-              variant="rectangular"
-              className="font-semibold"
-              onClick={() => setSelectedCategory(undefined)}
-            >
-              Wróć do kategorii
-            </FloorButton>
+            <div className="flex gap-2 flex-wrap justify-end">
+              {examples.some((item) => "image" in item) && (
+                <Link href={`/categories/edit/${categoryData.folder}`} prefetch={false}>
+                  <FloorButton variant="rectangular" className="font-semibold">
+                    Podmień obrazki
+                  </FloorButton>
+                </Link>
+              )}
+              <FloorButton
+                variant="rectangular"
+                className="font-semibold"
+                onClick={() => setSelectedCategory(undefined)}
+              >
+                Wróć do kategorii
+              </FloorButton>
+            </div>
           </div>
 
           {/* Category Info */}
@@ -114,7 +125,10 @@ export default function CategoriesPage() {
                             once, so without lazy loading the browser fetches
                             all ~50 images up front to fill a 200px box. */}
                         <img
-                          src={`/images/${categoryData.folder}/${item.image}`}
+                          src={
+                            curatedOverrides[categoryData.folder]?.[item.image] ??
+                            `/images/${categoryData.folder}/${item.image}`
+                          }
                           alt={item.name}
                           className="max-w-full max-h-[200px] object-contain"
                           loading="lazy"
