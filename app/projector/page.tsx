@@ -10,9 +10,9 @@ import {
 import { CategoryId, FLOOR_DATA, FloorData, GameDetails } from "../data";
 import { categoryDisplayName } from "../categories/registry";
 import { useCommunityCategories } from "../categories/useCommunityCategories";
-import classNames from "classnames";
 import { PROJECTOR_MESSAGE_TYPE } from "../presenter/page";
 import Round from "./round";
+import Board from "./board";
 import { boardLayout, neighbourIndices } from "./boardLayout";
 import { markDrawn, planDraw, winnerHasPlayed } from "./randomizer";
 import { useLocalStorage } from "usehooks-ts";
@@ -284,6 +284,15 @@ export function Projector() {
     }
   }, [whoIsRemaining]);
 
+  // Don't render until after hydration to avoid mismatch
+  if (!mounted) {
+    return (
+      <FloorPageLayout>
+        <div className="grid grid-cols-4 grid-rows-10 h-full p-20 w-full" />
+      </FloorPageLayout>
+    );
+  }
+
   if (!gameDetails) {
     return (
       <FloorPageLayout>
@@ -298,15 +307,6 @@ export function Projector() {
             Wróć
           </FloorButton>
         </div>
-      </FloorPageLayout>
-    );
-  }
-
-  // Don't render until after hydration to avoid mismatch
-  if (!mounted) {
-    return (
-      <FloorPageLayout>
-        <div className="grid grid-cols-4 grid-rows-10 h-full p-20 w-full" />
       </FloorPageLayout>
     );
   }
@@ -350,43 +350,17 @@ export function Projector() {
             )}
           </div>
         </header>
-        <div
-          className="grid gap-3 flex-1 min-h-0"
-          style={{
-            gridTemplateColumns: `repeat(${layout.cols}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${layout.rows}, minmax(0, 1fr))`,
-            // Lets the tile text scale with the tile: fewer rows, bigger names.
-            ["--board-rows" as string]: layout.rows,
-            ["--board-cols" as string]: layout.cols,
-          }}
-        >
-        {gameDetails?.data?.map((floorPiece: FloorData, index: number) => {
-          const isSameCategoryAndPerson =
-            selectedFloorPiece?.category === floorPiece.category &&
-            selectedFloorPiece?.person === floorPiece.person;
-
-          const isHighlighted = highlightedFloorPieceCategories.includes(
-            floorPiece.category
-          );
-
-          return (
-            <FloorPiece
-              key={floorPiece.category + "-" + index}
-              number={index + 1}
-              floorPiece={floorPiece}
-              categoryName={categoryDisplayName(
-                floorPiece.category,
-                communityCategories
-              )}
-              isSelected={isSameCategoryAndPerson}
-              isHighlighted={!isRandomizing && isHighlighted}
-              isRandomizing={isRandomizing}
-              onSelect={onStartRound}
-              selectedFloorPiece={selectedFloorPiece}
-            />
-          );
-        })}
-        </div>
+        <Board
+          pieces={gameDetails?.data ?? []}
+          layout={layout}
+          selectedFloorPiece={selectedFloorPiece}
+          highlightedCategories={highlightedFloorPieceCategories}
+          isRandomizing={isRandomizing}
+          categoryName={(piece) =>
+            categoryDisplayName(piece.category, communityCategories)
+          }
+          onSelect={onStartRound}
+        />
       </div>
     </FloorPageLayout>
   );
@@ -415,55 +389,6 @@ function SelectedPlayerCard({
         <span className="text-3xl font-bold leading-tight">{person}</span>
       </div>
     </div>
-  );
-}
-
-function FloorPiece({
-  number,
-  floorPiece,
-  categoryName,
-  isSelected,
-  isRandomizing = false,
-  isHighlighted = isRandomizing,
-  onSelect,
-  selectedFloorPiece,
-}: {
-  /** 1-based position on the board, shown in the tile's corner. */
-  number: number;
-  floorPiece: FloorData;
-  /** Display name for the tile's category -- ids are opaque for community ones. */
-  categoryName: string;
-  /** Selected floor piece */
-  isSelected: boolean;
-  /** Highlighted floor piece surrounding the selected floor piece */
-  isHighlighted: boolean;
-
-  isRandomizing: boolean;
-  onSelect: (floorPiece: FloorData) => void;
-  selectedFloorPiece?: FloorData;
-}) {
-  const onClick = () => {
-    if (!isHighlighted && selectedFloorPiece) return;
-
-    onSelect(floorPiece);
-  };
-
-  return (
-    <button
-      className={classNames("neon-tile font-bold min-h-0 px-2", {
-        "neon-tile--selected": isSelected,
-        "neon-tile--highlight": isHighlighted && !isSelected,
-      })}
-      onClick={onClick}
-    >
-      <span className="neon-tile-number">{number}</span>
-      <p className="neon-tile-name leading-tight truncate max-w-full">{floorPiece.person}</p>
-      {(isSelected || isHighlighted) && !isRandomizing && (
-        <p className="neon-tile-category font-semibold tracking-[0.12em] opacity-90 truncate max-w-full">
-          {categoryName}
-        </p>
-      )}
-    </button>
   );
 }
 

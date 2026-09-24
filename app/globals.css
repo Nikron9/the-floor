@@ -214,6 +214,110 @@ body {
   background: linear-gradient(180deg, rgba(110, 85, 25, 0.7), rgba(40, 28, 8, 0.85));
 }
 
+/*
+ * The board drawn by territory (app/projector/board.tsx): one SVG shape per
+ * player's block of tiles, with transparent buttons on top for clicks.
+ * Colours match .neon-tile and its states above.
+ */
+.territory-shape {
+  fill: url(#territory-fill);
+  stroke: rgba(58, 166, 255, 0.8);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(58, 166, 255, 0.35));
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.territory-shape--selected {
+  fill: url(#territory-fill-selected);
+  stroke: #cfeaff;
+  filter: drop-shadow(0 0 18px rgba(58, 166, 255, 0.9)) drop-shadow(0 0 36px rgba(58, 166, 255, 0.45));
+  transform: scale(1.03);
+}
+
+.territory-shape--highlight {
+  fill: url(#territory-fill-gold);
+  stroke: var(--color-gold);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 12px rgba(255, 200, 61, 0.75)) drop-shadow(0 0 26px rgba(255, 200, 61, 0.35));
+}
+
+.territory-shape--hover {
+  fill: url(#territory-fill-gold-hover);
+}
+
+.board-cell {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  cursor: default;
+}
+
+.board-cell--clickable {
+  cursor: pointer;
+}
+
+.board-cell:focus-visible {
+  outline: 2px solid var(--color-neon-bright);
+  outline-offset: -4px;
+}
+
+/*
+ * A territory's name, confined to the largest rectangle inside the block.
+ * Sized from that rectangle (container units), so a bigger block gets a
+ * bigger name, and clipped to it, so it can't cross the outline.
+ */
+.territory-label {
+  position: relative;
+  z-index: 2;
+  container-type: size;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0 0.6rem;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* Long names wrap onto a second line before they get cut off. */
+.territory-name {
+  max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: break-word;
+  line-height: 1.1;
+  font-size: clamp(0.85rem, min(20cqh, 11cqw), 5rem);
+}
+
+.territory-category {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+  font-size: clamp(0.6rem, min(9cqh, 5cqw), 1.8rem);
+}
+
 /* Form fields. Applied globally so every input matches without a class. */
 /* In the base layer, so a utility class on a field still wins. */
 @layer base {
@@ -364,6 +468,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .neon-tile,
+  .territory-shape,
   .btn-glow,
   .neon-plate {
     transition: none;
