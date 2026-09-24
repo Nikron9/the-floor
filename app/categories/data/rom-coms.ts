@@ -1,0 +1,145 @@
+import type { CategoryMetadata } from "./types";
+
+export const RomComsCategory: CategoryMetadata = {
+  name: "Komedie romantyczne",
+  folder: "rom-coms",
+  examples: [
+    {
+      name: "Kiedy Harry poznał Sally",
+      image: "when-harry-met-sally.jpg",
+      alternatives: ["When Harry Met Sally"],
+    },
+    { name: "Pretty Woman", image: "pretty-woman.jpg", alternatives: [] },
+    {
+      name: "Narzeczona dla księcia",
+      image: "the-princess-bride.jpg",
+      alternatives: ["The Princess Bride"],
+    },
+    {
+      name: "Bezsenność w Seattle",
+      image: "sleepless-in-seattle.jpg",
+      alternatives: ["Sleepless in Seattle"],
+    },
+    {
+      name: "Masz wiadomość",
+      image: "youve-got-mail.jpg",
+      alternatives: ["You've Got Mail"],
+    },
+    { name: "Notting Hill", image: "notting-hill.jpg", alternatives: [] },
+    {
+      name: "Zakochana złośnica",
+      image: "10-things-i-hate-about-you.jpg",
+      alternatives: ["10 Things I Hate About You"],
+    },
+    { name: "To właśnie miłość", image: "love-actually.jpg", alternatives: ["Love Actually"] },
+    {
+      name: "Dziennik Bridget Jones",
+      image: "bridget-joness-diary.jpg",
+      alternatives: ["Bridget Jones's Diary"],
+    },
+    {
+      name: "Moje wielkie greckie wesele",
+      image: "my-big-fat-greek-wedding.jpg",
+      alternatives: ["My Big Fat Greek Wedding"],
+    },
+    {
+      name: "Jak stracić chłopaka w 10 dni",
+      image: "how-to-lose-a-guy-in-10-days.jpg",
+      alternatives: ["How to Lose a Guy in 10 Days"],
+    },
+    { name: "13 Going on 30", image: "13-going-on-30.jpg", alternatives: [] },
+    { name: "Narzeczony mimo woli", image: "the-proposal.jpg", alternatives: ["The Proposal"] },
+    { name: "Clueless", image: "clueless.jpg", alternatives: [] },
+    { name: "Legalna blondynka", image: "legally-blonde.jpg", alternatives: ["Legally Blonde"] },
+    { name: "50 pierwszych randek", image: "50-first-dates.jpg", alternatives: ["50 First Dates"] },
+    {
+      name: "Chłopaki też płaczą",
+      image: "forgetting-sarah-marshall.jpg",
+      alternatives: ["Forgetting Sarah Marshall"],
+    },
+    {
+      name: "The Wedding Singer",
+      image: "the-wedding-singer.jpg",
+      alternatives: [],
+    },
+    { name: "Mamma Mia!", image: "mamma-mia.jpg", alternatives: [] },
+    { name: "Pretty in Pink", image: "pretty-in-pink.jpg", alternatives: [] },
+    {
+      name: "Szesnaście świeczek",
+      image: "sixteen-candles.jpg",
+      alternatives: ["Sixteen Candles"],
+    },
+    { name: "Rzymskie wakacje", image: "roman-holiday.jpg", alternatives: ["Roman Holiday"] },
+    {
+      name: "Śniadanie u Tiffany'ego",
+      image: "breakfast-at-tiffanys.jpg",
+      alternatives: ["Breakfast at Tiffany's"],
+    },
+    {
+      name: "Ja cię kocham, a ty śpisz",
+      image: "while-you-were-sleeping.jpg",
+      alternatives: ["While You Were Sleeping"],
+    },
+    {
+      name: "Cztery wesela i pogrzeb",
+      image: "four-weddings-and-a-funeral.jpg",
+      alternatives: ["Four Weddings and a Funeral"],
+    },
+    { name: "Hitch", image: "hitch.jpg", alternatives: [] },
+    { name: "Jerry Maguire", image: "jerry-maguire.jpg", alternatives: [] },
+    {
+      name: "Zakochany Szekspir",
+      image: "shakespeare-in-love.jpg",
+      alternatives: ["Shakespeare in Love"],
+    },
+    { name: "The Holiday", image: "the-holiday.jpg", alternatives: [] },
+    {
+      name: "Poradnik pozytywnego myślenia",
+      image: "silver-linings-playbook.jpg",
+      alternatives: ["Silver Linings Playbook"],
+    },
+    { name: "La La Land", image: "la-la-land.jpg", alternatives: [] },
+    { name: "Czas na miłość", image: "about-time.jpg", alternatives: ["About Time"] },
+    {
+      name: "Bajecznie bogaci Azjaci",
+      image: "crazy-rich-asians.jpg",
+      alternatives: ["Crazy Rich Asians"],
+    },
+    {
+      name: "Do wszystkich chłopców, których kochałam",
+      image: "to-all-the-boys-ive-loved-before.jpg",
+      alternatives: ["To All the Boys I've Loved Before"],
+    },
+    { name: "The Big Sick", image: "the-big-sick.jpg", alternatives: [] },
+    {
+      name: "Always Be My Maybe",
+      image: "always-be-my-maybe.jpg",
+      alternatives: [],
+    },
+    { name: "Set It Up", image: "set-it-up.jpg", alternatives: [] },
+    {
+      name: "Prosto w serce",
+      image: "music-and-lyrics.jpg",
+      alternatives: ["Music and Lyrics"],
+    },
+    {
+      name: "The American President",
+      image: "the-american-president.jpg",
+      alternatives: [],
+    },
+    { name: "Wpływ księżyca", image: "moonstruck.jpg", alternatives: ["Moonstruck"] },
+    { name: "Plusk", image: "splash.jpg", alternatives: ["Splash"] },
+    {
+      name: "The Decoy Bride",
+      image: "the-decoy-bride.jpg",
+      alternatives: [],
+    },
+    {
+      name: "Nappily Ever After",
+      image: "nappily-ever-after.jpg",
+      alternatives: [],
+    },
+    { name: "The Half of It", image: "the-half-of-it.jpg", alternatives: [] },
+    { name: "Amelia", image: "amÃ©lie.jpg", alternatives: ["Amelie"] },
+  ],
+};

@@ -58,12 +58,15 @@ It caps the longest edge at 2048px and re-encodes in place, keeping filenames
 and formats. 2048 is chosen so the projector never has to upscale on a 1080p
 screen. `npm test` fails if an oversized image slips through.
 
-**2. Register it in `app/data.ts`** — a `CategoryMetadata` const, the name
-added to the `Category` union, and an entry in `CATEGORY_METADATA`. Copy a
-neighbouring category; the shape is short:
+**2. Add `app/categories/data/<folder>.ts`** with a `CategoryMetadata` const,
+then register it in `app/data.ts`: an import, the name added to the `Category`
+union, and an entry in `CATEGORY_METADATA`. Copy a neighbouring file; the
+shape is short:
 
 ```ts
-const SeaCreaturesCategory: CategoryMetadata = {
+import type { CategoryMetadata } from "./types";
+
+export const SeaCreaturesCategory: CategoryMetadata = {
   name: "Sea Creatures",
   folder: "sea-creatures",
   examples: [
@@ -77,6 +80,11 @@ player shouts something close enough. Categories can use `text:` instead of
 `image:` if they're word or number prompts — see `Math`.
 
 There's a walkthrough with more detail at `/categories/contribute`.
+
+**Order matters:** the game shows examples in file order, so the list is the
+round's difficulty curve. Easiest first, never alphabetical, at least 45
+examples. The full rules are in
+[`app/categories/CATEGORY_GUIDELINES.md`](app/categories/CATEGORY_GUIDELINES.md).
 
 ### One trap worth knowing about
 

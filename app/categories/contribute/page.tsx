@@ -89,7 +89,11 @@ export default function ContributeCategoriesPage() {
                   </code>
                 </li>
                 <li>
-                  Dodaj wpis kategorii w{" "}
+                  Dodaj plik kategorii w{" "}
+                  <code className="text-neon font-mono">
+                    app/categories/data/
+                  </code>{" "}
+                  i zarejestruj go w{" "}
                   <code className="text-neon font-mono">app/data.ts</code>
                 </li>
                 <li>Otwórz pull request</li>
@@ -121,10 +125,17 @@ export default function ContributeCategoriesPage() {
                 Krok 2: Zdefiniuj kategorię
               </h2>
               <p className="mb-4">
-                W pliku{" "}
-                <code className="text-neon font-mono">app/data.ts</code>,
-                utwórz nową stałą{" "}
-                <code className="text-neon font-mono">CategoryMetadata</code>.
+                Utwórz plik{" "}
+                <code className="text-neon font-mono">
+                  app/categories/data/&lt;twój-folder&gt;.ts
+                </code>{" "}
+                z nową stałą{" "}
+                <code className="text-neon font-mono">CategoryMetadata</code>,
+                a w{" "}
+                <code className="text-neon font-mono">app/data.ts</code>{" "}
+                dopisz jej import, nazwę do typu{" "}
+                <code className="text-neon font-mono">Category</code> i wpis w{" "}
+                <code className="text-neon font-mono">CATEGORY_METADATA</code>.
                 Każdy przykład ma pole{" "}
                 <code className="text-neon font-mono">name</code>{" "}
                 (odpowiedź), zasób (nazwę pliku w{" "}

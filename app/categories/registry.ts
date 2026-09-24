@@ -9,7 +9,8 @@ import {
 /**
  * Turning a category key into something the screen can render.
  *
- * Curated categories live in `app/data.ts` and point at files under
+ * Curated categories live in `app/categories/data/` (registered in
+ * `app/data.ts`) and point at files under
  * `public/images/<folder>/`. Community categories are created in the browser
  * and point at absolute URLs on the image host. The game shouldn't have to care
  * which it got, so both collapse into a `ResolvedCategory` whose image examples
@@ -84,9 +85,9 @@ const LEGACY_CATEGORY_IDS: Readonly<Record<string, Category>> = {
   "Board games": "Gry planszowe",
   Books: "Książki",
   "Brand slogans": "Slogany reklamowe",
-  "Chicago tourist stuff": "Atrakcje Chicago",
   "City Skylines": "Panoramy miast",
-  "Disney Channel Original Movies": "Filmy Disney Channel",
+  "Disney Channel Original Movies": "Bajki i filmy 2000-2010",
+  "Filmy Disney Channel": "Bajki i filmy 2000-2010",
   "Disney characters": "Postacie Disneya",
   Dogs: "Psy",
   "EU Flags": "Flagi Europy",
