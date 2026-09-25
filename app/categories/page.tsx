@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useCuratedOverrides } from "./useCuratedOverrides";
 import { curatedItems } from "./examples";
 import { newShuffleSeed, seededShuffle } from "./shuffle";
-import { CATEGORY_GROUPS, DIFFICULTY_INFO, CATEGORY_CATALOG } from "./catalog";
+import { DIFFICULTY_INFO, CATEGORY_CATALOG, categoryGroup } from "./catalog";
+import { useHalloweenTheme } from "../components/useHalloweenTheme";
 import {
   CategorySections,
   CategoryViewControls,
@@ -17,6 +18,7 @@ import {
 } from "./CategoryView";
 
 export default function CategoriesPage() {
+  const halloween = useHalloweenTheme();
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
   >(undefined);
@@ -100,8 +102,8 @@ export default function CategoriesPage() {
             )}
             <p className="text-white/80 text-sm flex flex-wrap gap-x-6 gap-y-1">
               <span>
-                {CATEGORY_GROUPS.find(({ id }) => id === CATEGORY_CATALOG[selectedCategory].group)?.emoji}{" "}
-                {CATEGORY_GROUPS.find(({ id }) => id === CATEGORY_CATALOG[selectedCategory].group)?.label}
+                {categoryGroup(selectedCategory, halloween)?.emoji}{" "}
+                {categoryGroup(selectedCategory, halloween)?.label}
               </span>
               <span>
                 <DifficultyMark id={selectedCategory} /> Trudność:{" "}

@@ -18,7 +18,8 @@ import {
 import { useCuratedOverrides } from "../categories/useCuratedOverrides";
 import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
-import FloorLogo from "../components/FloorLogo";
+import MenuHero, { MENU_BUTTON_CLASS, MENU_BUTTONS_CLASS } from "../components/MenuHero";
+import { useHalloweenTheme } from "../components/useHalloweenTheme";
 import FloorPageLayout from "../components/FloorPageLayout";
 import {
   arrangeCategories,
@@ -123,6 +124,7 @@ export default function PresenterPage({
   }>();
   const [demoQuery, setDemoQuery] = useState("");
   const [viewOptions, setViewOptions] = useCategoryViewOptions();
+  const halloween = useHalloweenTheme();
   // Quick duels keep the category's fixed order unless the host asks otherwise.
   const [demoShuffle, setDemoShuffle] = useState(false);
 
@@ -343,7 +345,7 @@ export default function PresenterPage({
     // Category <option>s following the shared view settings: <optgroup>s when
     // grouping is on, a difficulty emoji in front of the name when shown.
     const categoryOptions = (currentCategory?: CategoryId) =>
-      arrangeCategories(getAvailableCategories(currentCategory), viewOptions).map(
+      arrangeCategories(getAvailableCategories(currentCategory), viewOptions, halloween).map(
         ({ group, items }) => {
           const options = items.map(({ id, name }) => {
             const difficulty = catalogEntry(String(id))?.difficulty;
@@ -718,7 +720,7 @@ export default function PresenterPage({
         </div>
 
         {/* Always in reach, however long the player list gets. */}
-        <div className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
+        <div data-bottom-bar className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
           <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
             <p className="text-white/80">
               Gracze:{" "}
@@ -819,7 +821,7 @@ export default function PresenterPage({
         </div>
 
         {/* Always in reach, however far down the list the host scrolled. */}
-        <div className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
+        <div data-bottom-bar className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
             <p className="text-white/80 truncate">
               {selected ? (
@@ -1174,27 +1176,23 @@ export default function PresenterPage({
       <div className="flex-1 w-full flex flex-col items-center justify-center gap-[3vh] px-6 pb-[6vh] text-center">
         <div className="w-full max-w-xl lg:hidden">{desktopPlayWarning}</div>
 
-        <div className="flex flex-col items-center gap-[1.5vh]">
-          <h1 className="flex justify-center">
-            <FloorLogo size="hero" />
-          </h1>
-          <p className="text-sm sm:text-base md:text-xl text-white/80 font-light uppercase tracking-[0.2em]">
-            Zagraj w The Floor w domu
-          </p>
-        </div>
+        <MenuHero
+          tagline="Zagraj w The Floor w domu"
+          halloweenTagline="Mroczne rozgrywki w twoim domu"
+        />
 
         {/* Equal-sized buttons; the start button is set apart only by colour. */}
-        <div className="flex flex-col gap-3 w-full max-w-xs">
+        <div className={MENU_BUTTONS_CLASS}>
           <FloorButton
             variant="rectangular"
-            className="btn-primary w-full font-bold text-base"
+            className={`btn-primary ${MENU_BUTTON_CLASS}`}
             onClick={() => setGameDetails({ data: [] })}
           >
             Rozpocznij grę
           </FloorButton>
           <FloorButton
             variant="rectangular"
-            className="w-full font-semibold text-base"
+            className={MENU_BUTTON_CLASS}
             onClick={() => {
               setDemoQuery("");
               setDemoDetails({ category: "" });
@@ -1204,7 +1202,7 @@ export default function PresenterPage({
           </FloorButton>
           <FloorButton
             variant="rectangular"
-            className="w-full font-semibold text-base"
+            className={MENU_BUTTON_CLASS}
             onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID, true)}
           >
             Miks kategorii

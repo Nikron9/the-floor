@@ -10,6 +10,7 @@ import {
   type CategorySort,
   type CategoryViewOptions,
 } from "./catalog";
+import { useHalloweenTheme } from "../components/useHalloweenTheme";
 
 const STORAGE_KEY = "the-floor:category-view";
 
@@ -143,18 +144,21 @@ export const CategorySections = <T extends { id: string; name: string }>({
   options: CategoryViewOptions;
   gridClassName: string;
   renderTile: (item: T) => ReactNode;
-}) => (
-  <div className="flex flex-col gap-8">
-    {arrangeCategories(items, options).map(({ group, items: sectionItems }) => (
-      <section key={group?.id ?? "all"} className="flex flex-col gap-3">
-        {group && (
-          <h2 className="text-xl font-bold uppercase tracking-wide text-white">
-            <span className="mr-2">{group.emoji}</span>
-            {group.label}
-          </h2>
-        )}
-        <div className={gridClassName}>{sectionItems.map(renderTile)}</div>
-      </section>
-    ))}
-  </div>
-);
+}) => {
+  const halloween = useHalloweenTheme();
+  return (
+    <div className="flex flex-col gap-8">
+      {arrangeCategories(items, options, halloween).map(({ group, items: sectionItems }) => (
+        <section key={group?.id ?? "all"} className="flex flex-col gap-3">
+          {group && (
+            <h2 className="text-xl font-bold uppercase tracking-wide text-white">
+              <span className="mr-2">{group.emoji}</span>
+              {group.label}
+            </h2>
+          )}
+          <div className={gridClassName}>{sectionItems.map(renderTile)}</div>
+        </section>
+      ))}
+    </div>
+  );
+};

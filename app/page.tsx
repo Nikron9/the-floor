@@ -2,31 +2,26 @@
 
 import FloorPageLayout from "./components/FloorPageLayout";
 import FloorButton from "./components/FloorButton";
-import FloorLogo from "./components/FloorLogo";
+import MenuHero, { MENU_BUTTON_CLASS, MENU_BUTTONS_CLASS } from "./components/MenuHero";
 import Link from "next/link";
 
 export default function HomePage() {
   return (
     <FloorPageLayout>
       <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-8 md:p-20">
-        <div className="max-w-3xl w-full flex flex-col items-center text-center gap-10">
-          <div className="flex flex-col items-center gap-6">
-            <h1>
-              <FloorLogo size="lg" />
-            </h1>
-            <p className="text-xl md:text-2xl glow-text uppercase tracking-[0.2em]">
-              Fanowska gra online
-            </p>
-          </div>
+        <div className="max-w-3xl w-full flex flex-col items-center text-center gap-[3vh]">
+          <MenuHero tagline="Fanowska gra online" halloweenTagline="Mroczna edycja" />
 
-          <div className="flex flex-col gap-4 w-full max-w-sm">
+          <div className={MENU_BUTTONS_CLASS}>
             <Link href="/presenter" prefetch={false} className="w-full">
-              <FloorButton variant="rectangular" className="btn-primary w-full whitespace-nowrap">
+              <FloorButton variant="rectangular" className={`btn-primary ${MENU_BUTTON_CLASS}`}>
                 Zacznij grać
               </FloorButton>
             </Link>
             <Link href="/categories" prefetch={false} className="w-full">
-              <FloorButton variant="rectangular" className="w-full whitespace-nowrap">Przeglądaj kategorie</FloorButton>
+              <FloorButton variant="rectangular" className={MENU_BUTTON_CLASS}>
+                Przeglądaj kategorie
+              </FloorButton>
             </Link>
           </div>
         </div>

@@ -626,6 +626,19 @@ body {
   }
 }
 
+/* Text shown only in one theme (e.g. the menu taglines). */
+.only-halloween {
+  display: none;
+}
+
+:root[data-theme="halloween"] .only-halloween {
+  display: inline;
+}
+
+:root[data-theme="halloween"] .only-classic {
+  display: none;
+}
+
 /* ----------------------------------------------------- halloween decor */
 
 /* Behind page content (z-10) but above the page background. */

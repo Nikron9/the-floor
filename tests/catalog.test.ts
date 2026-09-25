@@ -3,6 +3,7 @@ import { CATEGORY_METADATA, type Category } from "../app/data";
 import {
   CATEGORY_CATALOG,
   CATEGORY_GROUPS,
+  HALLOWEEN_CATEGORIES,
   arrangeCategories,
 } from "../app/categories/catalog";
 
@@ -22,8 +23,20 @@ describe("category catalog", () => {
 
   it("leaves no group empty", () => {
     for (const { id } of CATEGORY_GROUPS) {
+      if (id === "halloween") continue; // seasonal, filled from HALLOWEEN_CATEGORIES
       expect(Object.values(CATEGORY_CATALOG).some((e) => e.group === id), id).toBe(true);
     }
+  });
+
+  it("shows the Halloween group first, and only in the Halloween theme", () => {
+    const classic = arrangeCategories(items, { grouped: true, sort: "alpha" });
+    expect(classic.some(({ group }) => group?.id === "halloween")).toBe(false);
+    expect(classic.flatMap((s) => s.items)).toHaveLength(items.length);
+
+    const halloween = arrangeCategories(items, { grouped: true, sort: "alpha" }, true);
+    expect(halloween[0].group?.id).toBe("halloween");
+    expect(halloween[0].items.map(({ id }) => id).sort()).toEqual([...HALLOWEEN_CATEGORIES].sort());
+    expect(halloween.flatMap((s) => s.items)).toHaveLength(items.length);
   });
 
   it("sorts alphabetically in one section when grouping is off", () => {

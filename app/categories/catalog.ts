@@ -18,8 +18,12 @@ export const DIFFICULTY_INFO: Record<Difficulty, { dots: string; label: string }
   3: { dots: "●●●", label: "Trudna" },
 };
 
-/** Groups in display order. */
+/**
+ * Groups in display order. The Halloween group is seasonal: it exists only
+ * while the Halloween theme is on (see HALLOWEEN_CATEGORIES).
+ */
 export const CATEGORY_GROUPS = [
+  { id: "halloween", emoji: "🎃", label: "Halloween" },
   { id: "home", emoji: "🏠", label: "Dom i codzienność" },
   { id: "food", emoji: "🍔", label: "Jedzenie" },
   { id: "nature", emoji: "🐾", label: "Zwierzęta i przyroda" },
@@ -34,8 +38,28 @@ export const CATEGORY_GROUPS = [
 ] as const;
 
 export type CategoryGroupId = (typeof CATEGORY_GROUPS)[number]["id"];
+/** Groups a category belongs to all year round. */
+export type PermanentGroupId = Exclude<CategoryGroupId, "halloween">;
 
-export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; difficulty: Difficulty }> = {
+/**
+ * Categories moved into the Halloween group (shown first) while the
+ * Halloween theme is on. The rest of the year they stay in their own group.
+ */
+export const HALLOWEEN_CATEGORIES: ReadonlySet<Category> = new Set<Category>([
+  "Halloween",
+  "Kostiumy na Halloween",
+  "Potwory i demony",
+  "Straszne zwierzęta",
+  "Czarne charaktery z filmów",
+  "Grzyby",
+  "Superbohaterowie i złoczyńcy",
+  "Kawy i napoje",
+  "Ciasta i desery",
+  "Święta i daty",
+  "Gothic",
+]);
+
+export const CATEGORY_CATALOG: Record<Category, { group: PermanentGroupId; difficulty: Difficulty }> = {
   // Dom i codzienność
   "Gadżety kuchenne": { group: "home", difficulty: 1 },
   "Pranie": { group: "home", difficulty: 1 },
@@ -154,6 +178,13 @@ export const DEFAULT_VIEW_OPTIONS: CategoryViewOptions = {
 export const catalogEntry = (id: string) =>
   id in CATEGORY_CATALOG ? CATEGORY_CATALOG[id as Category] : undefined;
 
+/** The group a category is shown in, given whether the Halloween theme is on. */
+export const categoryGroup = (id: string, halloween: boolean) => {
+  if (halloween && HALLOWEEN_CATEGORIES.has(id as Category)) return CATEGORY_GROUPS[0];
+  const groupId = catalogEntry(id)?.group;
+  return CATEGORY_GROUPS.find((group) => group.id === groupId);
+};
+
 export type CategorySection<T> = {
   /** Undefined when grouping is off: one section with everything. */
   group?: (typeof CATEGORY_GROUPS)[number];
@@ -163,11 +194,12 @@ export type CategorySection<T> = {
 /**
  * Sorts (and optionally groups) anything with a category `id` and `name`.
  * Ties in difficulty fall back to alphabetical order; empty groups are
- * dropped.
+ * dropped, so the Halloween group only shows up with `halloween` on.
  */
 export const arrangeCategories = <T extends { id: string; name: string }>(
   items: T[],
-  { grouped, sort }: Pick<CategoryViewOptions, "grouped" | "sort">
+  { grouped, sort }: Pick<CategoryViewOptions, "grouped" | "sort">,
+  halloween = false
 ): CategorySection<T>[] => {
   const difficulty = (item: T) => catalogEntry(item.id)?.difficulty ?? 2;
   const sorted = [...items].sort((a, b) => {
@@ -182,6 +214,6 @@ export const arrangeCategories = <T extends { id: string; name: string }>(
 
   return CATEGORY_GROUPS.map((group) => ({
     group,
-    items: sorted.filter((item) => catalogEntry(item.id)?.group === group.id),
+    items: sorted.filter((item) => categoryGroup(item.id, halloween)?.id === group.id),
   })).filter((section) => section.items.length > 0);
 };
