@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CategoryId, FloorData, GameDetails } from "../data";
+import {
+  CATEGORY_METADATA,
+  type Category,
+  CategoryId,
+  FloorData,
+  GameDetails,
+} from "../data";
 import {
   categoryDisplayName,
   listSelectableCategories,
@@ -67,9 +73,11 @@ export default function PresenterPage({
     CategoryId | undefined
   >(undefined);
 
+  // Quick duel setup: an empty category means nothing is picked yet.
   const [demoDetails, setDemoDetails] = useState<{
     category: CategoryId;
   }>();
+  const [demoQuery, setDemoQuery] = useState("");
 
   // The exact list the projector is playing, in its order. Needed because a
   // single round shuffles its examples, so the presenter cannot re-resolve
@@ -544,48 +552,96 @@ export default function PresenterPage({
     );
   }
 
-  // DEMO SETUP
+  // QUICK DUEL SETUP
   if (demoDetails) {
+    const query = demoQuery.trim().toLowerCase();
+    const choices = listSelectableCategories()
+      .filter(({ name }) => name.toLowerCase().includes(query))
+      .map(({ id, name }) => {
+        const examples = CATEGORY_METADATA[id as Category].examples;
+        return {
+          id,
+          name,
+          count: examples.length,
+          isText: examples.some((example) => "text" in example),
+        };
+      });
+    const selected = demoDetails.category;
+    const pickRandom = () => {
+      const all = listSelectableCategories();
+      setDemoDetails({ category: all[Math.floor(Math.random() * all.length)].id });
+    };
+
     return (
-      <FloorPageLayout>
-        <div className="p-8 md:p-20 flex flex-col gap-6">
-          <h3
-            className="text-4xl font-bold mb-6 glow-text"
-            style={{ color: "var(--color-neon)" }}
-          >
-            Pojedyncza runda
-          </h3>
-          {desktopPlayWarning}
-          <label className="text-xl font-bold flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center mb-4">
-            <span className="glow-text" style={{ color: "var(--color-neon)" }}>
-              Kategoria:
-            </span>
-            <select
-              onChange={(e) => setDemoDetails({ category: e.target.value })}
-              value={demoDetails?.category}
-              className="w-full sm:w-auto bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
-              style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
+      <FloorPageLayout back={{ onClick: () => setDemoDetails(undefined) }}>
+        <div className="w-full max-w-6xl mx-auto px-6 pt-4 pb-32 flex flex-col gap-5">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h1
+              className="text-4xl md:text-5xl font-bold uppercase tracking-wide glow-text"
+              style={{ color: "var(--color-neon)" }}
             >
-              {listSelectableCategories().map(
-                ({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                )
-              )}
-            </select>
-          </label>
-          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
-            <FloorButton
-              variant="rectangular"
-              className="font-bold text-lg w-full sm:w-auto"
-              onClick={() => setDemoDetails(undefined)}
-            >
-              Anuluj
+              Szybki pojedynek
+            </h1>
+            <p className="text-sm md:text-base uppercase tracking-[0.2em] text-white/70">
+              Jedna runda w wybranej kategorii, elementy w losowej kolejności
+            </p>
+          </div>
+          <div className="w-full max-w-xl mx-auto lg:hidden">{desktopPlayWarning}</div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="Szukaj kategorii..."
+              value={demoQuery}
+              onChange={(event) => setDemoQuery(event.target.value)}
+              className="flex-1 bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
+            />
+            <FloorButton variant="rectangular" className="font-semibold" onClick={pickRandom}>
+              Losuj kategorię
             </FloorButton>
+          </div>
+
+          {choices.length === 0 ? (
+            <p className="text-center text-white/60 py-8">
+              Nie znaleziono kategorii pasujących do wyszukiwania
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {choices.map(({ id, name, count, isText }) => (
+                <FloorButton
+                  key={id}
+                  variant="rectangular"
+                  aria-pressed={id === selected}
+                  className={`${id === selected ? "btn-primary" : ""} flex flex-col items-center justify-center gap-1 !py-5 text-sm normal-case`}
+                  onClick={() => setDemoDetails({ category: id })}
+                >
+                  <span className="text-center uppercase">{name}</span>
+                  <span className="text-xs font-normal text-white/70 normal-case tracking-normal">
+                    {isText ? "Tekst" : "Obrazki"} · {count}
+                  </span>
+                </FloorButton>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Always in reach, however far down the list the host scrolled. */}
+        <div className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
+          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+            <p className="text-white/80 truncate">
+              {selected ? (
+                <>
+                  Kategoria:{" "}
+                  <span className="font-bold text-white">{categoryDisplayName(selected)}</span>
+                </>
+              ) : (
+                "Wybierz kategorię"
+              )}
+            </p>
             <FloorButton
               variant="rectangular"
-              className="font-bold text-lg w-full sm:w-auto"
+              className="btn-primary font-bold shrink-0"
+              disabled={!selected}
               onClick={() => triggerStartDemoRound()}
             >
               Start
@@ -841,8 +897,8 @@ export default function PresenterPage({
   }
 
   return (
-    <FloorPageLayout nav>
-      {/* Fills the screen below the nav bar, so the whole menu fits without scrolling. */}
+    <FloorPageLayout back={{ fallback: "/" }}>
+      {/* Fills the screen below the back button, so the whole menu fits without scrolling. */}
       <div className="flex-1 w-full flex flex-col items-center justify-center gap-[3vh] px-6 pb-[6vh] text-center">
         <div className="w-full max-w-xl lg:hidden">{desktopPlayWarning}</div>
 
@@ -867,16 +923,19 @@ export default function PresenterPage({
           <FloorButton
             variant="rectangular"
             className="w-full font-semibold text-base"
-            onClick={() => setDemoDetails({ category: "Aplikacje" })}
+            onClick={() => {
+              setDemoQuery("");
+              setDemoDetails({ category: "" });
+            }}
           >
-            Pojedyncza runda
+            Szybki pojedynek
           </FloorButton>
           <FloorButton
             variant="rectangular"
             className="w-full font-semibold text-base"
             onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID)}
           >
-            Co to jest?
+            Miks kategorii
           </FloorButton>
         </div>
 

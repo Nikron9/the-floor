@@ -2,8 +2,6 @@
 import classNames from "classnames";
 
 const SIZES = {
-  /** The small logo in the top navigation bar. */
-  nav: "h-10 sm:h-12",
   sm: "h-20",
   md: "h-36",
   lg: "h-32 md:h-56",

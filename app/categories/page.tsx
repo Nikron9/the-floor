@@ -42,7 +42,7 @@ export default function CategoriesPage() {
     const examples = categoryData.examples;
 
     return (
-      <FloorPageLayout nav>
+      <FloorPageLayout back={{ onClick: () => setSelectedCategory(undefined) }}>
         <div className="w-full px-6 md:px-12 pt-4 pb-16 flex flex-col gap-6 max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-row items-center justify-between mb-4">
@@ -60,13 +60,6 @@ export default function CategoriesPage() {
                   </FloorButton>
                 </Link>
               )}
-              <FloorButton
-                variant="rectangular"
-                className="font-semibold"
-                onClick={() => setSelectedCategory(undefined)}
-              >
-                Wróć do kategorii
-              </FloorButton>
             </div>
           </div>
 
@@ -148,7 +141,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <FloorPageLayout nav>
+    <FloorPageLayout back>
       <div className="w-full px-6 md:px-12 pt-4 pb-16 flex flex-col gap-6 max-w-7xl mx-auto">
         {/* Header */}
         <h1

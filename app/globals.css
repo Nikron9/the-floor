@@ -376,11 +376,15 @@ body {
   padding: 0.75rem 1.5rem;
 }
 
-/* The main call to action: same size as its neighbours, gold instead of blue. */
+/*
+ * The main call to action: same size as its neighbours, but filled with a
+ * brighter blue and a light border. Hover still turns it gold like every other
+ * button, so the hover change stays visible.
+ */
 .btn-glow.btn-primary {
-  border-color: var(--color-gold);
-  color: #fff4cf;
-  box-shadow: var(--gold-glow);
+  background: linear-gradient(180deg, #2f8cff 0%, #1766e0 55%, #0d4fc0 100%);
+  border-color: #bfe3ff;
+  box-shadow: 0 0 18px rgba(77, 176, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-glow:hover:not(:disabled) {

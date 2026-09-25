@@ -38,9 +38,9 @@ All three start from the presenter menu:
 - **Rozpocznij grę** — the full game: board, draw, duels until one player
   owns the floor. Examples play in each category's fixed order (easiest
   first).
-- **Pojedyncza runda** — one duel in a chosen category, examples in random
+- **Szybki pojedynek** — one duel in a chosen category, examples in random
   order (`/demo?category=…`).
-- **Co to jest?** — one duel on random pictures from every image category
+- **Miks kategorii** — one duel on random pictures from every image category
   (at most 100 per round).
 
 Before each round the projector shows who plays whom, the category, whether it

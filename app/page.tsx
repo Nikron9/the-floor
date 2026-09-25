@@ -21,7 +21,9 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/presenter" prefetch={false}>
-              <FloorButton variant="rectangular">Zacznij grać</FloorButton>
+              <FloorButton variant="rectangular" className="btn-primary">
+                Zacznij grać
+              </FloorButton>
             </Link>
             <Link href="/categories" prefetch={false}>
               <FloorButton variant="rectangular">Przeglądaj kategorie</FloorButton>

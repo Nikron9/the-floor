@@ -26,10 +26,15 @@ const STEPS = [
 
 export default function AboutPage() {
   return (
-    <FloorPageLayout nav>
+    <FloorPageLayout back>
       <div className="w-full max-w-4xl mx-auto px-6 pb-16 pt-6 flex flex-col gap-6">
-        <div className="text-center flex flex-col items-center gap-3 mb-2">
-          <h1 className="text-4xl md:text-6xl font-black metallic-text">O grze</h1>
+        <div className="flex flex-col items-center gap-3 mb-2 text-center">
+          <h1
+            className="text-4xl md:text-5xl font-bold uppercase tracking-wide glow-text"
+            style={{ color: "var(--color-neon)" }}
+          >
+            O grze
+          </h1>
           <p className="text-sm md:text-base uppercase tracking-[0.25em] text-white/70">
             Fanowska wersja teleturnieju do grania w domu
           </p>
@@ -66,11 +71,11 @@ export default function AboutPage() {
               pojedynki aż do ostatniego gracza.
             </li>
             <li>
-              <strong className="text-white">Pojedyncza runda</strong> — jeden pojedynek
+              <strong className="text-white">Szybki pojedynek</strong> — jeden pojedynek
               w wybranej kategorii, elementy w losowej kolejności.
             </li>
             <li>
-              <strong className="text-white">Co to jest?</strong> — pojedynek na losowych
+              <strong className="text-white">Miks kategorii</strong> — pojedynek na losowych
               obrazkach ze wszystkich kategorii.
             </li>
           </ul>

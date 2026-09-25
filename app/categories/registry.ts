@@ -156,7 +156,7 @@ export const resolveCuratedCategory = (
 };
 
 /**
- * Pseudo-category behind the "Co to jest?" single round: every curated
+ * Pseudo-category behind the "Miks kategorii" single round: every curated
  * picture from every image category, mixed together. It never appears in the
  * game's category list; the presenter opens it directly as a one-off round.
  */
@@ -169,7 +169,7 @@ export const resolveMixedCategory = (
   overrides: CuratedOverrides = {}
 ): ResolvedCategory => ({
   id: MIXED_CATEGORY_ID,
-  name: "Co to jest?",
+  name: "Miks kategorii",
   instruction:
     "Na ekranie pojawi się obrazek z dowolnej kategorii. Powiedz, co przedstawia.",
   examples: (Object.keys(CATEGORY_METADATA) as Category[]).flatMap((id) => {

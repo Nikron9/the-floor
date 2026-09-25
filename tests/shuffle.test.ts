@@ -49,11 +49,11 @@ describe("roundInstruction", () => {
   });
 });
 
-describe("mixed \"Co to jest?\" round", () => {
+describe("mixed \"Miks kategorii\" round", () => {
   const mixed = resolveCategory(MIXED_CATEGORY_ID);
 
   it("pools pictures from many categories", () => {
-    expect(mixed?.name).toBe("Co to jest?");
+    expect(mixed?.name).toBe("Miks kategorii");
     expect(mixed?.examples.length).toBeGreaterThan(1000);
     expect(mixed?.examples.every(isImageExample)).toBe(true);
   });
