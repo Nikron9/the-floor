@@ -125,7 +125,7 @@ describe("category ids", () => {
 
   it("still resolves the old English keys from saved games", () => {
     expect(resolveCategory("Fruits")?.id).toBe("Owoce");
-    expect(categoryDisplayName("Taylor Swift Lyrics")).toBe("Teksty Taylor Swift");
+    expect(categoryDisplayName("Pop divas")).toBe("Diwy popu");
     expect(resolveCategory("Anime")?.id).toBe("Anime");
   });
 

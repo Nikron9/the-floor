@@ -10,7 +10,6 @@ import { DisneyCharactersCategory } from "./categories/data/disney-characters";
 import { DogsCategory } from "./categories/data/dogs";
 import { EuropeanFlagsCategory } from "./categories/data/european-flags";
 import { FairFoodsCategory } from "./categories/data/fair-foods";
-import { FamousPeopleWhoDiedBeforeTurning30Category } from "./categories/data/famous-people-under-30";
 import { FastFoodChainsCategory } from "./categories/data/fast-food-chains";
 import { FridgeCategory } from "./categories/data/fridge";
 import { FruitsCategory } from "./categories/data/fruits";
@@ -31,19 +30,19 @@ import { PolishDishesCategory } from "./categories/data/polish-dishes";
 import { PolishEntertainmentCategory } from "./categories/data/polish-entertainment";
 import { PolishLandmarksCategory } from "./categories/data/polish-landmarks";
 import { PolishNatureCategory } from "./categories/data/polish-nature";
+import { PolishActressesCategory } from "./categories/data/polish-actresses";
+import { PolishActorsCategory } from "./categories/data/polish-actors";
+import { CatBreedsCategory } from "./categories/data/cat-breeds";
+import { PolishRappersCategory } from "./categories/data/polish-rappers";
+import { PolishInfluencersCategory } from "./categories/data/polish-influencers";
 import { ScaryAnimalsCategory } from "./categories/data/scary-animals";
 import { HalloweenDecorationsCategory } from "./categories/data/halloween-decorations";
 import { MonstersCategory } from "./categories/data/monsters";
 import { MovieVillainsCategory } from "./categories/data/movie-villains";
-import { PoolEquipmentCategory } from "./categories/data/pool-equipment";
 import { PopDivasCategory } from "./categories/data/pop-divas";
-import { RomComsCategory } from "./categories/data/rom-coms";
 import { SpiritHalloweenCatalogueCategory } from "./categories/data/spirit-halloween-catalogue";
 import { SportsCategory } from "./categories/data/sports";
 import { SuperherosCategory } from "./categories/data/superheros";
-import { TaylorSwiftLyricsCategory } from "./categories/data/taylor-swift-lyrics";
-import { ThanksgivingCategory } from "./categories/data/thanksgiving";
-import { TheOfficeCategory } from "./categories/data/the-office";
 import { TimesTablesCategory } from "./categories/data/times-tables";
 import { VideoGameCharactersCategory } from "./categories/data/video-game-characters";
 import { VideoGamesCategory } from "./categories/data/video-games";
@@ -76,7 +75,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Ellie",
-    category: "Komedie romantyczne",
+    category: "Polskie aktorki",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -100,7 +99,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Emma",
-    category: "Teksty Taylor Swift",
+    category: "Polscy aktorzy",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -118,13 +117,13 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Syd",
-    category: "Sławni, którzy zmarli przed 30",
+    category: "Czarne charaktery z filmów",
     hasPlayed: false,
     isStillInTheGame: true,
   },
   {
     person: "Pat",
-    category: "The Office",
+    category: "Halloween",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -287,6 +286,11 @@ export type Category =
   | "Znane budynki i pomniki"
   | "Rozrywka w Polsce"
   | "Przyroda Polski"
+  | "Polskie aktorki"
+  | "Polscy aktorzy"
+  | "Rasy kotów"
+  | "Polscy raperzy"
+  | "Polscy influencerzy i celebryci"
   | "Straszne zwierzęta"
   | "Halloween"
   | "Potwory i demony"
@@ -301,15 +305,10 @@ export type Category =
   | "Książki"
   | "Bajki i filmy 2000-2010"
   | "Slogany reklamowe"
-  | "Teksty Taylor Swift"
-  | "The Office"
-  | "Święto Dziękczynienia"
   | "Psy"
   | "Konie"
-  | "Komedie romantyczne"
   | "Wesołe miasteczka"
   | "Jedzenie z jarmarku"
-  | "Sławni, którzy zmarli przed 30"
   | "Sieci fast food"
   | "Lodówka"
   | "Garaż"
@@ -321,7 +320,6 @@ export type Category =
   // | "Chilis" // unused for now
   | "Matematyka"
   | "Aplikacje"
-  | "Wyposażenie basenu"
   | "Gry wideo"
   | "Polskie potrawy"
   | "Polscy sportowcy"
@@ -376,6 +374,11 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Znane budynki i pomniki": PolishLandmarksCategory,
   "Rozrywka w Polsce": PolishEntertainmentCategory,
   "Przyroda Polski": PolishNatureCategory,
+  "Polskie aktorki": PolishActressesCategory,
+  "Polscy aktorzy": PolishActorsCategory,
+  "Rasy kotów": CatBreedsCategory,
+  "Polscy raperzy": PolishRappersCategory,
+  "Polscy influencerzy i celebryci": PolishInfluencersCategory,
   "Straszne zwierzęta": ScaryAnimalsCategory,
   Halloween: HalloweenDecorationsCategory,
   "Potwory i demony": MonstersCategory,
@@ -385,8 +388,6 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Postacie Disneya": DisneyCharactersCategory,
   "Psy": DogsCategory,
   "Jedzenie z jarmarku": FairFoodsCategory,
-  "Sławni, którzy zmarli przed 30":
-    FamousPeopleWhoDiedBeforeTurning30Category,
   "Sieci fast food": FastFoodChainsCategory,
   "Lodówka": FridgeCategory,
   "Garaż": GarageCategory,
@@ -400,14 +401,9 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Filmy": MoviesCategory,
   "Diwy popu": PopDivasCategory,
   "Pokémony": PokemonCategory,
-  "Wyposażenie basenu": PoolEquipmentCategory,
-  "Komedie romantyczne": RomComsCategory,
   "Kostiumy na Halloween": SpiritHalloweenCatalogueCategory,
   "Sporty": SportsCategory,
   "Superbohaterowie": SuperherosCategory,
-  "Teksty Taylor Swift": TaylorSwiftLyricsCategory,
-  "The Office": TheOfficeCategory,
-  "Święto Dziękczynienia": ThanksgivingCategory,
   "Postacie z gier wideo": VideoGameCharactersCategory,
   "Gry wideo": VideoGamesCategory,
   "Polskie potrawy": PolishDishesCategory,
