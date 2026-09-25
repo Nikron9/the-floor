@@ -140,6 +140,10 @@ export function Projector() {
         case PROJECTOR_MESSAGE_TYPE.RESTART:
           onRestart();
           break;
+        case PROJECTOR_MESSAGE_TYPE.CLOSE:
+          // Only works for a window the presenter opened, which this is.
+          window.close();
+          break;
         default:
           console.warn("Unknown message type", event.data.type);
           break;

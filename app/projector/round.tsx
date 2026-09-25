@@ -10,6 +10,7 @@ import { ROUND_RULES, roundInstruction } from "../categories/instructions";
 import {
   PRESENTER_MESSAGE_TYPE,
   PROJECTOR_MESSAGE_TYPE,
+  type RoundTimerState,
 } from "../presenter/page";
 import { useSound } from "../hooks/useSound";
 import { useSearchParams } from "next/navigation";
@@ -98,6 +99,16 @@ export default function Round({
   const [currentTurn, setCurrentTurn] = useState<"challenger" | "defender">();
 
   const [countdown, setCountdown] = useState<number | null>(null);
+
+  // The host can pause the clocks (e.g. after a mistake) and correct them.
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(paused);
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
+  // Whether the round ended because a clock hit zero, as opposed to running
+  // out of examples; only then can adding time bring the round back.
+  const finishedByTimeoutRef = useRef(false);
 
   const [revealExampleName, setRevealExampleName] = useState<REVEAL_STATE>(
     REVEAL_STATE.NOT_STARTED
@@ -211,7 +222,7 @@ export default function Round({
   );
 
   const onPass = useCallback(async () => {
-    if (revealExampleName !== REVEAL_STATE.NOT_REVEALED) {
+    if (pausedRef.current || revealExampleName !== REVEAL_STATE.NOT_REVEALED) {
       return;
     }
 
@@ -221,7 +232,7 @@ export default function Round({
   }, [onNext, playSound, revealExampleName]);
 
   const onReveal = useCallback(async () => {
-    if (revealExampleName !== REVEAL_STATE.NOT_REVEALED) {
+    if (pausedRef.current || revealExampleName !== REVEAL_STATE.NOT_REVEALED) {
       return;
     }
 
@@ -260,7 +271,8 @@ export default function Round({
         // If the answer is revealed, don't count down
         revealExampleNameRef.current === REVEAL_STATE.REVEALED ||
         // If the round is finished, don't count down
-        revealExampleNameRef.current === REVEAL_STATE.FINISHED
+        revealExampleNameRef.current === REVEAL_STATE.FINISHED ||
+        pausedRef.current
       ) {
         return;
       }
@@ -269,6 +281,7 @@ export default function Round({
         setChallengerTimeLeft((prev) => {
           const newTime = prev - 1;
           if (newTime <= 0) {
+            finishedByTimeoutRef.current = true;
             setRevealExampleName(REVEAL_STATE.FINISHED);
             return 0;
           }
@@ -278,6 +291,7 @@ export default function Round({
         setDefenderTimeLeft((prev) => {
           const newTime = prev - 1;
           if (newTime <= 0) {
+            finishedByTimeoutRef.current = true;
             setRevealExampleName(REVEAL_STATE.FINISHED);
 
             return 0;
@@ -290,12 +304,50 @@ export default function Round({
     return () => clearInterval(interval);
   }, [currentTurn]);
 
+  const adjustTime = useCallback(
+    (player: "challenger" | "defender", delta: number) => {
+      const setTime =
+        player === "challenger" ? setChallengerTimeLeft : setDefenderTimeLeft;
+      const current = player === "challenger" ? challengerTimeLeft : defenderTimeLeft;
+      const next = Math.max(0, current + delta);
+      setTime(next);
+
+      if (next === 0 && currentTurn === player && revealExampleName !== REVEAL_STATE.FINISHED) {
+        // Taking the last seconds away ends the round like a real timeout.
+        finishedByTimeoutRef.current = true;
+        setRevealExampleName(REVEAL_STATE.FINISHED);
+      } else if (
+        next > 0 &&
+        revealExampleName === REVEAL_STATE.FINISHED &&
+        finishedByTimeoutRef.current
+      ) {
+        // The clock ran out by mistake: bring the round back, paused, so the
+        // host decides when it continues.
+        finishedByTimeoutRef.current = false;
+        setPaused(true);
+        setRevealExampleName(REVEAL_STATE.NOT_REVEALED);
+      }
+    },
+    [challengerTimeLeft, defenderTimeLeft, currentTurn, revealExampleName]
+  );
+
   // The handlers change identity on every example, but the subscription must
   // not: it is held in a ref so the effect below can run exactly once.
-  const handlers = useRef({ onRoundFinish, onPass, onReveal, playSound });
+  const handlers = useRef({ onRoundFinish, onPass, onReveal, playSound, adjustTime });
   useEffect(() => {
-    handlers.current = { onRoundFinish, onPass, onReveal, playSound };
-  }, [onRoundFinish, onPass, onReveal, playSound]);
+    handlers.current = { onRoundFinish, onPass, onReveal, playSound, adjustTime };
+  }, [onRoundFinish, onPass, onReveal, playSound, adjustTime]);
+
+  // Keep the host's panel in sync with the clocks.
+  useEffect(() => {
+    const timer: RoundTimerState = {
+      challengerTimeLeft,
+      defenderTimeLeft,
+      currentTurn,
+      paused,
+    };
+    channel().postMessage({ type: PRESENTER_MESSAGE_TYPE.TIMER_STATE, timer });
+  }, [challengerTimeLeft, defenderTimeLeft, currentTurn, paused, channel]);
 
   useEffect(() => {
     // This previously returned its cleanup from inside the message listener
@@ -320,6 +372,12 @@ export default function Round({
           break;
         case PROJECTOR_MESSAGE_TYPE.REVEAL_ROUND:
           handlers.current.onReveal();
+          break;
+        case PROJECTOR_MESSAGE_TYPE.PAUSE_ROUND:
+          setPaused(Boolean(event.data.paused));
+          break;
+        case PROJECTOR_MESSAGE_TYPE.ADJUST_TIME:
+          handlers.current.adjustTime(event.data.player, Number(event.data.delta) || 0);
           break;
         default:
           console.warn("Unknown message type", event.data.type);
@@ -444,11 +502,19 @@ export default function Round({
   return (
     <FloorPageLayout>
       <div className="p-10 relative w-full h-full">
-        <div className="round-stage flex flex-col items-center justify-center h-[75vh] mx-auto p-4">
+        <div className="round-stage relative flex flex-col items-center justify-center h-[75vh] mx-auto p-4">
           <RoundDisplay
             examples={examples}
             selectedExampleIndex={selectedExampleIndex}
           />
+          {paused && (
+            // Covers the picture too, so nobody keeps guessing during a pause.
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/85 backdrop-blur-sm">
+              <p className="text-8xl font-black uppercase tracking-widest metallic-text">
+                Pauza
+              </p>
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-row gap-2 w-full justify-between p-2">

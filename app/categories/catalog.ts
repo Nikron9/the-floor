@@ -73,7 +73,8 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Polscy influencerzy i celebryci": { group: "people", difficulty: 3 },
   // Filmy, książki i bajki
   "Postacie Disneya": { group: "screen", difficulty: 1 },
-  "Superbohaterowie": { group: "screen", difficulty: 1 },
+  "Superbohaterowie i złoczyńcy": { group: "screen", difficulty: 1 },
+  "Polskie seriale i programy TV": { group: "screen", difficulty: 2 },
   "Czarne charaktery z filmów": { group: "screen", difficulty: 2 },
   "Postacie z Harry'ego Pottera": { group: "screen", difficulty: 2 },
   "Filmy": { group: "screen", difficulty: 2 },
@@ -90,6 +91,10 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Minecraft": { group: "games", difficulty: 2 },
   "Gry i aplikacje z emoji": { group: "games", difficulty: 2 },
   "Gothic": { group: "games", difficulty: 3 },
+  "Ciasta i desery": { group: "food", difficulty: 1 },
+  "Kawy i napoje": { group: "food", difficulty: 1 },
+  "Paznokcie i makijaż": { group: "home", difficulty: 2 },
+  "Kamienie szlachetne": { group: "nature", difficulty: 3 },
   // Sport i rozrywka
   "Sporty": { group: "leisure", difficulty: 1 },
   "Gry planszowe": { group: "leisure", difficulty: 2 },

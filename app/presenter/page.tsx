@@ -39,16 +39,31 @@ export enum PROJECTOR_MESSAGE_TYPE {
   RANDOMIZER = "RANDOMIZER",
   GO_BACK_TO_FLOOR = "GO_BACK_TO_FLOOR",
   RESTART = "RESTART",
+  /** The game is over: the projector window closes itself. */
+  CLOSE = "CLOSE",
   START_ROUND = "START_ROUND",
   FINISH_ROUND = "FINISH_ROUND",
   PASS_ROUND = "PASS_ROUND",
   REVEAL_ROUND = "REVEAL_ROUND",
+  /** `{ paused: boolean }`: stops or resumes both clocks. */
+  PAUSE_ROUND = "PAUSE_ROUND",
+  /** `{ player: "challenger" | "defender", delta: number }` in seconds. */
+  ADJUST_TIME = "ADJUST_TIME",
 }
 
 export enum PRESENTER_MESSAGE_TYPE {
   SET_CURRENT_ROUND_EXAMPLE = "SET_CURRENT_ROUND_EXAMPLE",
   END_ROUND = "END_ROUND",
+  /** Both clocks, whose turn it is and whether the round is paused. */
+  TIMER_STATE = "TIMER_STATE",
 }
+
+export type RoundTimerState = {
+  challengerTimeLeft: number;
+  defenderTimeLeft: number;
+  currentTurn?: "challenger" | "defender";
+  paused: boolean;
+};
 
 export default function PresenterPage({
   params,
@@ -73,6 +88,7 @@ export default function PresenterPage({
     GameDetails | undefined
   >("the-floor-data", undefined);
   const [hasResumedLiveGame, setHasResumedLiveGame] = useState(false);
+  const [roundTimer, setRoundTimer] = useState<RoundTimerState>();
 
   // Game setup state
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -196,8 +212,24 @@ export default function PresenterPage({
     channel.postMessage({ type: PROJECTOR_MESSAGE_TYPE.REVEAL_ROUND });
   };
 
+  const triggerPause = (paused: boolean) => {
+    channel.postMessage({ type: PROJECTOR_MESSAGE_TYPE.PAUSE_ROUND, paused });
+  };
+
+  const triggerAdjustTime = (player: "challenger" | "defender", delta: number) => {
+    channel.postMessage({ type: PROJECTOR_MESSAGE_TYPE.ADJUST_TIME, player, delta });
+  };
+
   const triggerRestart = () => {
     channel.postMessage({ type: PROJECTOR_MESSAGE_TYPE.RESTART });
+  };
+
+  // Closes the projector window. The window handle is lost after a reload of
+  // this page, so the projector is also asked to close itself.
+  const closeProjector = () => {
+    channel.postMessage({ type: PROJECTOR_MESSAGE_TYPE.CLOSE });
+    projectorWindow?.close();
+    setProjectorWindow(null);
   };
 
   useEffect(() => {
@@ -217,9 +249,13 @@ export default function PresenterPage({
             setRoundExamples(event.data.roundExamples);
           }
           break;
+        case PRESENTER_MESSAGE_TYPE.TIMER_STATE:
+          setRoundTimer(event.data.timer);
+          break;
         case PRESENTER_MESSAGE_TYPE.END_ROUND:
           setRoundDetails(undefined);
           setRoundExamples(undefined);
+          setRoundTimer(undefined);
           break;
         default:
           console.warn("Unknown message type", event.data.type);
@@ -244,6 +280,14 @@ export default function PresenterPage({
       ) {
         return;
       }
+
+      // "P" or space pauses and resumes the clocks.
+      if (event.key === "p" || event.key === "P" || event.key === " ") {
+        event.preventDefault();
+        triggerPause(!roundTimer?.paused);
+        return;
+      }
+      if (roundTimer?.paused) return;
 
       // Handle "1" key for Pass
       if (event.key === "1") {
@@ -270,7 +314,7 @@ export default function PresenterPage({
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [roundDetails]);
+  }, [roundDetails, roundTimer?.paused]);
 
   // GAME SETUP
   if (gameDetails) {
@@ -321,6 +365,21 @@ export default function PresenterPage({
     });
     const isSuggested = suggestions.some(({ id }) => id === newPlayerCategory);
 
+    // Player names must be unique (ignoring case and surrounding spaces);
+    // `exceptIndex` skips the player being edited.
+    const isNameTaken = (name: string, exceptIndex?: number) => {
+      const wanted = name.trim().toLocaleLowerCase("pl");
+      return gameDetails.data.some(
+        ({ person }, index) =>
+          index !== exceptIndex && person.trim().toLocaleLowerCase("pl") === wanted
+      );
+    };
+    const newNameTaken = newPlayerName.trim() !== "" && isNameTaken(newPlayerName);
+    const editNameTaken =
+      editingIndex !== null &&
+      editPlayerName.trim() !== "" &&
+      isNameTaken(editPlayerName, editingIndex);
+
     const pickRandomCategory = () => {
       const free = getAvailableCategories();
       if (free.length > 0) {
@@ -337,6 +396,7 @@ export default function PresenterPage({
 
     const handleAddPlayer = () => {
       if (!newPlayerName.trim() || newPlayerCategory === undefined) return;
+      if (isNameTaken(newPlayerName)) return;
 
       // Check if category is already used
       if (usedCategories.has(newPlayerCategory)) {
@@ -362,6 +422,7 @@ export default function PresenterPage({
 
     const handleUpdatePlayer = (index: number) => {
       if (!editPlayerName.trim() || editPlayerCategory === undefined) return;
+      if (isNameTaken(editPlayerName, index)) return;
 
       // Check if category is already used by another player
       const currentPlayer = gameDetails.data[index];
@@ -437,9 +498,15 @@ export default function PresenterPage({
               placeholder="Imię gracza"
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
-              className={fieldClass}
+              className={`${fieldClass} ${newNameTaken ? "!border-red-500" : ""}`}
+              aria-invalid={newNameTaken}
               autoFocus
             />
+            {newNameTaken && (
+              <p className="-mt-2 text-sm text-red-400">
+                Gracz o tym imieniu jest już na liście.
+              </p>
+            )}
 
             {suggestions.length > 0 && (
               <div className="flex flex-col gap-2">
@@ -496,7 +563,9 @@ export default function PresenterPage({
                 type="submit"
                 variant="rectangular"
                 className="btn-primary font-semibold text-sm"
-                disabled={!newPlayerName.trim() || newPlayerCategory === undefined}
+                disabled={
+                  !newPlayerName.trim() || newNameTaken || newPlayerCategory === undefined
+                }
               >
                 Dodaj
               </FloorButton>
@@ -536,7 +605,9 @@ export default function PresenterPage({
                           type="text"
                           value={editPlayerName}
                           onChange={(e) => setEditPlayerName(e.target.value)}
-                          className={`${fieldClass} !p-2 sm:w-48`}
+                          className={`${fieldClass} !p-2 sm:w-48 ${editNameTaken ? "!border-red-500" : ""}`}
+                          aria-invalid={editNameTaken}
+                          title={editNameTaken ? "Gracz o tym imieniu jest już na liście." : undefined}
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === "Enter") handleUpdatePlayer(index);
@@ -554,6 +625,7 @@ export default function PresenterPage({
                           <FloorButton
                             variant="rectangular"
                             className="text-xs font-semibold !px-3 !py-2"
+                            disabled={editNameTaken}
                             onClick={() => handleUpdatePlayer(index)}
                           >
                             Zapisz
@@ -787,6 +859,7 @@ export default function PresenterPage({
                       className="cursor-pointer font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                       onClick={() => triggerPassRound()}
                       disabled={
+                        roundTimer?.paused ||
                         roundDetails.roundState === REVEAL_STATE.PASSED ||
                         roundDetails.roundState === REVEAL_STATE.REVEALED
                       }
@@ -801,6 +874,7 @@ export default function PresenterPage({
                       className="cursor-pointer font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                       onClick={() => triggerRevealRound()}
                       disabled={
+                        roundTimer?.paused ||
                         roundDetails.roundState === REVEAL_STATE.REVEALED ||
                         roundDetails.roundState === REVEAL_STATE.PASSED
                       }
@@ -810,10 +884,75 @@ export default function PresenterPage({
                         [2]
                       </code>
                     </FloorButton>
+                    <FloorButton
+                      variant="rectangular"
+                      className={`${roundTimer?.paused ? "btn-primary" : ""} cursor-pointer font-bold text-lg`}
+                      onClick={() => triggerPause(!roundTimer?.paused)}
+                    >
+                      {roundTimer?.paused ? "Wznów" : "Pauza"}{" "}
+                      <code className="ml-2 px-2 py-1 bg-black/30 rounded">[P]</code>
+                    </FloorButton>
                   </div>
                 </div>
               )}
           </div>
+
+          {/* While paused (or after the clock ran out) the host can correct
+              either player's time, e.g. after a misclick. */}
+          {roundTimer &&
+            (roundTimer.paused || roundDetails.roundState === REVEAL_STATE.FINISHED) && (
+              <div className="neon-panel p-5 flex flex-col gap-4 mb-6">
+                <p className="text-lg font-semibold text-white">
+                  {roundTimer.paused
+                    ? "Gra wstrzymana. Możesz poprawić czas graczy."
+                    : "Runda skończona. Jeśli czas skończył się przez pomyłkę, dodaj go graczowi, a gra wróci wstrzymana."}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {(["challenger", "defender"] as const).map((player) => {
+                    const time =
+                      player === "challenger"
+                        ? roundTimer.challengerTimeLeft
+                        : roundTimer.defenderTimeLeft;
+                    return (
+                      <div key={player} className="flex flex-col gap-2">
+                        <p className="text-white/80">
+                          {roundDetails[player].person}
+                          {roundTimer.currentTurn === player && (
+                            <span className="text-white/50"> · teraz odpowiada</span>
+                          )}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          {[-5, -1].map((delta) => (
+                            <FloorButton
+                              key={delta}
+                              variant="rectangular"
+                              className="font-bold !px-3 !py-2"
+                              disabled={time <= 0}
+                              onClick={() => triggerAdjustTime(player, delta)}
+                            >
+                              {delta}
+                            </FloorButton>
+                          ))}
+                          <span className="w-16 text-center text-3xl font-bold text-white tabular-nums">
+                            {time}
+                          </span>
+                          {[1, 5].map((delta) => (
+                            <FloorButton
+                              key={delta}
+                              variant="rectangular"
+                              className="font-bold !px-3 !py-2"
+                              onClick={() => triggerAdjustTime(player, delta)}
+                            >
+                              +{delta}
+                            </FloorButton>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div
               className="neon-panel flex flex-col gap-4 p-6"
@@ -976,6 +1115,7 @@ export default function PresenterPage({
               className="font-semibold"
               onClick={() => {
                 triggerRestart();
+                closeProjector();
                 setLiveGameDetails(undefined);
                 setHasResumedLiveGame(false);
               }}

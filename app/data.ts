@@ -15,6 +15,10 @@ import { FridgeCategory } from "./categories/data/fridge";
 import { FruitsCategory } from "./categories/data/fruits";
 import { GarageCategory } from "./categories/data/garage";
 import { GothicCategory } from "./categories/data/gothic";
+import { DessertsCategory } from "./categories/data/desserts";
+import { DrinksCategory } from "./categories/data/drinks";
+import { NailsMakeupCategory } from "./categories/data/nails-makeup";
+import { GemstonesCategory } from "./categories/data/gemstones";
 import { HarryPotterCharactersCategory } from "./categories/data/harry-potter-characters";
 import { ChristmasCategory } from "./categories/data/christmas";
 import { EuropeanCapitalsCategory } from "./categories/data/european-capitals";
@@ -65,7 +69,8 @@ import { MovieVillainsCategory } from "./categories/data/movie-villains";
 import { PopDivasCategory } from "./categories/data/pop-divas";
 import { SpiritHalloweenCatalogueCategory } from "./categories/data/spirit-halloween-catalogue";
 import { SportsCategory } from "./categories/data/sports";
-import { SuperherosCategory } from "./categories/data/superheros";
+import { ComicCharactersCategory } from "./categories/data/comic-characters";
+import { PolishTvCategory } from "./categories/data/polish-tv";
 import { TimesTablesCategory } from "./categories/data/times-tables";
 import { VideoGameCharactersCategory } from "./categories/data/video-game-characters";
 import { VideoGamesCategory } from "./categories/data/video-games";
@@ -116,7 +121,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Tanner",
-    category: "Superbohaterowie",
+    category: "Superbohaterowie i złoczyńcy",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -330,7 +335,8 @@ export type Category =
   | "Gry planszowe"
   | "Postacie z Harry'ego Pottera"
   | "Kostiumy na Halloween"
-  | "Superbohaterowie"
+  | "Superbohaterowie i złoczyńcy"
+  | "Polskie seriale i programy TV"
   | "Postacie z gier wideo"
   | "Panoramy miast"
   | "Filmy"
@@ -370,6 +376,10 @@ export type Category =
   | "Polskie potrawy"
   | "Polscy sportowcy"
   | "Gothic"
+  | "Ciasta i desery"
+  | "Kawy i napoje"
+  | "Paznokcie i makijaż"
+  | "Kamienie szlachetne"
   ;
 
 /**
@@ -472,12 +482,17 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Pokémony": PokemonCategory,
   "Kostiumy na Halloween": SpiritHalloweenCatalogueCategory,
   "Sporty": SportsCategory,
-  "Superbohaterowie": SuperherosCategory,
+  "Superbohaterowie i złoczyńcy": ComicCharactersCategory,
+  "Polskie seriale i programy TV": PolishTvCategory,
   "Postacie z gier wideo": VideoGameCharactersCategory,
   "Gry wideo": VideoGamesCategory,
   "Polskie potrawy": PolishDishesCategory,
   "Polscy sportowcy": PolishAthletesCategory,
   "Gothic": GothicCategory,
+  "Ciasta i desery": DessertsCategory,
+  "Kawy i napoje": DrinksCategory,
+  "Paznokcie i makijaż": NailsMakeupCategory,
+  "Kamienie szlachetne": GemstonesCategory,
   "Tabliczka mnożenia": TimesTablesCategory,
   "Anime": AnimeCategory,
   "Minecraft": MinecraftCategory,
