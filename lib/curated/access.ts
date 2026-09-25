@@ -1,13 +1,13 @@
 import { cookies } from "next/headers";
 
-import { isAdmin } from "../community/adminSession";
-import { isValidPinToken, pinToken } from "../community/pin";
+import { isAdmin } from "../shared/adminSession";
+import { isValidPinToken, pinToken } from "../shared/pin";
 import { curatedRepo } from "./overrides";
 
 /**
  * Who may replace pictures in the built-in categories: the admin, or anyone
  * who unlocked editing with the shared PIN. The PIN cookie is an HMAC keyed
- * by the stored hash (see lib/community/pin.ts), so changing the PIN signs
+ * by the stored hash (see lib/shared/pin.ts), so changing the PIN signs
  * every PIN editor out at once.
  */
 

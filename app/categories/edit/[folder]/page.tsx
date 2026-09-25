@@ -7,12 +7,12 @@ import { use, useCallback, useEffect, useMemo, useState } from "react";
 import BackLink from "@/app/components/BackLink";
 import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
-import ImageEditor from "@/app/components/community/ImageEditor";
-import ImagePicker from "@/app/components/community/ImagePicker";
+import ImageEditor from "@/app/components/curated/ImageEditor";
+import ImagePicker from "@/app/components/curated/ImagePicker";
 import { CATEGORY_METADATA, type Category, type ImageExample } from "@/app/data";
 import { primaryAnswer } from "@/app/categories/answers";
-import { LIMITS } from "@/lib/community/config";
-import { defaultQuery, type ImageResult } from "@/lib/community/search";
+import { LIMITS } from "@/lib/shared/config";
+import { defaultQuery, type ImageResult } from "@/lib/shared/search";
 
 import {
   getCuratedAccess,
@@ -86,7 +86,7 @@ export default function EditCuratedCategoryPage({
 
   useEffect(() => {
     load();
-    fetch("/api/community/capabilities")
+    fetch("/api/capabilities")
       .then((response) => response.json())
       .then((found) => setWebSearchAvailable(Boolean(found.webImageSearch)))
       .catch(() => undefined);
@@ -210,7 +210,7 @@ export default function EditCuratedCategoryPage({
               Administrator ustawia go w panelu administratora.
             </p>
           )}
-          <Link href="/community/admin" className="underline text-white/50 text-sm">
+          <Link href="/admin" className="underline text-white/50 text-sm">
             Logowanie administratora
           </Link>
         </div>

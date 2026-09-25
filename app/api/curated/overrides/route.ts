@@ -1,4 +1,4 @@
-import { handle, json } from "@/lib/community/http";
+import { handle, json } from "@/lib/shared/http";
 import { curatedRepo } from "@/lib/curated/overrides";
 
 /**

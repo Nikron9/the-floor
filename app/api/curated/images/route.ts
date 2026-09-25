@@ -1,20 +1,20 @@
-import { fail, handle, json } from "@/lib/community/http";
+import { fail, handle, json } from "@/lib/shared/http";
 import {
   fetchSourceImage,
   normalizeImage,
   validateLinkedImage,
-} from "@/lib/community/images";
-import { LIMITS } from "@/lib/community/config";
-import { imageStore } from "@/lib/community/storage";
-import type { ImageCredit } from "@/lib/community/types";
-import { cleanText } from "@/lib/community/validate";
+} from "@/lib/shared/images";
+import { LIMITS } from "@/lib/shared/config";
+import { imageStore } from "@/lib/shared/storage";
+import type { ImageCredit } from "@/lib/shared/types";
+import { cleanText } from "@/lib/shared/validate";
 import { curatedAccess } from "@/lib/curated/access";
 import { curatedImageKey, findCuratedImage } from "@/lib/curated/catalog";
 import { curatedRepo, sha256 } from "@/lib/curated/overrides";
 
 /**
  * Replace the picture of one example in a built-in category, or go back to
- * the shipped file. Accepts the same inputs as the community image route: a
+ * the shipped file. Accepts: a
  * link the browser verified (`linkUrl`), an upload (`file`) or a URL for the
  * server to fetch (`sourceUrl`), and runs them through the same checks.
  */

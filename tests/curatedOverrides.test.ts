@@ -19,7 +19,7 @@ describe("curated picture overrides", () => {
   it("replaces only the overridden example's picture", () => {
     const overrides = { [meta.folder]: { [firstImage.image]: "https://example.org/new.jpg" } };
     const plain = resolveCategory(imageCategory)!;
-    const replaced = resolveCategory(imageCategory, {}, overrides)!;
+    const replaced = resolveCategory(imageCategory, overrides)!;
 
     expect(replaced.examples.map((e) => e.name)).toEqual(plain.examples.map((e) => e.name));
     replaced.examples.forEach((example, index) => {
@@ -35,7 +35,7 @@ describe("curated picture overrides", () => {
   });
 
   it("falls back to the shipped file without overrides", () => {
-    const resolved = resolveCategory(imageCategory, {}, {})!;
+    const resolved = resolveCategory(imageCategory, {})!;
     const example = resolved.examples.find((e) => e.name === firstImage.name)!;
     expect("src" in example && example.src).toBe(`/images/${meta.folder}/${firstImage.image}`);
   });

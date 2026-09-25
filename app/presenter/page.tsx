@@ -9,7 +9,6 @@ import {
   resolveCategory,
   type ResolvedExample,
 } from "../categories/registry";
-import { useCommunityCategories } from "../categories/useCommunityCategories";
 import { useCuratedOverrides } from "../categories/useCuratedOverrides";
 import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
@@ -78,7 +77,6 @@ export default function PresenterPage({
   // the category and match by index.
   const [roundExamples, setRoundExamples] = useState<ResolvedExample[]>();
 
-  const { categories: communityCategories } = useCommunityCategories();
   const curatedOverrides = useCuratedOverrides();
 
   const desktopPlayWarning = (
@@ -105,10 +103,10 @@ export default function PresenterPage({
     }
 
     return (
-      resolveCategory(roundDetails.category, communityCategories, curatedOverrides)
+      resolveCategory(roundDetails.category, curatedOverrides)
         ?.examples ?? []
     );
-  }, [roundDetails?.category, roundExamples, communityCategories, curatedOverrides]);
+  }, [roundDetails?.category, roundExamples, curatedOverrides]);
 
   const channel = new BroadcastChannel("the-floor-projector");
 
@@ -251,14 +249,13 @@ export default function PresenterPage({
     // Get used categories to prevent duplicates
     const usedCategories = new Set(gameDetails.data.map((p) => p.category));
 
-    // Filter players based on search query. Match on the display name so
-    // searching for a community category finds it by what's on screen rather
-    // than by its opaque id.
+    // Filter players based on search query, matching the category's display
+    // name rather than its key.
     const filteredPlayers = gameDetails.data.filter((player) => {
       const query = searchQuery.toLowerCase();
       return (
         player.person.toLowerCase().includes(query) ||
-        categoryDisplayName(player.category, communityCategories)
+        categoryDisplayName(player.category)
           .toLowerCase()
           .includes(query)
       );
@@ -266,7 +263,7 @@ export default function PresenterPage({
 
     // Get available categories (not used by other players)
     const getAvailableCategories = (currentCategory?: CategoryId) =>
-      listSelectableCategories(communityCategories).filter(
+      listSelectableCategories().filter(
         ({ id }) => !usedCategories.has(id) || id === currentCategory
       );
 
@@ -390,9 +387,9 @@ export default function PresenterPage({
                 className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
               >
                 <option value="">Wybierz kategorię...</option>
-                {getAvailableCategories().map(({ id, name, source }) => (
+                {getAvailableCategories().map(({ id, name }) => (
                   <option key={id} value={id}>
-                    {source === "community" ? `${name} (społeczności)` : name}
+                    {name}
                   </option>
                 ))}
               </select>
@@ -455,11 +452,9 @@ export default function PresenterPage({
                             className="bg-gray-800 text-white p-2 rounded-md border border-neon focus:outline-none focus:ring-2 focus:ring-neon"
                           >
                             {getAvailableCategories(player.category).map(
-                              ({ id, name, source }) => (
+                              ({ id, name }) => (
                                 <option key={id} value={id}>
-                                  {source === "community"
-                                    ? `${name} (społeczności)`
-                                    : name}
+                                  {name}
                                 </option>
                               )
                             )}
@@ -491,10 +486,7 @@ export default function PresenterPage({
                               className="text-sm font-semibold"
                               style={{ color: "var(--color-neon)" }}
                             >
-                              {categoryDisplayName(
-                                player.category,
-                                communityCategories
-                              )}
+                              {categoryDisplayName(player.category)}
                             </p>
                           </div>
                           <div className="flex gap-2">
@@ -575,10 +567,10 @@ export default function PresenterPage({
               className="w-full sm:w-auto bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
               style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
             >
-              {listSelectableCategories(communityCategories).map(
-                ({ id, name, source }) => (
+              {listSelectableCategories().map(
+                ({ id, name }) => (
                   <option key={id} value={id}>
-                    {source === "community" ? `${name} (społeczności)` : name}
+                    {name}
                   </option>
                 )
               )}
@@ -776,7 +768,7 @@ export default function PresenterPage({
               {players.map((p, i) => (
                 <li key={i}>
                   <span className="font-semibold">{p.person}</span> —{" "}
-                  {categoryDisplayName(p.category, communityCategories)}
+                  {categoryDisplayName(p.category)}
                 </li>
               ))}
             </ul>
@@ -896,13 +888,6 @@ export default function PresenterPage({
             prefetch={false}
           >
             Zobacz dostępne kategorie
-          </Link>
-          <Link
-            className="font-semibold text-base text-center"
-            href="/community"
-            prefetch={false}
-          >
-            Kategorie społeczności
           </Link>
           <Link
             className="font-semibold text-base text-center"

@@ -1,7 +1,7 @@
-import { isAdmin } from "@/lib/community/adminSession";
-import { LIMITS } from "@/lib/community/config";
-import { fail, handle, json, readJson } from "@/lib/community/http";
-import { hashPin, parsePin, verifyPin } from "@/lib/community/pin";
+import { isAdmin } from "@/lib/shared/adminSession";
+import { LIMITS } from "@/lib/shared/config";
+import { fail, handle, json, readJson } from "@/lib/shared/http";
+import { hashPin, parsePin, verifyPin } from "@/lib/shared/pin";
 import { grantCuratedPin, revokeCuratedPin } from "@/lib/curated/access";
 import { curatedRepo } from "@/lib/curated/overrides";
 
@@ -9,7 +9,7 @@ const WINDOW_MS = LIMITS.pinAttemptWindowMinutes * 60 * 1000;
 
 /**
  * Unlock picture editing in the built-in categories with the shared PIN.
- * Attempts are counted before checking, as for community categories.
+ * Attempts are counted before checking, so parallel guesses share the budget.
  */
 export async function POST(request: Request) {
   return handle(async () => {

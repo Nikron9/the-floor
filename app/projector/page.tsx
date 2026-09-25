@@ -9,7 +9,6 @@ import {
 } from "react";
 import { CategoryId, FLOOR_DATA, FloorData, GameDetails } from "../data";
 import { categoryDisplayName } from "../categories/registry";
-import { useCommunityCategories } from "../categories/useCommunityCategories";
 import { PROJECTOR_MESSAGE_TYPE } from "../presenter/page";
 import Round from "./round";
 import Board from "./board";
@@ -43,7 +42,6 @@ export function Projector() {
     undefined
   );
 
-  const { categories: communityCategories } = useCommunityCategories();
 
   const [isRandomizing, setIsRandomizing] = useState(false);
 
@@ -357,7 +355,7 @@ export function Projector() {
           highlightedCategories={highlightedFloorPieceCategories}
           isRandomizing={isRandomizing}
           categoryName={(piece) =>
-            categoryDisplayName(piece.category, communityCategories)
+            categoryDisplayName(piece.category)
           }
           onSelect={onStartRound}
         />

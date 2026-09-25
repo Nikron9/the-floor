@@ -111,36 +111,20 @@ surface there instead of in production.
 ## Replacing pictures in built-in categories
 
 `/categories` → a category → **Podmień obrazki** lets the admin, or anyone with
-the shared PIN (set in `/community/admin`), replace a picture with the same
-search / link / upload / editor tools as community categories. Replacements are
-stored in Postgres (`curated_image_overrides`, see `lib/community/schema.sql`)
-and layered over `public/images/` at runtime, so deploys never overwrite them.
-If a later deploy changes a replaced file, the replacement still wins and the
-admin page flags it. Code: `lib/curated/`, `app/api/curated/`.
-
-## Community categories
-
-Adding a category the way above means a pull request, which is the right
-amount of friction for the built-in set. For everyone else there's
-`/community` — name a category, get a list of items suggested for you, pick a
-picture for each one in a grid, crop or erase watermarks, publish.
-
-Those live outside the repo and nobody reviews them before they appear, so
-they're kept in their own pool, ranked by votes and hidden when reported. Hosts
-opt into the ones they want and they show up in the presenter's category list
-alongside the built-in ones.
-
-It runs locally with no accounts and no keys — see
-[COMMUNITY_SETUP.md](COMMUNITY_SETUP.md) for that and for wiring up storage,
-a database and item suggestions.
+the shared PIN (set in `/admin`), replace a picture with search, link, upload
+and an in-browser crop / erase editor. Replacements are stored in Postgres
+(`curated_image_overrides`, see `lib/curated/schema.sql`) and layered over
+`public/images/` at runtime, so deploys never overwrite them. If a later deploy
+changes a replaced file, the replacement still wins and the admin page flags
+it. Code: `lib/curated/`, `lib/shared/`, `app/api/curated/`. Setup and
+environment variables: [SETUP.md](SETUP.md).
 
 ## Built with
 
 Next.js and Tailwind, deployed on Vercel. The game itself has no database, no
 accounts and no server — every page is static and the game state lives in your
-browser. The community tool adds Postgres for the category list, Cloudflare R2
-for the images, and the AI Gateway for item suggestions; without those
-configured, the rest of the site is unaffected.
+browser. Only the picture editor uses Postgres (and optionally Cloudflare R2);
+without those configured, the rest of the site is unaffected.
 
 ## Disclaimer
 

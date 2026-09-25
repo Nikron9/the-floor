@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: false,
     turbopackFileSystemCacheForBuild: false,
   },
+  async rewrites() {
+    return [
+      // Images stored before the community feature was removed were saved
+      // with this path in the database (curated overrides keep full URLs).
+      {
+        source: "/api/community/images/:path*",
+        destination: "/api/images/:path*",
+      },
+    ];
+  },
   async headers() {
     return [
       {

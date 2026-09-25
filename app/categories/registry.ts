@@ -12,13 +12,10 @@ import { answerList } from "./answers";
  *
  * Curated categories live in `app/categories/data/` (registered in
  * `app/data.ts`) and point at files under
- * `public/images/<folder>/`. Community categories are created in the browser
- * and point at absolute URLs on the image host. The game shouldn't have to care
- * which it got, so both collapse into a `ResolvedCategory` whose image examples
- * carry a ready-to-use `src`.
+ * `public/images/<folder>/` (or at a replacement made in the image editor).
+ * They collapse into a `ResolvedCategory` whose image examples carry a
+ * ready-to-use `src`.
  */
-
-export type CategorySource = "curated" | "community";
 
 export type ResolvedImageExample = {
   name: string;
@@ -38,17 +35,11 @@ export type ResolvedCategory = {
   id: CategoryId;
   /** What the host and the projector show. */
   name: string;
-  source: CategorySource;
   examples: ResolvedExample[];
   /** Pre-round prompt; see CategoryMetadata.instruction. */
   instruction?: string;
 };
 
-/**
- * A community category as it travels through the app: already flattened, with
- * absolute image URLs, so it can be dropped into a game and replayed later
- * without another round trip to the API.
- */
 /**
  * Picture replacements for curated categories, made in the app and kept in
  * the database so deploys don't overwrite them: `{ [folder]: { [image]: src } }`.
@@ -57,21 +48,6 @@ export type ResolvedCategory = {
 export type CuratedOverrides = Readonly<
   Record<string, Readonly<Record<string, string>>>
 >;
-
-export type CommunityCategory = {
-  id: string;
-  name: string;
-  examples: ResolvedImageExample[];
-};
-
-/** Namespaces community keys so they can never collide with a curated name. */
-export const COMMUNITY_ID_PREFIX = "community:";
-
-export const communityCategoryId = (id: string): string =>
-  id.startsWith(COMMUNITY_ID_PREFIX) ? id : `${COMMUNITY_ID_PREFIX}${id}`;
-
-export const isCommunityCategoryId = (id: CategoryId): boolean =>
-  typeof id === "string" && id.startsWith(COMMUNITY_ID_PREFIX);
 
 /**
  * Own-property lookup only.
@@ -172,7 +148,6 @@ export const resolveCuratedCategory = (
   return {
     id,
     name: meta.name,
-    source: "curated",
     instruction: meta.instruction,
     examples: (meta.examples as Array<ImageExample | TextExample>).map(
       (example) => resolveCuratedExample(meta.folder, example, overrides)
@@ -195,7 +170,6 @@ export const resolveMixedCategory = (
 ): ResolvedCategory => ({
   id: MIXED_CATEGORY_ID,
   name: "Co to jest?",
-  source: "curated",
   instruction:
     "Na ekranie pojawi się obrazek z dowolnej kategorii. Powiedz, co przedstawia.",
   examples: (Object.keys(CATEGORY_METADATA) as Category[]).flatMap((id) => {
@@ -207,27 +181,16 @@ export const resolveMixedCategory = (
   }),
 });
 
-export const resolveCommunityCategory = (
-  category: CommunityCategory
-): ResolvedCategory => ({
-  id: communityCategoryId(category.id),
-  name: category.name,
-  source: "community",
-  examples: category.examples,
-});
-
 /**
- * The single lookup the game uses. `community` is whatever the host has pulled
- * into this game -- see `useCommunityCategories`.
+ * The single lookup the game uses.
  *
  * Returns undefined for a key we no longer know about, which happens when a
- * saved game references a community category the host has since removed. Every
+ * saved game references a category that has since been removed. Every
  * caller has to handle that; the game used to crash on `CATEGORY_METADATA[id]`
  * returning undefined.
  */
 export const resolveCategory = (
   id: CategoryId | undefined,
-  community: Readonly<Record<string, CommunityCategory>> = {},
   curatedOverrides: CuratedOverrides = {}
 ): ResolvedCategory | undefined => {
   if (!id) return undefined;
@@ -238,46 +201,20 @@ export const resolveCategory = (
     return resolveCuratedCategory(curated, curatedOverrides);
   }
 
-  const found =
-    own(community, communityCategoryId(id)) ?? own(community, id);
-  return found ? resolveCommunityCategory(found) : undefined;
+  return undefined;
 };
 
 /**
- * Every category a host can currently assign to a player, curated first and
- * each group alphabetical -- the order the presenter's dropdown shows.
+ * Every category a host can assign to a player, alphabetical -- the order the
+ * presenter's dropdown shows.
  */
-export const listSelectableCategories = (
-  community: Readonly<Record<string, CommunityCategory>> = {}
-): Array<{ id: CategoryId; name: string; source: CategorySource }> => {
-  const curated = (Object.keys(CATEGORY_METADATA) as Category[])
-    .map((id) => ({
-      id: id as CategoryId,
-      name: CATEGORY_METADATA[id].name,
-      source: "curated" as const,
-    }))
+export const listSelectableCategories = (): Array<{ id: CategoryId; name: string }> =>
+  (Object.keys(CATEGORY_METADATA) as Category[])
+    .map((id) => ({ id: id as CategoryId, name: CATEGORY_METADATA[id].name }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const contributed = Object.values(community)
-    .map((category) => ({
-      id: communityCategoryId(category.id),
-      name: category.name,
-      source: "community" as const,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return [...curated, ...contributed];
-};
-
-/**
- * What to print for a category key. Community ids are opaque, so fall back to
- * the stored name and only ever show the raw key when we've lost the category
- * entirely.
- */
-export const categoryDisplayName = (
-  id: CategoryId | undefined,
-  community: Readonly<Record<string, CommunityCategory>> = {}
-): string => {
+/** What to print for a category key; the raw key only if the category is gone. */
+export const categoryDisplayName = (id: CategoryId | undefined): string => {
   if (!id) return "";
-  return resolveCategory(id, community)?.name ?? String(id);
+  return resolveCategory(id)?.name ?? String(id);
 };

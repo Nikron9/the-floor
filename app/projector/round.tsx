@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CategoryId, FloorData } from "../data";
 import { resolveCategory, type ResolvedExample } from "../categories/registry";
-import { useCommunityCategories } from "../categories/useCommunityCategories";
 import { useCuratedOverrides } from "../categories/useCuratedOverrides";
 import { newShuffleSeed, seededShuffle } from "../categories/shuffle";
 import { ROUND_RULES, roundInstruction } from "../categories/instructions";
@@ -66,12 +65,10 @@ export default function Round({
     newCategory: CategoryId
   ) => void;
 }) {
-  const { categories: communityCategories, ready: categoriesReady } =
-    useCommunityCategories();
   const curatedOverrides = useCuratedOverrides();
   const resolved = useMemo(
-    () => resolveCategory(category, communityCategories, curatedOverrides),
-    [category, communityCategories, curatedOverrides]
+    () => resolveCategory(category, curatedOverrides),
+    [category, curatedOverrides]
   );
   const rawExamples = useMemo(() => resolved?.examples ?? [], [resolved]);
   // One send-only channel for the lifetime of the component. Constructing it
@@ -110,7 +107,7 @@ export default function Round({
   const selectedExampleIndexRef = useRef(selectedExampleIndex);
 
   // One seed per round, so the order survives the category re-resolving
-  // mid-round (curated overrides and community categories load async).
+  // mid-round (curated overrides load async).
   const [shuffleSeed] = useState(newShuffleSeed);
   const shouldShuffle = shuffle || searchParams.get("debug") === "true";
   const examples = useMemo(
@@ -368,11 +365,10 @@ export default function Round({
     revealExampleName === REVEAL_STATE.PASSED ||
     revealExampleName === REVEAL_STATE.FINISHED;
 
-  // A saved game can name a community category this browser no longer holds.
-  // Say so rather than showing an empty white board for 45 seconds -- but only
-  // once the store has actually been read, or the server (which has no
-  // localStorage) would render this for every community category.
-  if (!resolved && categoriesReady) {
+  // A saved game can name a category that no longer exists (for example one of
+  // the removed community categories). Say so rather than showing an empty
+  // white board for 45 seconds.
+  if (!resolved) {
     return (
       <FloorPageLayout>
         <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-10 text-center">
@@ -380,8 +376,8 @@ export default function Round({
             Kategoria niedostępna
           </p>
           <p className="text-2xl text-white/80">
-            „{String(category)}” nie jest wczytana w tej przeglądarce. Dodaj ją
-            ponownie ze strony społeczności, aby zagrać tę rundę.
+            Kategoria „{String(category)}” już nie istnieje. Wybierz graczowi
+            inną kategorię w panelu prowadzącego.
           </p>
         </div>
       </FloorPageLayout>

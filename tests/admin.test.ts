@@ -4,7 +4,7 @@ import {
   adminToken,
   isValidAdminSecret,
   isValidAdminToken,
-} from "../lib/community/admin";
+} from "../lib/shared/admin";
 
 /**
  * The admin session is one shared secret and one cookie derived from it. The

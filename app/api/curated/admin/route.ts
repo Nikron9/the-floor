@@ -1,5 +1,5 @@
-import { isAdmin } from "@/lib/community/adminSession";
-import { fail, handle, json } from "@/lib/community/http";
+import { isAdmin } from "@/lib/shared/adminSession";
+import { fail, handle, json } from "@/lib/shared/http";
 import { findCuratedImage } from "@/lib/curated/catalog";
 import { curatedRepo, sha256 } from "@/lib/curated/overrides";
 

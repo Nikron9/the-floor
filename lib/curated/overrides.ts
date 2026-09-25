@@ -4,8 +4,8 @@ import path from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { NotConfigured, databaseUrl, isProduction } from "../community/config";
-import type { ImageCredit } from "../community/types";
+import { NotConfigured, databaseUrl, isProduction } from "../shared/config";
+import type { ImageCredit } from "../shared/types";
 
 /**
  * Picture replacements for the built-in (curated) categories.
@@ -48,7 +48,7 @@ export type CuratedRepo = {
   allImageKeys(): Promise<Set<string>>;
   pinHash(): Promise<string | null>;
   setPinHash(hash: string): Promise<void>;
-  /** Count one attempt before checking it; same contract as the community PIN. */
+  /** Count one attempt before checking it; see lib/shared/pin.ts. */
   claimPinAttempt(windowStartedBefore: string): Promise<PinState>;
   clearPinAttempts(): Promise<void>;
 };
@@ -265,7 +265,7 @@ export const curatedRepo = (): CuratedRepo => {
   if (isProduction()) {
     throw new NotConfigured(
       "Edycja obrazków nie jest skonfigurowana w tym wdrożeniu. " +
-        "Wymagany jest DATABASE_URL z zastosowanym lib/community/schema.sql."
+        "Wymagany jest DATABASE_URL z zastosowanym lib/curated/schema.sql."
     );
   }
   return (cached = devRepo());

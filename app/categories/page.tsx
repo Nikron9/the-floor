@@ -229,11 +229,6 @@ export default function CategoriesPage() {
               Jak dodać więcej kategorii
             </FloorButton>
           </Link>
-          <Link href="/community" prefetch={false}>
-            <FloorButton variant="rectangular" className="font-semibold">
-              Kategorie społeczności
-            </FloorButton>
-          </Link>
         </div>
       </div>
     </FloorPageLayout>

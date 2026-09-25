@@ -43,13 +43,11 @@ balenciaga.jpg — Balenciaga (logo): Balenciaga, Public domain, https://commons
 timberland.jpg — Timberland (logo): Timberland, Public domain, https://commons.wikimedia.org/wiki/File:Timberland-logo.png
 wrangler.jpg — Wrangler (logo): Unknown author, Public domain, https://commons.wikimedia.org/wiki/File:Wrangler_(Jeans)_logo.svg
 diesel.jpg — Diesel (logo): OTB Group., Public domain, https://commons.wikimedia.org/wiki/File:Diesel_Logo_2015.png
-benetton.jpg — Benetton (logo): Bruno Sutter (Eldorado Agency), Public domain, https://commons.wikimedia.org/wiki/File:United_Colors_of_Benetton_-_logo_(Italy,_1989-1996).svg
 c-a.jpg — C&A (logo): C&A, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Logo_C%26A_RED.png
 shein.jpg — Shein (logo): Shein, Public domain, https://commons.wikimedia.org/wiki/File:Shein_Logo_2017.svg
 uniqlo.jpg — Uniqlo (logo): Kashiwa Satō, Public domain, https://commons.wikimedia.org/wiki/File:UNIQLO_logo_(Japanese).svg
 fila.jpg — Fila (logo): Fila, Public domain, https://commons.wikimedia.org/wiki/File:Fila_Holdings_Corp._logo.svg
 under-armour.jpg — Under Armour (logo): Unknown (Vector graphics logo by Kalel2007), Public domain, https://commons.wikimedia.org/wiki/File:Under_armour_logo.svg
-dr-martens.jpg — Dr. Martens (logo): Dr. Martens, Public domain, https://commons.wikimedia.org/wiki/File:Dr._Martens_Logo.svg
 ugg.jpg — UGG (logo): UGG Australia, Public domain, https://commons.wikimedia.org/wiki/File:UGG_Australia_logo.svg
 massimo-dutti.jpg — Massimo Dutti (logo): Industria de Diseño Textil, S.A., Public domain, https://commons.wikimedia.org/wiki/File:Massimo_Dutti_logo_2024.svg
 fendi.jpg — Fendi (logo): Unknown author, Public domain, https://commons.wikimedia.org/wiki/File:Fendi_logo.jpg
@@ -57,7 +55,5 @@ givenchy.jpg — Givenchy (logo): Paul Barnes, Public domain, https://commons.wi
 valentino.jpg — Valentino (logo): Valentino S.p.A., Public domain, https://commons.wikimedia.org/wiki/File:Logo_Valentino.gif
 supreme.jpg — Supreme (logo): Bizart, Public domain, https://commons.wikimedia.org/wiki/File:Supreme_Logo.svg
 moncler.jpg — Moncler (logo): Moncler S.p.A., Public domain, https://commons.wikimedia.org/wiki/File:Logo_Moncler_Group.jpg
-champion.jpg — Champion (logo): Champion, Public domain, https://commons.wikimedia.org/wiki/File:Logo_Supermarch%C3%A9s_Champion.svg
 answear.jpg — Answear (logo): Answear, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Answear_Logotype.jpg
-kenzo.jpg — Kenzo (logo): Kenzo SA, Public domain, https://commons.wikimedia.org/wiki/File:Kenzo_logo_(2022%E2%80%93present).svg
 off-white.jpg — Off-White (logo): Off-White (Virgil Abloh), Public domain, https://commons.wikimedia.org/wiki/File:Off-White_Logo.svg

@@ -1,15 +1,33 @@
 "use client";
 
-import { linkUrlFor } from "@/app/community/api";
 import {
   ClientImageFailed,
   fetchAndShrink,
   probeLinkable,
-} from "@/lib/community/clientImage";
-import type { ImageResult } from "@/lib/community/search";
-import type { ImageCredit } from "@/lib/community/types";
+} from "@/lib/shared/clientImage";
+import type { ImageResult } from "@/lib/shared/search";
+import type { ImageCredit } from "@/lib/shared/types";
 
 /** Client calls for replacing pictures in the built-in categories. */
+
+/**
+ * Wikimedia thumbnails can be requested at any width; asking for a sensible
+ * one instead of the multi-megabyte original keeps linked images light.
+ */
+const COMMONS_LINK_WIDTH = 1280;
+
+const linkUrlFor = (result: ImageResult): string => {
+  const thumb = result.thumbUrl;
+  if (
+    result.width > COMMONS_LINK_WIDTH &&
+    thumb.startsWith("https://upload.wikimedia.org/") &&
+    thumb.includes("/thumb/") &&
+    /\/\d+px-[^/]+$/.test(thumb)
+  ) {
+    return thumb.replace(/\/\d+px-([^/]+)$/, `/${COMMONS_LINK_WIDTH}px-$1`);
+  }
+  return result.fullUrl;
+};
 
 export type CuratedAccess = {
   isAdmin: boolean;

@@ -5,7 +5,7 @@ import {
   eraseRegion,
   inpaint,
   smoothWithin,
-} from "../lib/community/inpaint";
+} from "../lib/shared/inpaint";
 
 type Rgb = [number, number, number];
 
