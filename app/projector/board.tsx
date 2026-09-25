@@ -125,21 +125,21 @@ export default function Board({
         >
           <defs>
             <linearGradient id="territory-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(24, 70, 170, 0.5)" />
-              <stop offset="100%" stopColor="rgba(6, 22, 70, 0.78)" />
+              <stop offset="0%" style={{ stopColor: "rgba(var(--rgb-24-70-170), 0.5)" }} />
+              <stop offset="100%" style={{ stopColor: "rgba(var(--rgb-6-22-70), 0.78)" }} />
             </linearGradient>
             <linearGradient id="territory-fill-selected" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4db0ff" />
-              <stop offset="55%" stopColor="#1677f2" />
-              <stop offset="100%" stopColor="#0b5fe0" />
+              <stop offset="0%" style={{ stopColor: "var(--hx-4db0ff)" }} />
+              <stop offset="55%" style={{ stopColor: "var(--hx-1677f2)" }} />
+              <stop offset="100%" style={{ stopColor: "var(--hx-0b5fe0)" }} />
             </linearGradient>
             <linearGradient id="territory-fill-gold" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(70, 55, 20, 0.6)" />
-              <stop offset="100%" stopColor="rgba(22, 16, 6, 0.8)" />
+              <stop offset="0%" style={{ stopColor: "rgba(var(--rgb-70-55-20), 0.6)" }} />
+              <stop offset="100%" style={{ stopColor: "rgba(var(--rgb-22-16-6), 0.8)" }} />
             </linearGradient>
             <linearGradient id="territory-fill-gold-hover" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(110, 85, 25, 0.7)" />
-              <stop offset="100%" stopColor="rgba(40, 28, 8, 0.85)" />
+              <stop offset="0%" style={{ stopColor: "rgba(var(--rgb-110-85-25), 0.7)" }} />
+              <stop offset="100%" style={{ stopColor: "rgba(var(--rgb-40-28-8), 0.85)" }} />
             </linearGradient>
           </defs>
           {drawOrder.map(({ territory, isSelected, isHighlighted }) => (

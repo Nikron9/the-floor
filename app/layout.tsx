@@ -3,6 +3,9 @@ import { Montserrat } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { THEME_BOOT_SCRIPT } from "./theme";
+import ThemeSync from "./components/ThemeSync";
+import HalloweenDecor from "./components/HalloweenDecor";
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
@@ -136,7 +139,11 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pl">
+    <html lang="pl" suppressHydrationWarning>
+      <head>
+        {/* Sets data-theme before first paint; see app/theme.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body
         className={`${montserrat.variable} antialiased`}
       >
@@ -147,6 +154,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <HalloweenDecor />
+        <ThemeSync />
         <Analytics />
       </body>
     </html>

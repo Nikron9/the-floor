@@ -24,17 +24,135 @@
   --color-gray-900: #0a1640;
 }
 
+/*
+ * Colour tokens. Every colour below the theme block goes through these, so a
+ * seasonal theme only has to swap the values (see app/theme.ts).
+ */
 :root {
-  --background: #020824;
+  --rgb-58-166-255: 58, 166, 255;
+  --rgb-70-150-255: 70, 150, 255;
+  --rgb-58-120-255: 58, 120, 255;
+  --rgb-58-140-255: 58, 140, 255;
+  --rgb-77-176-255: 77, 176, 255;
+  --rgb-30-90-255: 30, 90, 255;
+  --rgb-24-70-170: 24, 70, 170;
+  --rgb-6-22-70: 6, 22, 70;
+  --rgb-6-20-64: 6, 20, 64;
+  --rgb-5-16-52: 5, 16, 52;
+  --rgb-4-14-50: 4, 14, 50;
+  --rgb-20-50-130: 20, 50, 130;
+  --rgb-18-50-130: 18, 50, 130;
+  --rgb-180-205-255: 180, 205, 255;
+  --rgb-130-90-255: 130, 90, 255;
+  --rgb-255-200-61: 255, 200, 61;
+  --rgb-70-55-20: 70, 55, 20;
+  --rgb-22-16-6: 22, 16, 6;
+  --rgb-110-85-25: 110, 85, 25;
+  --rgb-40-28-8: 40, 28, 8;
+  --rgb-255-190-40: 255, 190, 40;
+  --rgb-120-60-0: 120, 60, 0;
+  --hx-3aa6ff: #3aa6ff;
+  --hx-8fd3ff: #8fd3ff;
+  --hx-0b5fe0: #0b5fe0;
+  --hx-4db0ff: #4db0ff;
+  --hx-1677f2: #1677f2;
+  --hx-cfeaff: #cfeaff;
+  --hx-2f8cff: #2f8cff;
+  --hx-1766e0: #1766e0;
+  --hx-0d4fc0: #0d4fc0;
+  --hx-bfe3ff: #bfe3ff;
+  --hx-ffc83d: #ffc83d;
+  --hx-f59e0b: #f59e0b;
+  --hx-fff4cf: #fff4cf;
+  --hx-fffbe0: #fffbe0;
+  --hx-ffe27a: #ffe27a;
+  --hx-b45309: #b45309;
+  --hx-020824: #020824;
+  --hx-040c2c: #040c2c;
+  --hx-030b2e: #030b2e;
+  --hx-051340: #051340;
+  --hx-3a4a7a: #3a4a7a;
+  --hx-26386b: #26386b;
+  --hx-1a2b5c: #1a2b5c;
+  --hx-0f1f4d: #0f1f4d;
+  --hx-0a1640: #0a1640;
+}
+
+/* Halloween: pumpkin orange for the neon, toxic green for the gold, night purple. */
+:root[data-theme="halloween"] {
+  --rgb-58-166-255: 255, 122, 26;
+  --rgb-70-150-255: 255, 122, 26;
+  --rgb-58-120-255: 255, 100, 20;
+  --rgb-58-140-255: 255, 110, 30;
+  --rgb-77-176-255: 255, 150, 60;
+  --rgb-30-90-255: 170, 55, 10;
+  --rgb-24-70-170: 60, 28, 90;
+  --rgb-6-22-70: 20, 8, 34;
+  --rgb-6-20-64: 22, 10, 36;
+  --rgb-5-16-52: 16, 7, 28;
+  --rgb-4-14-50: 14, 6, 24;
+  --rgb-20-50-130: 58, 24, 86;
+  --rgb-18-50-130: 52, 22, 80;
+  --rgb-180-205-255: 200, 180, 220;
+  --rgb-130-90-255: 140, 60, 220;
+  --rgb-255-200-61: 157, 255, 58;
+  --rgb-70-55-20: 30, 60, 10;
+  --rgb-22-16-6: 8, 20, 4;
+  --rgb-110-85-25: 50, 95, 15;
+  --rgb-40-28-8: 14, 32, 6;
+  --rgb-255-190-40: 255, 140, 30;
+  --rgb-120-60-0: 90, 30, 0;
+  --hx-3aa6ff: #ff7a1a;
+  --hx-8fd3ff: #ffc27a;
+  --hx-0b5fe0: #c24a00;
+  --hx-4db0ff: #ffb347;
+  --hx-1677f2: #ff7a00;
+  --hx-cfeaff: #ffe4c2;
+  --hx-2f8cff: #ff8a2a;
+  --hx-1766e0: #e35e00;
+  --hx-0d4fc0: #b34200;
+  --hx-bfe3ff: #ffd9b0;
+  --hx-ffc83d: #9dff3a;
+  --hx-f59e0b: #5ad10f;
+  --hx-fff4cf: #eaffd0;
+  --hx-fffbe0: #fff1d6;
+  --hx-ffe27a: #ffc46b;
+  --hx-b45309: #7a2a00;
+  --hx-020824: #0e0714;
+  --hx-040c2c: #120a1c;
+  --hx-030b2e: #140a22;
+  --hx-051340: #1e1030;
+  --hx-3a4a7a: #4a3a66;
+  --hx-26386b: #35254f;
+  --hx-1a2b5c: #2a1a42;
+  --hx-0f1f4d: #1e1030;
+  --hx-0a1640: #170c28;
+  --color-neon: #ff7a1a;
+  --color-neon-bright: #ffc27a;
+  --color-neon-deep: #c24a00;
+  --color-gold: #9dff3a;
+  --color-gold-deep: #5ad10f;
+  --color-navy: #120a1c;
+  --color-gray-500: #4a3a66;
+  --color-gray-600: #35254f;
+  --color-gray-700: #2a1a42;
+  --color-gray-800: #1e1030;
+  --color-gray-900: #170c28;
+  --foreground: #f3ead8;
+}
+
+
+:root {
+  --background: var(--hx-020824);
   --foreground: #ffffff;
   --neon: var(--color-neon);
   --gold: var(--color-gold);
-  --tile-fill: linear-gradient(180deg, rgba(24, 70, 170, 0.5) 0%, rgba(6, 22, 70, 0.78) 100%);
-  --tile-glow: 0 0 10px rgba(58, 166, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 18px rgba(58, 166, 255, 0.16);
-  --gold-glow: 0 0 14px rgba(255, 200, 61, 0.75), 0 0 32px rgba(255, 200, 61, 0.35),
-    inset 0 0 16px rgba(255, 200, 61, 0.18);
-  --blue-glow: 0 0 22px rgba(58, 166, 255, 0.9), 0 0 48px rgba(58, 166, 255, 0.45),
+  --tile-fill: linear-gradient(180deg, rgba(var(--rgb-24-70-170), 0.5) 0%, rgba(var(--rgb-6-22-70), 0.78) 100%);
+  --tile-glow: 0 0 10px rgba(var(--rgb-58-166-255), 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 18px rgba(var(--rgb-58-166-255), 0.16);
+  --gold-glow: 0 0 14px rgba(var(--rgb-255-200-61), 0.75), 0 0 32px rgba(var(--rgb-255-200-61), 0.35),
+    inset 0 0 16px rgba(var(--rgb-255-200-61), 0.18);
+  --blue-glow: 0 0 22px rgba(var(--rgb-58-166-255), 0.9), 0 0 48px rgba(var(--rgb-58-166-255), 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -46,7 +164,7 @@ body {
 }
 
 ::selection {
-  background: rgba(58, 166, 255, 0.45);
+  background: rgba(var(--rgb-58-166-255), 0.45);
 }
 
 /* ------------------------------------------------------------ backdrop */
@@ -59,9 +177,9 @@ body {
 .grid-background {
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(58, 140, 255, 0.38), transparent 70%),
-    radial-gradient(ellipse 90% 35% at 50% 105%, rgba(30, 90, 255, 0.3), transparent 70%),
-    linear-gradient(180deg, #030b2e 0%, #051340 45%, #020824 100%);
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(var(--rgb-58-140-255), 0.38), transparent 70%),
+    radial-gradient(ellipse 90% 35% at 50% 105%, rgba(var(--rgb-30-90-255), 0.3), transparent 70%),
+    linear-gradient(180deg, var(--hx-030b2e) 0%, var(--hx-051340) 45%, var(--hx-020824) 100%);
 }
 
 .grid-background::before {
@@ -72,8 +190,8 @@ body {
   bottom: -10%;
   height: 60%;
   background-image:
-    linear-gradient(rgba(70, 150, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(70, 150, 255, 0.2) 1px, transparent 1px);
+    linear-gradient(rgba(var(--rgb-70-150-255), 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--rgb-70-150-255), 0.2) 1px, transparent 1px);
   background-size: 90px 90px;
   transform: perspective(700px) rotateX(62deg);
   transform-origin: bottom center;
@@ -85,33 +203,35 @@ body {
   content: "";
   position: absolute;
   inset: 0;
+  /* Soft side glows plus a gentle vignette, instead of hard edge bands. */
   background:
-    linear-gradient(90deg, rgba(130, 90, 255, 0.35) 0, rgba(58, 120, 255, 0.12) 2.5%, transparent 7%),
-    linear-gradient(270deg, rgba(130, 90, 255, 0.35) 0, rgba(58, 120, 255, 0.12) 2.5%, transparent 7%);
+    radial-gradient(ellipse 28% 65% at 0% 50%, rgba(var(--rgb-130-90-255), 0.16), rgba(var(--rgb-58-120-255), 0.05) 45%, transparent 75%),
+    radial-gradient(ellipse 28% 65% at 100% 50%, rgba(var(--rgb-130-90-255), 0.16), rgba(var(--rgb-58-120-255), 0.05) 45%, transparent 75%),
+    radial-gradient(ellipse 85% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 /* ---------------------------------------------------------------- text */
 
 .glow-text {
-  text-shadow: 0 0 6px rgba(58, 166, 255, 0.85), 0 0 18px rgba(58, 166, 255, 0.35);
+  text-shadow: 0 0 6px rgba(var(--rgb-58-166-255), 0.85), 0 0 18px rgba(var(--rgb-58-166-255), 0.35);
 }
 
 /* Gold logo lettering. */
 .metallic-text {
   background: linear-gradient(
     180deg,
-    #fffbe0 0%,
-    #ffe27a 28%,
-    #ffc83d 50%,
-    #f59e0b 72%,
-    #b45309 100%
+    var(--hx-fffbe0) 0%,
+    var(--hx-ffe27a) 28%,
+    var(--hx-ffc83d) 50%,
+    var(--hx-f59e0b) 72%,
+    var(--hx-b45309) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 900;
   letter-spacing: 0.04em;
-  filter: drop-shadow(0 0 10px rgba(255, 190, 40, 0.55)) drop-shadow(0 2px 0 rgba(120, 60, 0, 0.8));
+  filter: drop-shadow(0 0 10px rgba(var(--rgb-255-190-40), 0.55)) drop-shadow(0 2px 0 rgba(var(--rgb-120-60-0), 0.8));
 }
 
 /* The hex-ended plate the logo sits on. */
@@ -122,24 +242,24 @@ body {
   align-items: center;
   line-height: 0.9;
   padding: 0.35em 1.4em 0.4em;
-  background: linear-gradient(180deg, rgba(20, 50, 130, 0.85), rgba(4, 14, 50, 0.95));
+  background: linear-gradient(180deg, rgba(var(--rgb-20-50-130), 0.85), rgba(var(--rgb-4-14-50), 0.95));
   clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
 }
 
 .logo-badge-frame {
   display: inline-block;
   padding: 2px;
-  background: linear-gradient(180deg, #8fd3ff, #3aa6ff 50%, #0b5fe0);
+  background: linear-gradient(180deg, var(--hx-8fd3ff), var(--hx-3aa6ff) 50%, var(--hx-0b5fe0));
   clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
-  filter: drop-shadow(0 0 14px rgba(58, 166, 255, 0.8));
+  filter: drop-shadow(0 0 14px rgba(var(--rgb-58-166-255), 0.8));
 }
 
 /* ------------------------------------------------------------ surfaces */
 
 /* A glass panel: cards, forms, info boxes. */
 .neon-panel {
-  background: linear-gradient(180deg, rgba(18, 50, 130, 0.45), rgba(5, 16, 52, 0.72));
-  border: 1.5px solid rgba(58, 166, 255, 0.7);
+  background: linear-gradient(180deg, rgba(var(--rgb-18-50-130), 0.45), rgba(var(--rgb-5-16-52), 0.72));
+  border: 1.5px solid rgba(var(--rgb-58-166-255), 0.7);
   border-radius: 14px;
   box-shadow: var(--tile-glow);
   backdrop-filter: blur(6px);
@@ -154,7 +274,7 @@ body {
   justify-content: center;
   gap: 0.15rem;
   border-radius: 12px;
-  border: 1.5px solid rgba(58, 166, 255, 0.8);
+  border: 1.5px solid rgba(var(--rgb-58-166-255), 0.8);
   background: var(--tile-fill);
   box-shadow: var(--tile-glow);
   color: #fff;
@@ -195,8 +315,8 @@ body {
 
 /* The tile a host picked: bright blue, lit from inside. */
 .neon-tile--selected {
-  background: linear-gradient(180deg, #4db0ff 0%, #1677f2 55%, #0b5fe0 100%);
-  border-color: #cfeaff;
+  background: linear-gradient(180deg, var(--hx-4db0ff) 0%, var(--hx-1677f2) 55%, var(--hx-0b5fe0) 100%);
+  border-color: var(--hx-cfeaff);
   box-shadow: var(--blue-glow);
   transform: scale(1.03);
   z-index: 1;
@@ -205,13 +325,13 @@ body {
 /* Tiles that can be challenged from the selected one: gold. */
 .neon-tile--highlight {
   border: 2px solid var(--color-gold);
-  background: linear-gradient(180deg, rgba(70, 55, 20, 0.6), rgba(22, 16, 6, 0.8));
+  background: linear-gradient(180deg, rgba(var(--rgb-70-55-20), 0.6), rgba(var(--rgb-22-16-6), 0.8));
   box-shadow: var(--gold-glow);
   cursor: pointer;
 }
 
 .neon-tile--highlight:hover {
-  background: linear-gradient(180deg, rgba(110, 85, 25, 0.7), rgba(40, 28, 8, 0.85));
+  background: linear-gradient(180deg, rgba(var(--rgb-110-85-25), 0.7), rgba(var(--rgb-40-28-8), 0.85));
 }
 
 /*
@@ -221,10 +341,10 @@ body {
  */
 .territory-shape {
   fill: url(#territory-fill);
-  stroke: rgba(58, 166, 255, 0.8);
+  stroke: rgba(var(--rgb-58-166-255), 0.8);
   stroke-width: 1.5;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 8px rgba(58, 166, 255, 0.35));
+  filter: drop-shadow(0 0 8px rgba(var(--rgb-58-166-255), 0.35));
   transform-box: fill-box;
   transform-origin: center;
   transition: transform 0.2s ease, filter 0.2s ease;
@@ -232,8 +352,8 @@ body {
 
 .territory-shape--selected {
   fill: url(#territory-fill-selected);
-  stroke: #cfeaff;
-  filter: drop-shadow(0 0 18px rgba(58, 166, 255, 0.9)) drop-shadow(0 0 36px rgba(58, 166, 255, 0.45));
+  stroke: var(--hx-cfeaff);
+  filter: drop-shadow(0 0 18px rgba(var(--rgb-58-166-255), 0.9)) drop-shadow(0 0 36px rgba(var(--rgb-58-166-255), 0.45));
   transform: scale(1.03);
 }
 
@@ -241,7 +361,7 @@ body {
   fill: url(#territory-fill-gold);
   stroke: var(--color-gold);
   stroke-width: 2;
-  filter: drop-shadow(0 0 12px rgba(255, 200, 61, 0.75)) drop-shadow(0 0 26px rgba(255, 200, 61, 0.35));
+  filter: drop-shadow(0 0 12px rgba(var(--rgb-255-200-61), 0.75)) drop-shadow(0 0 26px rgba(var(--rgb-255-200-61), 0.35));
 }
 
 .territory-shape--hover {
@@ -329,14 +449,14 @@ body {
   input:not([type]),
   textarea,
   select {
-    background-color: rgba(6, 20, 64, 0.85);
-    border-color: rgba(58, 166, 255, 0.75);
+    background-color: rgba(var(--rgb-6-20-64), 0.85);
+    border-color: rgba(var(--rgb-58-166-255), 0.75);
     color: #fff;
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: rgba(180, 205, 255, 0.45);
+    color: rgba(var(--rgb-180-205-255), 0.45);
   }
 }
 
@@ -346,7 +466,7 @@ body {
   position: relative;
   transition: all 0.2s ease;
   background: var(--tile-fill);
-  border: 1.5px solid rgba(58, 166, 255, 0.85);
+  border: 1.5px solid rgba(var(--rgb-58-166-255), 0.85);
   border-radius: 12px;
   box-shadow: var(--tile-glow);
   color: white;
@@ -376,27 +496,47 @@ body {
   padding: 0.75rem 1.5rem;
 }
 
+/* Round icon-only button (main menu corner: settings, about). */
+.btn-glow.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 9999px;
+}
+
+.btn-glow.icon-btn svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: currentColor;
+}
+
 /*
  * The main call to action: same size as its neighbours, but filled with a
  * brighter blue and a light border. Hover still turns it gold like every other
  * button, so the hover change stays visible.
  */
 .btn-glow.btn-primary {
-  background: linear-gradient(180deg, #2f8cff 0%, #1766e0 55%, #0d4fc0 100%);
-  border-color: #bfe3ff;
-  box-shadow: 0 0 18px rgba(77, 176, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, var(--hx-2f8cff) 0%, var(--hx-1766e0) 55%, var(--hx-0d4fc0) 100%);
+  border-color: var(--hx-bfe3ff);
+  box-shadow: 0 0 18px rgba(var(--rgb-77-176-255), 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-glow:hover:not(:disabled) {
   border-color: var(--color-gold);
-  color: #fff4cf;
+  color: var(--hx-fff4cf);
   box-shadow: var(--gold-glow);
 }
 
 .btn-glow:active:not(:disabled),
 .btn-glow.active:not(:disabled) {
-  background: linear-gradient(180deg, #4db0ff 0%, #1677f2 55%, #0b5fe0 100%);
-  border-color: #cfeaff;
+  background: linear-gradient(180deg, var(--hx-4db0ff) 0%, var(--hx-1677f2) 55%, var(--hx-0b5fe0) 100%);
+  border-color: var(--hx-cfeaff);
   color: #fff;
   box-shadow: var(--blue-glow);
 }
@@ -407,13 +547,13 @@ body {
 }
 
 .btn-orange {
-  background: linear-gradient(180deg, #ffd66b, #f59e0b);
+  background: linear-gradient(180deg, #ffd66b, var(--hx-f59e0b));
   color: #1a1000;
-  box-shadow: 0 0 12px rgba(255, 200, 61, 0.6);
+  box-shadow: 0 0 12px rgba(var(--rgb-255-200-61), 0.6);
 }
 
 .btn-orange:hover {
-  box-shadow: 0 0 22px rgba(255, 200, 61, 0.9);
+  box-shadow: 0 0 22px rgba(var(--rgb-255-200-61), 0.9);
 }
 
 /* ------------------------------------------------------ round screen */
@@ -424,7 +564,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  border: 1.5px solid rgba(58, 166, 255, 0.85);
+  border: 1.5px solid rgba(var(--rgb-58-166-255), 0.85);
   background: var(--tile-fill);
   box-shadow: var(--tile-glow);
   color: #fff;
@@ -458,7 +598,7 @@ body {
   background: #fff;
   border-radius: 16px;
   border: 3px solid var(--color-neon);
-  box-shadow: 0 0 24px rgba(58, 166, 255, 0.7), 0 0 60px rgba(58, 166, 255, 0.3);
+  box-shadow: 0 0 24px rgba(var(--rgb-58-166-255), 0.7), 0 0 60px rgba(var(--rgb-58-166-255), 0.3);
 }
 
 /* Circular glow effect */
@@ -483,5 +623,33 @@ body {
   .btn-glow,
   .neon-plate {
     transition: none;
+  }
+}
+
+/* ----------------------------------------------------- halloween decor */
+
+/* Behind page content (z-10) but above the page background. */
+.halloween-decor > * {
+  z-index: 5;
+}
+
+/* A bat crossing the screen for a few seconds, then a long pause. */
+.halloween-bat-flight {
+  animation: halloween-bat-flight 26s linear infinite;
+  animation-delay: 4s;
+  transform: translate(-20vw, 30vh);
+}
+
+@keyframes halloween-bat-flight {
+  0% { transform: translate(-20vw, 34vh) scale(0.8); }
+  8% { transform: translate(30vw, 16vh) scale(1); }
+  16% { transform: translate(70vw, 26vh) scale(0.9); }
+  24% { transform: translate(120vw, 10vh) scale(0.8); }
+  100% { transform: translate(120vw, 10vh) scale(0.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halloween-bat-flight {
+    display: none;
   }
 }

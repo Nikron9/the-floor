@@ -99,6 +99,7 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Waluty": { group: "brain", difficulty: 2 },
   "Supersamochody": { group: "brands", difficulty: 3 },
   "Marki samochodowe": { group: "brands", difficulty: 2 },
+  "Grzyby": { group: "nature", difficulty: 2 },
   "Ciasta i desery": { group: "food", difficulty: 1 },
   "Kawy i napoje": { group: "food", difficulty: 1 },
   "Paznokcie i makijaż": { group: "home", difficulty: 2 },

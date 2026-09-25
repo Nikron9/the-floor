@@ -222,7 +222,7 @@ export default function CategoriesPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
-            style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
+            style={{ boxShadow: "0 0 10px rgba(var(--rgb-58-166-255), 0.3)" }}
           />
         </div>
         <CategoryViewControls options={viewOptions} onChange={setViewOptions} />

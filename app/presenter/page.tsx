@@ -100,7 +100,7 @@ export default function PresenterPage({
   // Seed behind the one-per-difficulty category suggestions for the next
   // player; a new seed draws new suggestions.
   const [suggestionSeed, setSuggestionSeed] = useState(newShuffleSeed);
-  // Category choice unlocks a second after the host stops typing a name, and
+  // Category choice unlocks half a second after the host stops typing a name, and
   // that is when the three suggestions are drawn.
   const [categoryUiReady, setCategoryUiReady] = useState(false);
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function PresenterPage({
     const timer = setTimeout(() => {
       setCategoryUiReady(true);
       setSuggestionSeed(newShuffleSeed());
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timer);
   }, [newPlayerName]);
   const [editPlayerName, setEditPlayerName] = useState("");
@@ -503,11 +503,11 @@ export default function PresenterPage({
           </div>
           <div className="w-full lg:hidden">{desktopPlayWarning}</div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-6 items-start">
           {/* Left: adding a player */}
-          <div className="flex flex-col gap-4 lg:sticky lg:top-4">
+          <div className="min-w-0 flex flex-col gap-4 lg:sticky lg:top-4">
           <form
-            className="neon-panel p-4 md:p-5 flex flex-col gap-4"
+            className="neon-panel min-w-0 p-4 md:p-5 flex flex-col gap-4"
             onSubmit={(event) => {
               event.preventDefault();
               handleAddPlayer();
@@ -536,9 +536,10 @@ export default function PresenterPage({
 
             <fieldset
               disabled={categoryUiLocked}
-              className={`flex flex-col gap-4 transition-opacity ${categoryUiLocked ? "opacity-40" : ""}`}
+              className={`min-w-0 m-0 p-0 border-0 flex flex-col gap-4 transition-opacity ${categoryUiLocked ? "opacity-40" : ""}`}
             >
-            {suggestions.length > 0 && (
+            {/* Drawn only once a name is in, so nothing is suggested for nobody. */}
+            {categoryUiReady && suggestions.length > 0 && (
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm uppercase tracking-[0.15em] text-white/70">
@@ -552,14 +553,14 @@ export default function PresenterPage({
                     Inne propozycje
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-0">
                   {suggestions.map(({ id, name, difficulty }) => (
                     <FloorButton
                       key={difficulty}
                       type="button"
                       variant="rectangular"
                       aria-pressed={id === newPlayerCategory}
-                      className={`${id === newPlayerCategory ? "btn-primary" : ""} flex flex-col items-center gap-1 !py-4 text-sm`}
+                      className={`${id === newPlayerCategory ? "btn-primary" : ""} min-w-0 flex flex-col items-center gap-1 !px-3 !py-4 text-sm break-words`}
                       onClick={() => setNewPlayerCategory(id)}
                     >
                       <span className="text-xs font-normal normal-case tracking-normal text-white/70">
@@ -572,15 +573,15 @@ export default function PresenterPage({
               </div>
             )}
 
-            <div className="flex flex-col md:flex-row gap-3">
-              <select
-                value={isSuggested ? "" : newPlayerCategory || ""}
-                onChange={(e) => setNewPlayerCategory(e.target.value || undefined)}
-                className={`${fieldClass} flex-1 min-w-0`}
-              >
-                <option value="">…albo wybierz z wszystkich kategorii</option>
-                {categoryOptions()}
-              </select>
+            <select
+              value={isSuggested ? "" : newPlayerCategory || ""}
+              onChange={(e) => setNewPlayerCategory(e.target.value || undefined)}
+              className={`${fieldClass} w-full min-w-0`}
+            >
+              <option value="">…albo wybierz z wszystkich kategorii</option>
+              {categoryOptions()}
+            </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FloorButton
                 type="button"
                 variant="rectangular"
@@ -995,7 +996,7 @@ export default function PresenterPage({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div
               className="neon-panel flex flex-col gap-4 p-6"
-              style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
+              style={{ boxShadow: "0 0 20px rgba(var(--rgb-58-166-255), 0.2)" }}
             >
               {/* Every accepted answer, most fitting first: Polish word,
                   Polish alternatives, Polish proper name, English name. */}
@@ -1059,7 +1060,7 @@ export default function PresenterPage({
             {roundDetails.category && (
               <div
                 className="neon-panel text-lg text-white max-h-[45vh] p-6"
-                style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
+                style={{ boxShadow: "0 0 20px rgba(var(--rgb-58-166-255), 0.2)" }}
               >
                 <RoundDisplay
                   examples={examples}

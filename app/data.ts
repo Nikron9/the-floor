@@ -20,6 +20,7 @@ import { PolishCitiesCategory } from "./categories/data/polish-cities";
 import { CurrenciesCategory } from "./categories/data/currencies";
 import { SupercarsCategory } from "./categories/data/supercars";
 import { CarBrandsCategory } from "./categories/data/car-brands";
+import { MushroomsCategory } from "./categories/data/mushrooms";
 import { DessertsCategory } from "./categories/data/desserts";
 import { DrinksCategory } from "./categories/data/drinks";
 import { NailsMakeupCategory } from "./categories/data/nails-makeup";
@@ -384,6 +385,7 @@ export type Category =
   | "Waluty"
   | "Supersamochody"
   | "Marki samochodowe"
+  | "Grzyby"
   | "Ciasta i desery"
   | "Kawy i napoje"
   | "Paznokcie i makijaż"
@@ -501,6 +503,7 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Waluty": CurrenciesCategory,
   "Supersamochody": SupercarsCategory,
   "Marki samochodowe": CarBrandsCategory,
+  "Grzyby": MushroomsCategory,
   "Ciasta i desery": DessertsCategory,
   "Kawy i napoje": DrinksCategory,
   "Paznokcie i makijaż": NailsMakeupCategory,

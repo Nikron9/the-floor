@@ -378,7 +378,7 @@ function SelectedPlayerCard({
 }) {
   return (
     <div className="neon-panel flex items-center gap-4 pl-4 pr-8 py-3 min-w-[280px]">
-      <div className="w-14 h-14 shrink-0 rounded-full border-2 border-neon grid place-items-center shadow-[0_0_14px_rgba(58,166,255,0.7)]">
+      <div className="w-14 h-14 shrink-0 rounded-full border-2 border-neon grid place-items-center shadow-[0_0_14px_rgba(var(--rgb-58-166-255),0.7)]">
         <svg viewBox="0 0 24 24" className="w-8 h-8 fill-neon-bright" aria-hidden="true">
           <circle cx="12" cy="8" r="4.2" />
           <path d="M3.5 21c0-4.7 3.8-8 8.5-8s8.5 3.3 8.5 8z" />
