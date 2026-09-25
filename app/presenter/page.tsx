@@ -20,7 +20,13 @@ import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
 import FloorLogo from "../components/FloorLogo";
 import FloorPageLayout from "../components/FloorPageLayout";
-import { arrangeCategories, catalogEntry, DIFFICULTY_INFO } from "../categories/catalog";
+import {
+  arrangeCategories,
+  catalogEntry,
+  DIFFICULTY_INFO,
+  type Difficulty,
+} from "../categories/catalog";
+import { newShuffleSeed, seededShuffle } from "../categories/shuffle";
 import {
   CategorySections,
   CategoryViewControls,
@@ -74,6 +80,9 @@ export default function PresenterPage({
   const [newPlayerCategory, setNewPlayerCategory] = useState<
     CategoryId | undefined
   >(undefined);
+  // Seed behind the one-per-difficulty category suggestions for the next
+  // player; a new seed draws new suggestions.
+  const [suggestionSeed, setSuggestionSeed] = useState(newShuffleSeed);
   const [editPlayerName, setEditPlayerName] = useState("");
   const [editPlayerCategory, setEditPlayerCategory] = useState<
     CategoryId | undefined
@@ -302,6 +311,16 @@ export default function PresenterPage({
         }
       );
 
+    // One free category per difficulty level for the next player to pick from.
+    const suggestions = ([1, 2, 3] as Difficulty[]).flatMap((difficulty) => {
+      const pool = getAvailableCategories().filter(
+        ({ id }) => catalogEntry(String(id))?.difficulty === difficulty
+      );
+      const [pick] = seededShuffle(pool, suggestionSeed + difficulty);
+      return pick ? [{ ...pick, difficulty }] : [];
+    });
+    const isSuggested = suggestions.some(({ id }) => id === newPlayerCategory);
+
     const pickRandomCategory = () => {
       const free = getAvailableCategories();
       if (free.length > 0) {
@@ -338,6 +357,7 @@ export default function PresenterPage({
 
       setNewPlayerName("");
       setNewPlayerCategory(undefined);
+      setSuggestionSeed(newShuffleSeed());
     };
 
     const handleUpdatePlayer = (index: number) => {
@@ -406,7 +426,7 @@ export default function PresenterPage({
 
           {/* Add a player */}
           <form
-            className="neon-panel p-4 md:p-5 flex flex-col md:flex-row gap-3"
+            className="neon-panel p-4 md:p-5 flex flex-col gap-4"
             onSubmit={(event) => {
               event.preventDefault();
               handleAddPlayer();
@@ -417,33 +437,78 @@ export default function PresenterPage({
               placeholder="Imię gracza"
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
-              className={`${fieldClass} md:w-56`}
+              className={fieldClass}
               autoFocus
             />
-            <select
-              value={newPlayerCategory || ""}
-              onChange={(e) => setNewPlayerCategory(e.target.value || undefined)}
-              className={`${fieldClass} flex-1 min-w-0`}
-            >
-              <option value="">Wybierz kategorię...</option>
-              {categoryOptions()}
-            </select>
-            <FloorButton
-              type="button"
-              variant="rectangular"
-              className="font-semibold text-sm"
-              onClick={pickRandomCategory}
-            >
-              Losuj
-            </FloorButton>
-            <FloorButton
-              type="submit"
-              variant="rectangular"
-              className="font-semibold text-sm"
-              disabled={!newPlayerName.trim() || newPlayerCategory === undefined}
-            >
-              Dodaj
-            </FloorButton>
+
+            {suggestions.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm uppercase tracking-[0.15em] text-white/70">
+                    Propozycje kategorii
+                  </p>
+                  <button
+                    type="button"
+                    className="text-sm text-white/70 underline underline-offset-4 hover:text-white"
+                    onClick={() => setSuggestionSeed(newShuffleSeed())}
+                  >
+                    Inne propozycje
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {suggestions.map(({ id, name, difficulty }) => (
+                    <FloorButton
+                      key={difficulty}
+                      type="button"
+                      variant="rectangular"
+                      aria-pressed={id === newPlayerCategory}
+                      className={`${id === newPlayerCategory ? "btn-primary" : ""} flex flex-col items-center gap-1 !py-4 text-sm`}
+                      onClick={() => setNewPlayerCategory(id)}
+                    >
+                      <span className="text-xs font-normal normal-case tracking-normal text-white/70">
+                        {DIFFICULTY_INFO[difficulty].emoji} {DIFFICULTY_INFO[difficulty].label}
+                      </span>
+                      <span className="text-center">{name}</span>
+                    </FloorButton>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col md:flex-row gap-3">
+              <select
+                value={isSuggested ? "" : newPlayerCategory || ""}
+                onChange={(e) => setNewPlayerCategory(e.target.value || undefined)}
+                className={`${fieldClass} flex-1 min-w-0`}
+              >
+                <option value="">…albo wybierz z wszystkich kategorii</option>
+                {categoryOptions()}
+              </select>
+              <FloorButton
+                type="button"
+                variant="rectangular"
+                className="font-semibold text-sm"
+                onClick={pickRandomCategory}
+              >
+                Całkowicie losowa
+              </FloorButton>
+              <FloorButton
+                type="submit"
+                variant="rectangular"
+                className="btn-primary font-semibold text-sm"
+                disabled={!newPlayerName.trim() || newPlayerCategory === undefined}
+              >
+                Dodaj
+              </FloorButton>
+            </div>
+            {newPlayerCategory !== undefined && (
+              <p className="text-sm text-white/70">
+                Wybrana kategoria:{" "}
+                <span className="font-bold text-white">
+                  {categoryDisplayName(newPlayerCategory)}
+                </span>
+              </p>
+            )}
           </form>
           <CategoryViewControls options={viewOptions} onChange={setViewOptions} />
 

@@ -12,6 +12,7 @@ import FloorButton from "../components/FloorButton";
 import Link from "next/link";
 import { useCuratedOverrides } from "./useCuratedOverrides";
 import { answerList, primaryAnswer } from "./answers";
+import { newShuffleSeed, seededShuffle } from "./shuffle";
 import { CATEGORY_GROUPS, DIFFICULTY_INFO, CATEGORY_CATALOG } from "./catalog";
 import {
   CategorySections,
@@ -25,6 +26,12 @@ export default function CategoriesPage() {
     Category | undefined
   >(undefined);
   const [searchQuery, setSearchQuery] = useState("");
+  // How a category's examples are listed: a fresh random order each time a
+  // category is opened, so browsing doesn't spoil the in-game order.
+  const [exampleOrder, setExampleOrder] = useState<"random" | "alpha" | "game">(
+    "random"
+  );
+  const [previewSeed, setPreviewSeed] = useState(0);
   const curatedOverrides = useCuratedOverrides();
   const [viewOptions, setViewOptions] = useCategoryViewOptions();
 
@@ -38,11 +45,21 @@ export default function CategoriesPage() {
   // category starts from the top of the page.
   useEffect(() => {
     window.scrollTo({ top: 0 });
+    setExampleOrder("random");
+    setPreviewSeed(newShuffleSeed());
   }, [selectedCategory]);
 
   if (selectedCategory) {
     const categoryData = CATEGORY_METADATA[selectedCategory];
-    const examples = categoryData.examples;
+    const gameOrder = categoryData.examples as Array<ImageExample | TextExample>;
+    const examples =
+      exampleOrder === "game"
+        ? gameOrder
+        : exampleOrder === "alpha"
+          ? [...gameOrder].sort((a, b) =>
+              primaryAnswer(a).localeCompare(primaryAnswer(b), "pl")
+            )
+          : seededShuffle(gameOrder, previewSeed);
 
     return (
       <FloorPageLayout back={{ onClick: () => setSelectedCategory(undefined) }}>
@@ -92,6 +109,21 @@ export default function CategoriesPage() {
               <span>Przykłady: {examples.length}</span>
             </p>
           </div>
+
+          <label className="flex items-center gap-2 text-sm text-white/80 -mt-4">
+            Kolejność:
+            <select
+              value={exampleOrder}
+              onChange={(event) =>
+                setExampleOrder(event.target.value as typeof exampleOrder)
+              }
+              className="bg-gray-900 text-white px-2 py-1 rounded-md border border-neon focus:outline-none"
+            >
+              <option value="random">Losowa</option>
+              <option value="alpha">Alfabetycznie</option>
+              <option value="game">Jak w grze</option>
+            </select>
+          </label>
 
           {/* Examples Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
