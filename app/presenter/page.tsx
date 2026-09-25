@@ -843,60 +843,52 @@ export default function PresenterPage({
 
   return (
     <FloorPageLayout>
-      <div className="flex flex-col items-center justify-center gap-6 md:gap-8 p-8 md:p-20">
-        {desktopPlayWarning}
-        {/* Logo-style title */}
-        <div className="text-center mb-8">
+      {/* Sized to the viewport so the whole menu fits on one screen. */}
+      <div className="min-h-dvh w-full flex flex-col items-center justify-center gap-[3vh] px-6 py-[3vh] text-center">
+        <div className="w-full max-w-xl lg:hidden">{desktopPlayWarning}</div>
+
+        <div className="flex flex-col items-center gap-[1.5vh]">
           <h1 className="flex justify-center">
-            <FloorLogo size="lg" />
+            <FloorLogo size="hero" />
           </h1>
-          <div className="text-base sm:text-lg md:text-2xl text-white/80 font-light mt-6 uppercase tracking-[0.2em]">
+          <p className="text-sm sm:text-base md:text-xl text-white/80 font-light uppercase tracking-[0.2em]">
             Zagraj w The Floor w domu
-          </div>
+          </p>
         </div>
 
-        {/* Main action button */}
-        <div className="mt-8">
-          <FloorButton
-            variant="square"
-            className="font-bold text-xl relative z-10"
-            onClick={() => setGameDetails({ data: [] })}
-          >
-            Rozpocznij grę
-          </FloorButton>
-        </div>
+        <FloorButton
+          variant="square"
+          className="font-bold text-xl relative z-10 w-[clamp(8.75rem,20vh,11rem)]"
+          onClick={() => setGameDetails({ data: [] })}
+        >
+          Rozpocznij grę
+        </FloorButton>
 
-        {/* Additional control buttons */}
-        <div className="flex flex-col gap-8 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
           <FloorButton
             variant="rectangular"
             className="font-semibold text-base"
             onClick={() => setDemoDetails({ category: "Aplikacje" })}
           >
-            Zagraj pojedynczą rundę
+            Pojedyncza runda
           </FloorButton>
           <FloorButton
             variant="rectangular"
             className="font-semibold text-base"
             onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID)}
           >
-            Co to jest? (losowe obrazki)
+            Co to jest?
           </FloorButton>
-          <Link
-            className="font-semibold text-base text-center"
-            href="/categories"
-            prefetch={false}
-          >
-            Zobacz dostępne kategorie
+        </div>
+
+        <nav className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-semibold uppercase tracking-wider text-white/70">
+          <Link className="hover:text-white" href="/categories" prefetch={false}>
+            Kategorie
           </Link>
-          <Link
-            className="font-semibold text-base text-center"
-            href="/about"
-            prefetch={false}
-          >
+          <Link className="hover:text-white" href="/about" prefetch={false}>
             O grze
           </Link>
-        </div>
+        </nav>
       </div>
     </FloorPageLayout>
   );

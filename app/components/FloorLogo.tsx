@@ -5,6 +5,8 @@ const SIZES = {
   sm: "h-20",
   md: "h-36",
   lg: "h-32 md:h-56",
+  /** Scales with the viewport height so a menu fits without scrolling. */
+  hero: "h-[clamp(4.5rem,22vh,13rem)]",
 } as const;
 
 /**

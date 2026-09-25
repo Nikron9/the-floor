@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Category,
   CATEGORY_METADATA,
@@ -14,7 +14,6 @@ import { useCuratedOverrides } from "./useCuratedOverrides";
 import { answerList, primaryAnswer } from "./answers";
 
 export default function CategoriesPage() {
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
   >(undefined);
@@ -32,11 +31,11 @@ export default function CategoriesPage() {
       CATEGORY_METADATA[a].name.localeCompare(CATEGORY_METADATA[b].name, "pl")
     );
 
+  // The page itself is the only scroller, so switching between the list and a
+  // category starts from the top of the page.
   useEffect(() => {
-    if (selectedCategory && containerRef) {
-      containerRef.scrollTop = 0;
-    }
-  }, [selectedCategory, containerRef]);
+    window.scrollTo({ top: 0 });
+  }, [selectedCategory]);
 
   if (selectedCategory) {
     const categoryData = CATEGORY_METADATA[selectedCategory];
@@ -44,7 +43,7 @@ export default function CategoriesPage() {
 
     return (
       <FloorPageLayout>
-        <div className="h-full w-full overflow-hidden p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
+        <div className="w-full p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-row items-center justify-between mb-4">
             <h2
@@ -82,10 +81,7 @@ export default function CategoriesPage() {
           </div>
 
           {/* Examples Grid */}
-          <div
-            ref={setContainerRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {examples.map((item, index) => {
               const isTextExample = "text" in item;
               const isImageExample = "image" in item;
@@ -153,7 +149,7 @@ export default function CategoriesPage() {
 
   return (
     <FloorPageLayout>
-      <div className="h-full w-full overflow-hidden p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
+      <div className="w-full p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
         {/* Header */}
         <h1
           className="text-4xl font-bold mb-4 glow-text"
@@ -175,7 +171,7 @@ export default function CategoriesPage() {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[70vh] overflow-y-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredCategories.length === 0 ? (
             <div className="col-span-full text-center text-white/60 py-8">
               Nie znaleziono kategorii pasujących do wyszukiwania
@@ -188,14 +184,7 @@ export default function CategoriesPage() {
                   key={category}
                   variant="rectangular"
                   className="font-semibold text-base flex flex-col items-center justify-center gap-2 p-8"
-                  onClick={() => {
-                    setSelectedCategory(category);
-
-                    containerRef?.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
+                  onClick={() => setSelectedCategory(category)}
                 >
                   <span className="text-center">{categoryData.name}</span>
                   <span
