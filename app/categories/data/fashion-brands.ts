@@ -4,6 +4,9 @@ export const FashionBrandsCategory: CategoryMetadata = {
   name: "Marki modowe",
   folder: "fashion-brands",
   instruction: "Na ekranie pojawi się logo. Podaj nazwę marki.",
+  details: [
+    "Wystarczy nazwa marki, bez nazwy kolekcji czy produktu.",
+  ],
   // Full logos on purpose (the admin blurs/crops them later). Best known in Poland first -- never alphabetical.
   examples: [
     { properEn: "Nike", image: "nike.jpg" },

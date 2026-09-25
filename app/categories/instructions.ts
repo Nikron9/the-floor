@@ -12,6 +12,8 @@ export type RoundInstruction = {
   kindLabel: string;
   /** What appears on screen and what the players have to say. */
   prompt: string;
+  /** Category-specific rules: accepted answers, difficulty, tolerances. */
+  details: string[];
 };
 
 const DEFAULT_PROMPT = {
@@ -20,7 +22,7 @@ const DEFAULT_PROMPT = {
 } as const;
 
 export const roundInstruction = (
-  category: Pick<ResolvedCategory, "examples" | "instruction">
+  category: Pick<ResolvedCategory, "examples" | "instruction" | "details">
 ): RoundInstruction => {
   const kind = category.examples.some((example) => "text" in example)
     ? "text"
@@ -30,6 +32,7 @@ export const roundInstruction = (
     kind,
     kindLabel: kind === "text" ? "Tekst" : "Obrazki",
     prompt: category.instruction ?? DEFAULT_PROMPT[kind],
+    details: category.details ?? [],
   };
 };
 

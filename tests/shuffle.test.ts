@@ -47,6 +47,19 @@ describe("roundInstruction", () => {
       }).prompt
     ).toBe("Podaj wartość.");
   });
+
+  it("passes category details through and defaults to none", () => {
+    const example = { name: "a", alternatives: [], text: "X" };
+    expect(roundInstruction({ examples: [example] }).details).toEqual([]);
+    expect(
+      roundInstruction({ examples: [example], details: ["(±2)"] }).details
+    ).toEqual(["(±2)"]);
+  });
+
+  it("explains the tolerance in \"Ile tego jest?\"", () => {
+    const details = resolveCategory("Ile tego jest?")?.details ?? [];
+    expect(details.some((line) => line.includes("±"))).toBe(true);
+  });
 });
 
 describe("mixed \"Miks kategorii\" round", () => {

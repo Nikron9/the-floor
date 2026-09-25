@@ -4,6 +4,10 @@ export const PolishActorsCategory: CategoryMetadata = {
   name: "Polscy aktorzy",
   folder: "polish-actors",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Linda"], properPl: "Bogusław Linda", image: "boguslaw-linda.jpg" },

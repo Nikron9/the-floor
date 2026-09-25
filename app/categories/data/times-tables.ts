@@ -4,6 +4,10 @@ export const TimesTablesCategory: CategoryMetadata = {
   name: "Tabliczka mnożenia",
   folder: "times-tables",
   instruction: "Na ekranie pojawi się mnożenie. Podaj wynik.",
+  details: [
+    "Liczy się tylko wynik.",
+    "Tabliczka mnożenia do 12 x 12, kolejność pomieszana.",
+  ],
   examples: [
     { pl: "18", text: "2 x 9" },
     { pl: "72", text: "8 x 9" },

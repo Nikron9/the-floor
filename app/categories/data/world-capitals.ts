@@ -5,6 +5,10 @@ export const WorldCapitalsCategory: CategoryMetadata = {
   name: "Stolice spoza Europy",
   folder: "world-capitals",
   instruction: "Na ekranie pojawi się nazwa państwa. Podaj jego stolicę.",
+  details: [
+    "Zaliczana jest polska nazwa stolicy albo nazwa angielska lub lokalna.",
+    "Na początku duże państwa, dalej coraz bardziej egzotyczne.",
+  ],
   // Easiest first -- never alphabetical.
   examples: [
     { plAlt: ["USA"], properPl: "Waszyngton", properEn: "Washington", text: "Stany Zjednoczone" },

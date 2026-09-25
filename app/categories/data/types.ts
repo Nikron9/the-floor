@@ -41,5 +41,11 @@ export type CategoryMetadata = {
    * app/categories/instructions.ts.
    */
   instruction?: string;
+  /**
+   * Optional extra rules (Polish UI text), one sentence each: what answers
+   * count, how difficulty grows, tolerances. Shown under the instruction on
+   * the projector and on the category page.
+   */
+  details?: string[];
   examples: ImageExample[] | TextExample[];
 };

@@ -38,8 +38,9 @@ All three start from the presenter menu:
 - **Rozpocznij grę** — the full game: board, draw, duels until one player
   owns the floor. Examples play in each category's fixed order (easiest
   first).
-- **Szybki pojedynek** — one duel in a chosen category, examples in random
-  order (`/demo?category=…`).
+- **Szybki pojedynek** — one duel in a chosen category, in the category's
+  fixed order or, if the host ticks *Losowa kolejność*, shuffled
+  (`/demo?category=…&shuffle=1`).
 - **Miks kategorii** — one duel on random pictures from every image category
   (at most 100 per round).
 

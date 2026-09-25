@@ -5,6 +5,10 @@ export const RomanNumeralsCategory: CategoryMetadata = {
   name: "Liczby rzymskie",
   folder: "roman-numerals",
   instruction: "Na ekranie pojawi się liczba rzymska. Podaj jej wartość.",
+  details: [
+    "Podaj wartość liczby zapisanej cyframi rzymskimi.",
+    "Na początku pojedyncze znaki, dalej coraz dłuższe liczby (aż do 3999).",
+  ],
   // Easiest first -- never alphabetical.
   examples: [
     { pl: "1", text: "I" },

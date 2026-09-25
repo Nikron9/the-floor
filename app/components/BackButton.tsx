@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 /**
- * The plain "← Wstecz" button in the top-left corner of a page.
+ * The plain "Wstecz" button in the top-left corner of a page.
  *
  * Goes back in history when the visitor arrived from another page of this
  * site, otherwise to `fallback` -- a pasted link must not leave the site.
@@ -34,7 +34,7 @@ export default function BackButton({
       onClick={goBack}
       className="btn-glow rectangular !px-4 !py-2 text-xs sm:text-sm"
     >
-      <span aria-hidden="true">←</span> Wstecz
+      Wstecz
     </button>
   );
 }

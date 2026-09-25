@@ -5,6 +5,9 @@ export const EmojiRebusCategory: CategoryMetadata = {
   name: "Emoji-rebusy",
   folder: "emoji-rebus",
   instruction: "Na ekranie pojawią się emoji. Odgadnij film, bajkę lub serial.",
+  details: [
+    "Podaj tytuł polski albo oryginalny.",
+  ],
   // Easiest first -- never alphabetical.
   examples: [
     { properPl: "Król Lew", properEn: "The Lion King", text: "🦁👑" },

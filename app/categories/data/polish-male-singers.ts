@@ -4,6 +4,10 @@ export const PolishMaleSingersCategory: CategoryMetadata = {
   name: "Polscy piosenkarze",
   folder: "polish-male-singers",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Krawczyk"], properPl: "Krzysztof Krawczyk", image: "krzysztof-krawczyk.jpg" },

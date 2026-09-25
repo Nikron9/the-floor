@@ -32,9 +32,11 @@ export function Demo() {
         isStillInTheGame: true,
       }}
       onFinish={() => window.close()}
-      // A one-off round from the presenter menu draws examples in random
-      // order; a full game keeps each category's fixed order.
-      shuffle
+      // Fixed (easiest-first) order unless the host ticked "Losowa kolejność";
+      // the mixed round is always shuffled.
+      shuffle={
+        searchParams.get("shuffle") === "1" || category === MIXED_CATEGORY_ID
+      }
       limit={category === MIXED_CATEGORY_ID ? MIXED_ROUND_LIMIT : undefined}
     />
   );

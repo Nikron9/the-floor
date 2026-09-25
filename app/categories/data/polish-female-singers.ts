@@ -4,6 +4,10 @@ export const PolishFemaleSingersCategory: CategoryMetadata = {
   name: "Polskie piosenkarki",
   folder: "polish-female-singers",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Rodowicz", "Maryla"], properPl: "Maryla Rodowicz", image: "maryla-rodowicz.jpg" },

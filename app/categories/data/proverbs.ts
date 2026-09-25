@@ -5,6 +5,10 @@ export const ProverbsCategory: CategoryMetadata = {
   name: "Dokończ przysłowie",
   folder: "proverbs",
   instruction: "Na ekranie pojawi się początek przysłowia. Dokończ je.",
+  details: [
+    "Trzeba dokończyć przysłowie. Wystarczy brakująca część.",
+    "Drobne różnice w brzmieniu są uznawane, jeśli sens się zgadza.",
+  ],
   // Easiest first -- never alphabetical.
   examples: [
     { pl: "tam nie ma co jeść", text: "Gdzie kucharek sześć…" },

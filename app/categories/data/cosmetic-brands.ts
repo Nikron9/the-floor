@@ -4,6 +4,9 @@ export const CosmeticBrandsCategory: CategoryMetadata = {
   name: "Marki kosmetyków",
   folder: "cosmetic-brands",
   instruction: "Na ekranie pojawi się logo. Podaj nazwę marki.",
+  details: [
+    "Wystarczy nazwa marki, bez nazwy kolekcji czy produktu.",
+  ],
   // Full logos on purpose (the admin blurs/crops them later). Best known in Poland first -- never alphabetical.
   examples: [
     { properEn: "Nivea", image: "nivea.jpg" },

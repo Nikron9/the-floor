@@ -124,8 +124,9 @@ export default function Round({
       roundInstruction({
         examples: rawExamples,
         instruction: resolved?.instruction,
+        details: resolved?.details,
       }),
-    [rawExamples, resolved?.instruction]
+    [rawExamples, resolved?.instruction, resolved?.details]
   );
 
   // Warm the browser cache for the opening pictures while the host is still
@@ -420,6 +421,16 @@ export default function Round({
           <p className="text-4xl font-bold text-white max-w-5xl">
             {instruction.prompt}
           </p>
+          {instruction.details.length > 0 && (
+            <ul className="neon-panel text-2xl font-semibold text-white max-w-5xl space-y-2 text-left px-8 py-5">
+              {instruction.details.map((detail) => (
+                <li key={detail} className="flex gap-3">
+                  <span style={{ color: "var(--color-neon)" }}>•</span>
+                  <span>{detail}</span>
+                </li>
+              ))}
+            </ul>
+          )}
           <ul className="text-2xl text-white/80 max-w-4xl space-y-2 text-left list-disc pl-8">
             {ROUND_RULES.map((rule) => (
               <li key={rule}>{rule}</li>

@@ -4,6 +4,10 @@ export const PopDivasCategory: CategoryMetadata = {
   name: "Diwy popu",
   folder: "pop-divas",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   examples: [
     // Most recognisable in Poland first -- never alphabetical.
     { properPl: "Madonna", image: "madonna.jpg" },

@@ -5,6 +5,10 @@ export const EuropeanCapitalsCategory: CategoryMetadata = {
   name: "Stolice Europy",
   folder: "european-capitals",
   instruction: "Na ekranie pojawi się nazwa państwa. Podaj jego stolicę.",
+  details: [
+    "Zaliczana jest polska nazwa stolicy albo nazwa lokalna.",
+    "Na początku duże państwa, dalej mniejsze i mniej oczywiste.",
+  ],
   // Easiest first -- never alphabetical.
   examples: [
     { properPl: "Warszawa", properEn: "Warsaw", text: "Polska" },

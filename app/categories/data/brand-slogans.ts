@@ -4,6 +4,10 @@ export const BrandSlogansCategory: CategoryMetadata = {
   name: "Slogany reklamowe",
   folder: "brand-slogans",
   instruction: "Na ekranie pojawi się slogan reklamowy. Podaj markę.",
+  details: [
+    "Wystarczy nazwa marki, nie produktu.",
+    "Większość sloganów jest w oryginalnym brzmieniu, często po angielsku.",
+  ],
   examples: [
     { properPl: "Nike", text: "Just Do It" },
     { plAlt: ["McDonald"], properPl: "McDonald's", text: "I'm Lovin' It" },

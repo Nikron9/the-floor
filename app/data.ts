@@ -23,6 +23,14 @@ import { ProverbsCategory } from "./categories/data/proverbs";
 import { EmojiRebusCategory } from "./categories/data/emoji-rebus";
 import { RomanNumeralsCategory } from "./categories/data/roman-numerals";
 import { ColorsCategory } from "./categories/data/colors";
+import { AbbreviationsCategory } from "./categories/data/abbreviations";
+import { HolidaysAndDatesCategory } from "./categories/data/holidays-and-dates";
+import { HowManyCategory } from "./categories/data/how-many";
+import { DishCountriesCategory } from "./categories/data/dish-countries";
+import { AnimalBabiesCategory } from "./categories/data/animal-babies";
+import { EmojiProverbsCategory } from "./categories/data/emoji-proverbs";
+import { EmojiJobsCategory } from "./categories/data/emoji-jobs";
+import { EmojiGamesAppsCategory } from "./categories/data/emoji-games-apps";
 import { HorsesCategory } from "./categories/data/horses";
 import { JunkDrawerCategory } from "./categories/data/junk-drawer";
 import { KitchenGadgetsCategory } from "./categories/data/kitchen-gadgets";
@@ -343,6 +351,14 @@ export type Category =
   | "Emoji-rebusy"
   | "Liczby rzymskie"
   | "Jaki to kolor?"
+  | "Skróty"
+  | "Święta i daty"
+  | "Ile tego jest?"
+  | "Kraj po potrawie"
+  | "Zwierzęce maluchy"
+  | "Przysłowia z emoji"
+  | "Zawody z emoji"
+  | "Gry i aplikacje z emoji"
   | "Sporty"
   | "Anime"
   | "Minecraft"
@@ -438,6 +454,14 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Emoji-rebusy": EmojiRebusCategory,
   "Liczby rzymskie": RomanNumeralsCategory,
   "Jaki to kolor?": ColorsCategory,
+  "Skróty": AbbreviationsCategory,
+  "Święta i daty": HolidaysAndDatesCategory,
+  "Ile tego jest?": HowManyCategory,
+  "Kraj po potrawie": DishCountriesCategory,
+  "Zwierzęce maluchy": AnimalBabiesCategory,
+  "Przysłowia z emoji": EmojiProverbsCategory,
+  "Zawody z emoji": EmojiJobsCategory,
+  "Gry i aplikacje z emoji": EmojiGamesAppsCategory,
   "Konie": HorsesCategory,
   "Szuflada z rupieciami": JunkDrawerCategory,
   "Gadżety kuchenne": KitchenGadgetsCategory,

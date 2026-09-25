@@ -12,6 +12,13 @@ import FloorButton from "../components/FloorButton";
 import Link from "next/link";
 import { useCuratedOverrides } from "./useCuratedOverrides";
 import { answerList, primaryAnswer } from "./answers";
+import { CATEGORY_GROUPS, DIFFICULTY_INFO, CATEGORY_CATALOG } from "./catalog";
+import {
+  CategorySections,
+  CategoryViewControls,
+  DifficultyMark,
+  useCategoryViewOptions,
+} from "./CategoryView";
 
 export default function CategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -19,17 +26,13 @@ export default function CategoriesPage() {
   >(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const curatedOverrides = useCuratedOverrides();
+  const [viewOptions, setViewOptions] = useCategoryViewOptions();
 
-  // Filter categories based on search query, by the name shown on screen
+  // Filter categories based on search query, by the name shown on screen;
+  // sorting and grouping happen in CategorySections.
   const filteredCategories = (Object.keys(CATEGORY_METADATA) as Category[])
-    .filter((category) =>
-      CATEGORY_METADATA[category].name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) =>
-      CATEGORY_METADATA[a].name.localeCompare(CATEGORY_METADATA[b].name, "pl")
-    );
+    .map((id) => ({ id, name: CATEGORY_METADATA[id].name }))
+    .filter(({ name }) => name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // The page itself is the only scroller, so switching between the list and a
   // category starts from the top of the page.
@@ -64,12 +67,29 @@ export default function CategoriesPage() {
           </div>
 
           {/* Category Info */}
-          <div className="neon-panel p-4 mb-6">
-            <p className="text-white">
-              <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
-                Liczba przykładów:
-              </span>{" "}
-              {examples.length}
+          <div className="neon-panel p-4 mb-6 flex flex-col gap-3">
+            {categoryData.instruction && (
+              <p className="text-white text-lg font-semibold">
+                {categoryData.instruction}
+              </p>
+            )}
+            {categoryData.details && (
+              <ul className="text-white/80 space-y-1 list-disc pl-6">
+                {categoryData.details.map((detail) => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            )}
+            <p className="text-white/80 text-sm flex flex-wrap gap-x-6 gap-y-1">
+              <span>
+                {CATEGORY_GROUPS.find(({ id }) => id === CATEGORY_CATALOG[selectedCategory].group)?.emoji}{" "}
+                {CATEGORY_GROUPS.find(({ id }) => id === CATEGORY_CATALOG[selectedCategory].group)?.label}
+              </span>
+              <span>
+                {DIFFICULTY_INFO[CATEGORY_CATALOG[selectedCategory].difficulty].emoji} Trudność:{" "}
+                {DIFFICULTY_INFO[CATEGORY_CATALOG[selectedCategory].difficulty].label.toLowerCase()}
+              </span>
+              <span>Przykłady: {examples.length}</span>
             </p>
           </div>
 
@@ -162,35 +182,35 @@ export default function CategoriesPage() {
             style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
           />
         </div>
+        <CategoryViewControls options={viewOptions} onChange={setViewOptions} />
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredCategories.length === 0 ? (
-            <div className="col-span-full text-center text-white/60 py-8">
-              Nie znaleziono kategorii pasujących do wyszukiwania
-            </div>
-          ) : (
-            filteredCategories.map((category) => {
-              const categoryData = CATEGORY_METADATA[category];
-              return (
-                <FloorButton
-                  key={category}
-                  variant="rectangular"
-                  className="font-semibold text-base flex flex-col items-center justify-center gap-2 p-8"
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  <span className="text-center">{categoryData.name}</span>
-                  <span
-                    className="text-xs font-normal"
-                    style={{ color: "var(--color-neon)" }}
-                  >
-                    przykłady: {categoryData.examples.length}
+        {filteredCategories.length === 0 ? (
+          <div className="text-center text-white/60 py-8">
+            Nie znaleziono kategorii pasujących do wyszukiwania
+          </div>
+        ) : (
+          <CategorySections
+            items={filteredCategories}
+            options={viewOptions}
+            gridClassName="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            renderTile={({ id, name }) => (
+              <FloorButton
+                key={id}
+                variant="rectangular"
+                className="font-semibold text-base flex flex-col items-center justify-center gap-2 p-8"
+                onClick={() => setSelectedCategory(id)}
+              >
+                {viewOptions.showDifficulty && (
+                  <span className="text-xl leading-none">
+                    <DifficultyMark id={id} />
                   </span>
-                </FloorButton>
-              );
-            })
-          )}
-        </div>
+                )}
+                <span className="text-center">{name}</span>
+              </FloorButton>
+            )}
+          />
+        )}
 
       </div>
     </FloorPageLayout>

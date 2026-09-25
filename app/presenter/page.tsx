@@ -20,6 +20,13 @@ import { REVEAL_STATE, RoundDisplay } from "../projector/round";
 import FloorButton from "../components/FloorButton";
 import FloorLogo from "../components/FloorLogo";
 import FloorPageLayout from "../components/FloorPageLayout";
+import { arrangeCategories, catalogEntry, DIFFICULTY_INFO } from "../categories/catalog";
+import {
+  CategorySections,
+  CategoryViewControls,
+  DifficultyMark,
+  useCategoryViewOptions,
+} from "../categories/CategoryView";
 import { useLocalStorage } from "usehooks-ts";
 
 export enum PROJECTOR_MESSAGE_TYPE {
@@ -62,7 +69,6 @@ export default function PresenterPage({
   const [hasResumedLiveGame, setHasResumedLiveGame] = useState(false);
 
   // Game setup state
-  const [searchQuery, setSearchQuery] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [newPlayerCategory, setNewPlayerCategory] = useState<
@@ -78,6 +84,9 @@ export default function PresenterPage({
     category: CategoryId;
   }>();
   const [demoQuery, setDemoQuery] = useState("");
+  const [viewOptions, setViewOptions] = useCategoryViewOptions();
+  // Quick duels keep the category's fixed order unless the host asks otherwise.
+  const [demoShuffle, setDemoShuffle] = useState(false);
 
   // The exact list the projector is playing, in its order. Needed because a
   // single round shuffles its examples, so the presenter cannot re-resolve
@@ -128,9 +137,12 @@ export default function PresenterPage({
     }
   };
 
-  const triggerStartDemoRound = (category = demoDetails?.category ?? "") => {
+  const triggerStartDemoRound = (
+    category = demoDetails?.category ?? "",
+    shuffle = demoShuffle
+  ) => {
     const newWindow = window.open(
-      `/demo?category=${encodeURIComponent(category)}`,
+      `/demo?category=${encodeURIComponent(category)}${shuffle ? "&shuffle=1" : ""}`,
       "debug",
       "fullscreen=yes"
     );
@@ -256,23 +268,53 @@ export default function PresenterPage({
     // Get used categories to prevent duplicates
     const usedCategories = new Set(gameDetails.data.map((p) => p.category));
 
-    // Filter players based on search query, matching the category's display
-    // name rather than its key.
-    const filteredPlayers = gameDetails.data.filter((player) => {
-      const query = searchQuery.toLowerCase();
-      return (
-        player.person.toLowerCase().includes(query) ||
-        categoryDisplayName(player.category)
-          .toLowerCase()
-          .includes(query)
-      );
-    });
-
     // Get available categories (not used by other players)
     const getAvailableCategories = (currentCategory?: CategoryId) =>
       listSelectableCategories().filter(
         ({ id }) => !usedCategories.has(id) || id === currentCategory
       );
+
+    // Category <option>s following the shared view settings: <optgroup>s when
+    // grouping is on, a difficulty emoji in front of the name when shown.
+    const categoryOptions = (currentCategory?: CategoryId) =>
+      arrangeCategories(getAvailableCategories(currentCategory), viewOptions).map(
+        ({ group, items }) => {
+          const options = items.map(({ id, name }) => {
+            const difficulty = catalogEntry(String(id))?.difficulty;
+            const mark =
+              viewOptions.showDifficulty && difficulty
+                ? `${DIFFICULTY_INFO[difficulty].emoji} `
+                : "";
+            return (
+              <option key={id} value={id}>
+                {mark}
+                {name}
+              </option>
+            );
+          });
+          return group ? (
+            <optgroup key={group.id} label={`${group.emoji} ${group.label}`}>
+              {options}
+            </optgroup>
+          ) : (
+            options
+          );
+        }
+      );
+
+    const pickRandomCategory = () => {
+      const free = getAvailableCategories();
+      if (free.length > 0) {
+        setNewPlayerCategory(free[Math.floor(Math.random() * free.length)].id);
+      }
+    };
+
+    const startGame = () => {
+      if (gameDetails.data.length === 0) return;
+      setLiveGameDetails(gameDetails);
+      setGameDetails(undefined);
+      openProjector();
+    };
 
     const handleAddPlayer = () => {
       if (!newPlayerName.trim() || newPlayerCategory === undefined) return;
@@ -343,206 +385,173 @@ export default function PresenterPage({
       setEditPlayerCategory(undefined);
     };
 
+    const fieldClass =
+      "bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon";
+
     return (
-      <FloorPageLayout>
-        <div className="p-8 md:p-20 flex flex-col gap-6 w-full max-w-7xl mx-auto">
-          <h3
-            className="text-4xl font-bold mb-4 glow-text"
-            style={{ color: "var(--color-neon)" }}
+      <FloorPageLayout back={{ onClick: () => setGameDetails(undefined) }}>
+        <div className="w-full max-w-4xl mx-auto px-6 pt-4 pb-32 flex flex-col gap-6">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h1
+              className="text-4xl md:text-5xl font-bold uppercase tracking-wide glow-text"
+              style={{ color: "var(--color-neon)" }}
+            >
+              Nowa gra
+            </h1>
+            <p className="text-sm md:text-base uppercase tracking-[0.2em] text-white/70">
+              Dodaj graczy i przydziel każdemu kategorię
+            </p>
+          </div>
+          <div className="w-full lg:hidden">{desktopPlayWarning}</div>
+
+          {/* Add a player */}
+          <form
+            className="neon-panel p-4 md:p-5 flex flex-col md:flex-row gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleAddPlayer();
+            }}
           >
-            Ustawienia gry
-          </h3>
-
-          {desktopPlayWarning}
-
-          {/* Search Bar */}
-          <div className="mb-4">
             <input
               type="text"
-              placeholder="Szukaj graczy lub kategorii..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-black"
-              style={{ boxShadow: "0 0 10px rgba(0, 212, 255, 0.3)" }}
+              placeholder="Imię gracza"
+              value={newPlayerName}
+              onChange={(e) => setNewPlayerName(e.target.value)}
+              className={`${fieldClass} md:w-56`}
+              autoFocus
             />
-          </div>
-
-          {/* Add New Player Form */}
-          <div className="neon-panel p-6 mb-6">
-            <h4
-              className="text-2xl font-bold mb-4 glow-text"
-              style={{ color: "var(--color-neon)" }}
+            <select
+              value={newPlayerCategory || ""}
+              onChange={(e) => setNewPlayerCategory(e.target.value || undefined)}
+              className={`${fieldClass} flex-1 min-w-0`}
             >
-              Dodaj nowego gracza
-            </h4>
-            <div className="flex flex-col md:flex-row gap-4">
-              <input
-                type="text"
-                placeholder="Imię gracza"
-                value={newPlayerName}
-                onChange={(e) => setNewPlayerName(e.target.value)}
-                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddPlayer();
-                }}
-              />
-              <select
-                value={newPlayerCategory || ""}
-                onChange={(e) =>
-                  setNewPlayerCategory(e.target.value || undefined)
-                }
-                className="flex-1 bg-gray-800 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon"
-              >
-                <option value="">Wybierz kategorię...</option>
-                {getAvailableCategories().map(({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-              <FloorButton
-                variant="rectangular"
-                className="font-semibold"
-                onClick={handleAddPlayer}
-                disabled={
-                  !newPlayerName.trim() || newPlayerCategory === undefined
-                }
-              >
-                Dodaj gracza
-              </FloorButton>
-            </div>
-          </div>
-
-          {/* Players List */}
-          <div className="flex flex-col gap-4 mb-6">
-            <h4
-              className="text-2xl font-bold glow-text"
-              style={{ color: "var(--color-neon)" }}
-            >
-              Gracze ({gameDetails.data.length})
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-              {filteredPlayers.length === 0 ? (
-                <div className="col-span-full text-center text-white/60 py-8">
-                  {searchQuery
-                    ? "Nie znaleziono graczy pasujących do wyszukiwania"
-                    : "Nie dodano jeszcze żadnych graczy"}
-                </div>
-              ) : (
-                filteredPlayers.map((player, index) => {
-                  const actualIndex = gameDetails.data.indexOf(player);
-                  const isEditing = editingIndex === actualIndex;
-
-                  return (
-                    <div
-                      key={actualIndex}
-                      className="neon-panel p-4 flex flex-col gap-3"
-                    >
-                      {isEditing ? (
-                        <>
-                          <input
-                            type="text"
-                            value={editPlayerName}
-                            onChange={(e) => setEditPlayerName(e.target.value)}
-                            className="bg-gray-800 text-white p-2 rounded-md border border-neon focus:outline-none focus:ring-2 focus:ring-neon"
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter")
-                                handleUpdatePlayer(actualIndex);
-                              if (e.key === "Escape") handleCancelEdit();
-                            }}
-                          />
-                          <select
-                            value={editPlayerCategory || ""}
-                            onChange={(e) =>
-                              setEditPlayerCategory(e.target.value || undefined)
-                            }
-                            className="bg-gray-800 text-white p-2 rounded-md border border-neon focus:outline-none focus:ring-2 focus:ring-neon"
-                          >
-                            {getAvailableCategories(player.category).map(
-                              ({ id, name }) => (
-                                <option key={id} value={id}>
-                                  {name}
-                                </option>
-                              )
-                            )}
-                          </select>
-                          <div className="flex gap-2">
-                            <FloorButton
-                              variant="rectangular"
-                              className="flex-1 text-sm font-semibold"
-                              onClick={() => handleUpdatePlayer(actualIndex)}
-                            >
-                              Zapisz
-                            </FloorButton>
-                            <FloorButton
-                              variant="rectangular"
-                              className="flex-1 text-sm font-semibold"
-                              onClick={handleCancelEdit}
-                            >
-                              Anuluj
-                            </FloorButton>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="flex flex-col gap-1">
-                            <p className="text-xl font-bold text-white">
-                              {player.person}
-                            </p>
-                            <p
-                              className="text-sm font-semibold"
-                              style={{ color: "var(--color-neon)" }}
-                            >
-                              {categoryDisplayName(player.category)}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <FloorButton
-                              variant="rectangular"
-                              className="flex-1 text-sm font-semibold"
-                              onClick={() => handleStartEdit(actualIndex)}
-                            >
-                              Edytuj
-                            </FloorButton>
-                            <FloorButton
-                              variant="rectangular"
-                              className="flex-1 text-sm font-semibold"
-                              onClick={() => handleDeletePlayer(actualIndex)}
-                            >
-                              Usuń
-                            </FloorButton>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4 border-t-2 border-neon/30">
+              <option value="">Wybierz kategorię...</option>
+              {categoryOptions()}
+            </select>
             <FloorButton
+              type="button"
               variant="rectangular"
-              className="font-bold text-lg w-full sm:w-auto"
-              onClick={() => setGameDetails(undefined)}
+              className="font-semibold text-sm"
+              onClick={pickRandomCategory}
             >
-              Anuluj
+              Losuj
             </FloorButton>
             <FloorButton
+              type="submit"
               variant="rectangular"
-              className="font-bold text-lg w-full sm:w-auto"
-              onClick={() => {
-                if (gameDetails.data.length === 0) {
-                  alert("Dodaj co najmniej jednego gracza, aby rozpocząć grę!");
-                  return;
-                }
-                setLiveGameDetails(gameDetails);
-                setGameDetails(undefined);
-                openProjector();
-              }}
+              className="font-semibold text-sm"
+              disabled={!newPlayerName.trim() || newPlayerCategory === undefined}
+            >
+              Dodaj
+            </FloorButton>
+          </form>
+          <CategoryViewControls options={viewOptions} onChange={setViewOptions} />
+
+          {/* Players */}
+          {gameDetails.data.length === 0 ? (
+            <p className="text-center text-white/60 py-10">
+              Nie dodano jeszcze żadnych graczy.
+            </p>
+          ) : (
+            <ol className="flex flex-col gap-2">
+              {gameDetails.data.map((player, index) => {
+                const isEditing = editingIndex === index;
+
+                return (
+                  <li
+                    key={index}
+                    className="neon-panel px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3"
+                  >
+                    <span className="w-8 shrink-0 text-lg font-bold text-white/50">
+                      {index + 1}.
+                    </span>
+                    {isEditing ? (
+                      <>
+                        <input
+                          type="text"
+                          value={editPlayerName}
+                          onChange={(e) => setEditPlayerName(e.target.value)}
+                          className={`${fieldClass} !p-2 sm:w-48`}
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleUpdatePlayer(index);
+                            if (e.key === "Escape") handleCancelEdit();
+                          }}
+                        />
+                        <select
+                          value={editPlayerCategory || ""}
+                          onChange={(e) => setEditPlayerCategory(e.target.value || undefined)}
+                          className={`${fieldClass} !p-2 flex-1 min-w-0`}
+                        >
+                          {categoryOptions(player.category)}
+                        </select>
+                        <div className="flex gap-2 shrink-0">
+                          <FloorButton
+                            variant="rectangular"
+                            className="text-xs font-semibold !px-3 !py-2"
+                            onClick={() => handleUpdatePlayer(index)}
+                          >
+                            Zapisz
+                          </FloorButton>
+                          <FloorButton
+                            variant="rectangular"
+                            className="text-xs font-semibold !px-3 !py-2"
+                            onClick={handleCancelEdit}
+                          >
+                            Anuluj
+                          </FloorButton>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-baseline sm:gap-4">
+                          <p className="text-xl font-bold text-white truncate">
+                            {player.person}
+                          </p>
+                          <p
+                            className="text-sm font-semibold uppercase tracking-wide truncate"
+                            style={{ color: "var(--color-neon)" }}
+                          >
+                            {categoryDisplayName(player.category)}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                          <FloorButton
+                            variant="rectangular"
+                            className="text-xs font-semibold !px-3 !py-2"
+                            onClick={() => handleStartEdit(index)}
+                          >
+                            Edytuj
+                          </FloorButton>
+                          <FloorButton
+                            variant="rectangular"
+                            className="text-xs font-semibold !px-3 !py-2"
+                            onClick={() => handleDeletePlayer(index)}
+                          >
+                            Usuń
+                          </FloorButton>
+                        </div>
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+
+        {/* Always in reach, however long the player list gets. */}
+        <div className="fixed bottom-0 inset-x-0 z-30 bg-black/80 backdrop-blur border-t border-neon/40">
+          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+            <p className="text-white/80">
+              Gracze:{" "}
+              <span className="font-bold text-white">{gameDetails.data.length}</span>
+            </p>
+            <FloorButton
+              variant="rectangular"
+              className="btn-primary font-bold shrink-0"
               disabled={gameDetails.data.length === 0}
+              onClick={startGame}
             >
               Rozpocznij grę
             </FloorButton>
@@ -557,15 +566,13 @@ export default function PresenterPage({
     const query = demoQuery.trim().toLowerCase();
     const choices = listSelectableCategories()
       .filter(({ name }) => name.toLowerCase().includes(query))
-      .map(({ id, name }) => {
-        const examples = CATEGORY_METADATA[id as Category].examples;
-        return {
-          id,
-          name,
-          count: examples.length,
-          isText: examples.some((example) => "text" in example),
-        };
-      });
+      .map(({ id, name }) => ({
+        id,
+        name,
+        isText: CATEGORY_METADATA[id as Category].examples.some(
+          (example) => "text" in example
+        ),
+      }));
     const selected = demoDetails.category;
     const pickRandom = () => {
       const all = listSelectableCategories();
@@ -583,7 +590,7 @@ export default function PresenterPage({
               Szybki pojedynek
             </h1>
             <p className="text-sm md:text-base uppercase tracking-[0.2em] text-white/70">
-              Jedna runda w wybranej kategorii, elementy w losowej kolejności
+              Jedna runda w wybranej kategorii
             </p>
           </div>
           <div className="w-full max-w-xl mx-auto lg:hidden">{desktopPlayWarning}</div>
@@ -600,14 +607,18 @@ export default function PresenterPage({
               Losuj kategorię
             </FloorButton>
           </div>
+          <CategoryViewControls options={viewOptions} onChange={setViewOptions} />
 
           {choices.length === 0 ? (
             <p className="text-center text-white/60 py-8">
               Nie znaleziono kategorii pasujących do wyszukiwania
             </p>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {choices.map(({ id, name, count, isText }) => (
+            <CategorySections
+              items={choices}
+              options={viewOptions}
+              gridClassName="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
+              renderTile={({ id, name, isText }) => (
                 <FloorButton
                   key={id}
                   variant="rectangular"
@@ -617,11 +628,16 @@ export default function PresenterPage({
                 >
                   <span className="text-center uppercase">{name}</span>
                   <span className="text-xs font-normal text-white/70 normal-case tracking-normal">
-                    {isText ? "Tekst" : "Obrazki"} · {count}
+                    {viewOptions.showDifficulty && (
+                      <>
+                        <DifficultyMark id={String(id)} />{" "}
+                      </>
+                    )}
+                    {isText ? "Tekst" : "Obrazki"}
                   </span>
                 </FloorButton>
-              ))}
-            </div>
+              )}
+            />
           )}
         </div>
 
@@ -638,14 +654,25 @@ export default function PresenterPage({
                 "Wybierz kategorię"
               )}
             </p>
-            <FloorButton
-              variant="rectangular"
-              className="btn-primary font-bold shrink-0"
-              disabled={!selected}
-              onClick={() => triggerStartDemoRound()}
-            >
-              Start
-            </FloorButton>
+            <div className="flex items-center gap-4 shrink-0">
+              <label className="flex items-center gap-2 text-sm text-white/80 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={demoShuffle}
+                  onChange={(event) => setDemoShuffle(event.target.checked)}
+                  className="w-5 h-5 accent-[var(--color-neon)]"
+                />
+                Losowa kolejność
+              </label>
+              <FloorButton
+                variant="rectangular"
+                className="btn-primary font-bold"
+                disabled={!selected}
+                onClick={() => triggerStartDemoRound()}
+              >
+                Start
+              </FloorButton>
+            </div>
           </div>
         </div>
       </FloorPageLayout>
@@ -933,7 +960,7 @@ export default function PresenterPage({
           <FloorButton
             variant="rectangular"
             className="w-full font-semibold text-base"
-            onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID)}
+            onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID, true)}
           >
             Miks kategorii
           </FloorButton>

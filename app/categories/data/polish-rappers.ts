@@ -4,6 +4,10 @@ export const PolishRappersCategory: CategoryMetadata = {
   name: "Polscy raperzy",
   folder: "polish-rappers",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Quebo", "Jakub Grabowski"], properPl: "Quebonafide", image: "quebonafide.jpg" },

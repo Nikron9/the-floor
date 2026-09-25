@@ -72,7 +72,7 @@ export default function AboutPage() {
             </li>
             <li>
               <strong className="text-white">Szybki pojedynek</strong> — jeden pojedynek
-              w wybranej kategorii, elementy w losowej kolejności.
+              w wybranej kategorii, od najłatwiejszych albo w losowej kolejności.
             </li>
             <li>
               <strong className="text-white">Miks kategorii</strong> — pojedynek na losowych

@@ -8,6 +8,10 @@ export const PolishAthletesCategory: CategoryMetadata = {
   name: "Polscy sportowcy",
   folder: "polish-athletes",
   instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
+  details: [
+    "Wystarczy nazwisko albo pseudonim, pod którym ta osoba jest znana.",
+    "Samo imię nie wystarcza, chyba że to imię jest pseudonimem (np. Doda).",
+  ],
   // Ordered from the most recognisable to the least, so a round opens with
   // faces anyone gets and ends with ones only fans will.
   examples: [

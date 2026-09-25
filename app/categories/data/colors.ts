@@ -5,6 +5,10 @@ export const ColorsCategory: CategoryMetadata = {
   name: "Jaki to kolor?",
   folder: "colors",
   instruction: "Na ekranie pojawi się kolorowy kwadrat. Podaj nazwę koloru.",
+  details: [
+    "Na początku podstawowe kolory, dalej coraz subtelniejsze odcienie.",
+    "Przy trudnych odcieniach zaliczane są też przymiotniki (np. akwamarynowy).",
+  ],
   // Basic colours first, then ever finer shades -- never alphabetical.
   examples: [
     { pl: "Czerwony", properEn: "Red", image: "czerwony.png" }, // #E10600

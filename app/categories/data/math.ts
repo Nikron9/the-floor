@@ -4,6 +4,10 @@ export const MathCategory: CategoryMetadata = {
   name: "Matematyka",
   folder: "math",
   instruction: "Na ekranie pojawi się działanie. Podaj wynik.",
+  details: [
+    "Liczy się tylko wynik, bez obliczeń na głos.",
+    "Działania stają się coraz trudniejsze.",
+  ],
   examples: [
     { pl: "12", text: "7 + 5" },
     { pl: "9", text: "18 - 9" },

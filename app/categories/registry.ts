@@ -38,6 +38,8 @@ export type ResolvedCategory = {
   examples: ResolvedExample[];
   /** Pre-round prompt; see CategoryMetadata.instruction. */
   instruction?: string;
+  /** Extra rules; see CategoryMetadata.details. */
+  details?: string[];
 };
 
 /**
@@ -149,6 +151,7 @@ export const resolveCuratedCategory = (
     id,
     name: meta.name,
     instruction: meta.instruction,
+    details: meta.details,
     examples: (meta.examples as Array<ImageExample | TextExample>).map(
       (example) => resolveCuratedExample(meta.folder, example, overrides)
     ),
@@ -172,6 +175,10 @@ export const resolveMixedCategory = (
   name: "Miks kategorii",
   instruction:
     "Na ekranie pojawi się obrazek z dowolnej kategorii. Powiedz, co przedstawia.",
+  details: [
+    "Obrazki pochodzą ze wszystkich kategorii obrazkowych, w losowej kolejności.",
+    "Zaliczana jest każda odpowiedź, którą uznałaby dana kategoria.",
+  ],
   examples: (Object.keys(CATEGORY_METADATA) as Category[]).flatMap((id) => {
     const meta = CATEGORY_METADATA[id];
     if (MIXED_EXCLUDED_FOLDERS.has(meta.folder)) return [];
