@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const TimesTablesCategory: CategoryMetadata = {
   name: "Tabliczka mnożenia",
   folder: "times-tables",
+  instruction: "Na ekranie pojawi się mnożenie. Podaj wynik.",
   examples: [
     { pl: "18", text: "2 x 9" },
     { pl: "72", text: "8 x 9" },

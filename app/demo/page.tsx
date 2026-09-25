@@ -3,6 +3,10 @@ import { useSearchParams } from "next/navigation";
 import { CategoryId } from "../data";
 import Round from "../projector/round";
 import { Suspense } from "react";
+import { MIXED_CATEGORY_ID } from "../categories/registry";
+
+/** Nobody gets through more than this in a 2 x 45 s duel. */
+const MIXED_ROUND_LIMIT = 100;
 
 export function Demo() {
   const searchParams = useSearchParams();
@@ -28,6 +32,10 @@ export function Demo() {
         isStillInTheGame: true,
       }}
       onFinish={() => window.close()}
+      // A one-off round from the presenter menu draws examples in random
+      // order; a full game keeps each category's fixed order.
+      shuffle
+      limit={category === MIXED_CATEGORY_ID ? MIXED_ROUND_LIMIT : undefined}
     />
   );
 }

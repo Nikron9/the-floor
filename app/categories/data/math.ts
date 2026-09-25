@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const MathCategory: CategoryMetadata = {
   name: "Matematyka",
   folder: "math",
+  instruction: "Na ekranie pojawi się działanie. Podaj wynik.",
   examples: [
     { pl: "12", text: "7 + 5" },
     { pl: "9", text: "18 - 9" },

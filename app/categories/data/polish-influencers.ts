@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const PolishInfluencersCategory: CategoryMetadata = {
   name: "Polscy influencerzy i celebryci",
   folder: "polish-influencers",
+  instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Karol Wiśniewski"], properPl: "Friz", image: "friz.jpg" },

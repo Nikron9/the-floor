@@ -6,6 +6,8 @@ import { CategoryId, FloorData } from "../data";
 import { resolveCategory, type ResolvedExample } from "../categories/registry";
 import { useCommunityCategories } from "../categories/useCommunityCategories";
 import { useCuratedOverrides } from "../categories/useCuratedOverrides";
+import { newShuffleSeed, seededShuffle } from "../categories/shuffle";
+import { ROUND_RULES, roundInstruction } from "../categories/instructions";
 import {
   PRESENTER_MESSAGE_TYPE,
   PROJECTOR_MESSAGE_TYPE,
@@ -48,10 +50,16 @@ export default function Round({
   challenger,
   defender,
   onFinish,
+  shuffle = false,
+  limit,
 }: {
   category: CategoryId;
   challenger: FloorData;
   defender: FloorData;
+  /** Draw the examples in random order (single rounds from the menu). */
+  shuffle?: boolean;
+  /** Play at most this many examples (the mixed round draws from thousands). */
+  limit?: number;
   onFinish: (
     winner: FloorData,
     loser: FloorData,
@@ -101,15 +109,27 @@ export default function Round({
   const revealExampleNameRef = useRef(revealExampleName);
   const selectedExampleIndexRef = useRef(selectedExampleIndex);
 
-  const examples = useMemo(() => {
-    if (searchParams.get("debug") === "true") {
-      // Copy first: `rawExamples` is the memoised resolution, and sorting in
-      // place rewrote the category itself.
-      return [...rawExamples].sort(() => Math.random() - 0.5);
-    }
-
-    return rawExamples;
-  }, [rawExamples, searchParams]);
+  // One seed per round, so the order survives the category re-resolving
+  // mid-round (curated overrides and community categories load async).
+  const [shuffleSeed] = useState(newShuffleSeed);
+  const shouldShuffle = shuffle || searchParams.get("debug") === "true";
+  const examples = useMemo(
+    () => {
+      const ordered = shouldShuffle
+        ? seededShuffle(rawExamples, shuffleSeed)
+        : rawExamples;
+      return limit ? ordered.slice(0, limit) : ordered;
+    },
+    [rawExamples, shouldShuffle, shuffleSeed, limit]
+  );
+  const instruction = useMemo(
+    () =>
+      roundInstruction({
+        examples: rawExamples,
+        instruction: resolved?.instruction,
+      }),
+    [rawExamples, resolved?.instruction]
+  );
 
   // Warm the browser cache for the opening pictures while the host is still
   // on the countdown. The <img> tags mounted later hit the cache instead of
@@ -329,7 +349,7 @@ export default function Round({
       example,
       selectedExampleIndex,
       state: revealExampleName,
-      debugExamples: examples,
+      roundExamples: examples,
       challenger,
       defender,
     });
@@ -368,13 +388,47 @@ export default function Round({
     );
   }
 
-  if (currentTurn == null) {
+  if (currentTurn == null && countdown !== null) {
     return (
       <FloorPageLayout>
         <div className="flex items-center justify-center w-full h-full">
           <p className="text-[12rem] font-black metallic-text text-center">
-            {countdown !== null ? countdown : "THE FLOOR"}
+            {countdown}
           </p>
+        </div>
+      </FloorPageLayout>
+    );
+  }
+
+  // Before the host presses start: explain the round so both players know
+  // what will appear on screen and how the duel is scored.
+  if (currentTurn == null) {
+    return (
+      <FloorPageLayout>
+        <div className="flex flex-col items-center justify-center w-full h-full gap-8 p-10 text-center">
+          <p className="text-2xl uppercase tracking-[0.3em] text-white/70">
+            {challenger.person} <span className="text-white/40">vs</span>{" "}
+            {defender.person}
+          </p>
+          <p className="text-7xl font-black metallic-text">
+            {resolved?.name ?? String(category)}
+          </p>
+          <div className="flex items-center gap-4">
+            <span className="neon-plate px-5 py-2 text-xl font-bold uppercase text-white">
+              {instruction.kindLabel}
+            </span>
+            <span className="text-xl text-white/70">
+              {examples.length} elementów
+            </span>
+          </div>
+          <p className="text-4xl font-bold text-white max-w-5xl">
+            {instruction.prompt}
+          </p>
+          <ul className="text-2xl text-white/80 max-w-4xl space-y-2 text-left list-disc pl-8">
+            {ROUND_RULES.map((rule) => (
+              <li key={rule}>{rule}</li>
+            ))}
+          </ul>
         </div>
       </FloorPageLayout>
     );

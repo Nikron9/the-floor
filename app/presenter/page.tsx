@@ -5,6 +5,7 @@ import { CategoryId, FloorData, GameDetails } from "../data";
 import {
   categoryDisplayName,
   listSelectableCategories,
+  MIXED_CATEGORY_ID,
   resolveCategory,
   type ResolvedExample,
 } from "../categories/registry";
@@ -72,7 +73,10 @@ export default function PresenterPage({
     category: CategoryId;
   }>();
 
-  const [debugExamples, setDebugExamples] = useState<ResolvedExample[]>();
+  // The exact list the projector is playing, in its order. Needed because a
+  // single round shuffles its examples, so the presenter cannot re-resolve
+  // the category and match by index.
+  const [roundExamples, setRoundExamples] = useState<ResolvedExample[]>();
 
   const { categories: communityCategories } = useCommunityCategories();
   const curatedOverrides = useCuratedOverrides();
@@ -96,15 +100,15 @@ export default function PresenterPage({
       return [];
     }
 
-    if (debugExamples) {
-      return debugExamples;
+    if (roundExamples) {
+      return roundExamples;
     }
 
     return (
       resolveCategory(roundDetails.category, communityCategories, curatedOverrides)
         ?.examples ?? []
     );
-  }, [roundDetails?.category, debugExamples, communityCategories, curatedOverrides]);
+  }, [roundDetails?.category, roundExamples, communityCategories, curatedOverrides]);
 
   const channel = new BroadcastChannel("the-floor-projector");
 
@@ -119,9 +123,9 @@ export default function PresenterPage({
     }
   };
 
-  const triggerStartDemoRound = () => {
+  const triggerStartDemoRound = (category = demoDetails?.category ?? "") => {
     const newWindow = window.open(
-      `/demo?category=${encodeURIComponent(demoDetails?.category ?? "")}`,
+      `/demo?category=${encodeURIComponent(category)}`,
       "debug",
       "fullscreen=yes"
     );
@@ -183,9 +187,13 @@ export default function PresenterPage({
             roundState: event.data.state,
             example: event.data.example,
           });
+          if (Array.isArray(event.data.roundExamples)) {
+            setRoundExamples(event.data.roundExamples);
+          }
           break;
         case PRESENTER_MESSAGE_TYPE.END_ROUND:
           setRoundDetails(undefined);
+          setRoundExamples(undefined);
           break;
         default:
           console.warn("Unknown message type", event.data.type);
@@ -587,7 +595,7 @@ export default function PresenterPage({
             <FloorButton
               variant="rectangular"
               className="font-bold text-lg w-full sm:w-auto"
-              onClick={triggerStartDemoRound}
+              onClick={() => triggerStartDemoRound()}
             >
               Start
             </FloorButton>
@@ -874,6 +882,13 @@ export default function PresenterPage({
             onClick={() => setDemoDetails({ category: "Aplikacje" })}
           >
             Zagraj pojedynczą rundę
+          </FloorButton>
+          <FloorButton
+            variant="rectangular"
+            className="font-semibold text-base"
+            onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID)}
+          >
+            Co to jest? (losowe obrazki)
           </FloorButton>
           <Link
             className="font-semibold text-base text-center"

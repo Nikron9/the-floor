@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const PopDivasCategory: CategoryMetadata = {
   name: "Diwy popu",
   folder: "pop-divas",
+  instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
   examples: [
     // Most recognisable in Poland first -- never alphabetical.
     { properPl: "Madonna", image: "madonna.jpg" },

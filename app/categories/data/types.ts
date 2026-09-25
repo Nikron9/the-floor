@@ -34,5 +34,12 @@ export type TextExample = Answers & {
 export type CategoryMetadata = {
   name: string;
   folder: string;
+  /**
+   * Optional UI text (Polish) shown on the projector before the round starts:
+   * what appears on screen and what players must answer. Without it the
+   * projector uses a generic prompt for image or text categories -- see
+   * app/categories/instructions.ts.
+   */
+  instruction?: string;
   examples: ImageExample[] | TextExample[];
 };

@@ -7,6 +7,7 @@ import type { CategoryMetadata } from "./types";
 export const PolishAthletesCategory: CategoryMetadata = {
   name: "Polscy sportowcy",
   folder: "polish-athletes",
+  instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
   // Ordered from the most recognisable to the least, so a round opens with
   // faces anyone gets and ends with ones only fans will.
   examples: [

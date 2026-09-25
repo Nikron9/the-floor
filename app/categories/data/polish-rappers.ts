@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const PolishRappersCategory: CategoryMetadata = {
   name: "Polscy raperzy",
   folder: "polish-rappers",
+  instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Quebo", "Jakub Grabowski"], properPl: "Quebonafide", image: "quebonafide.jpg" },

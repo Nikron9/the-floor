@@ -40,6 +40,8 @@ export type ResolvedCategory = {
   name: string;
   source: CategorySource;
   examples: ResolvedExample[];
+  /** Pre-round prompt; see CategoryMetadata.instruction. */
+  instruction?: string;
 };
 
 /**
@@ -109,7 +111,8 @@ const LEGACY_CATEGORY_IDS: Readonly<Record<string, Category>> = {
   Fruits: "Owoce",
   Garage: "Garaż",
   "Harry Potter characters": "Postacie z Harry'ego Pottera",
-  Holidays: "Święta",
+  Holidays: "Boże Narodzenie",
+  "Święta": "Boże Narodzenie",
   Horses: "Konie",
   "Junk drawer": "Szuflada z rupieciami",
   "Kitchen gadgets": "Gadżety kuchenne",
@@ -170,11 +173,39 @@ export const resolveCuratedCategory = (
     id,
     name: meta.name,
     source: "curated",
+    instruction: meta.instruction,
     examples: (meta.examples as Array<ImageExample | TextExample>).map(
       (example) => resolveCuratedExample(meta.folder, example, overrides)
     ),
   };
 };
+
+/**
+ * Pseudo-category behind the "Co to jest?" single round: every curated
+ * picture from every image category, mixed together. It never appears in the
+ * game's category list; the presenter opens it directly as a one-off round.
+ */
+export const MIXED_CATEGORY_ID = "__co-to-jest__";
+
+/** Picture categories that make no sense out of context. */
+const MIXED_EXCLUDED_FOLDERS = new Set(["colors"]);
+
+export const resolveMixedCategory = (
+  overrides: CuratedOverrides = {}
+): ResolvedCategory => ({
+  id: MIXED_CATEGORY_ID,
+  name: "Co to jest?",
+  source: "curated",
+  instruction:
+    "Na ekranie pojawi się obrazek z dowolnej kategorii. Powiedz, co przedstawia.",
+  examples: (Object.keys(CATEGORY_METADATA) as Category[]).flatMap((id) => {
+    const meta = CATEGORY_METADATA[id];
+    if (MIXED_EXCLUDED_FOLDERS.has(meta.folder)) return [];
+    return (meta.examples as Array<ImageExample | TextExample>)
+      .filter((example): example is ImageExample => "image" in example)
+      .map((example) => resolveCuratedExample(meta.folder, example, overrides));
+  }),
+});
 
 export const resolveCommunityCategory = (
   category: CommunityCategory
@@ -200,6 +231,7 @@ export const resolveCategory = (
   curatedOverrides: CuratedOverrides = {}
 ): ResolvedCategory | undefined => {
   if (!id) return undefined;
+  if (id === MIXED_CATEGORY_ID) return resolveMixedCategory(curatedOverrides);
 
   const curated = canonicalCategoryId(id);
   if (isCuratedCategoryId(curated)) {

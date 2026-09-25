@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const BrandSlogansCategory: CategoryMetadata = {
   name: "Slogany reklamowe",
   folder: "brand-slogans",
+  instruction: "Na ekranie pojawi się slogan reklamowy. Podaj markę.",
   examples: [
     { properPl: "Nike", text: "Just Do It" },
     { plAlt: ["McDonald"], properPl: "McDonald's", text: "I'm Lovin' It" },

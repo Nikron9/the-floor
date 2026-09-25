@@ -3,6 +3,7 @@ import type { CategoryMetadata } from "./types";
 export const PolishActorsCategory: CategoryMetadata = {
   name: "Polscy aktorzy",
   folder: "polish-actors",
+  instruction: "Na ekranie pojawi się zdjęcie. Powiedz, kto to jest.",
   // Most recognisable in Poland first -- never alphabetical.
   examples: [
     { plAlt: ["Linda"], properPl: "Bogusław Linda", image: "boguslaw-linda.jpg" },

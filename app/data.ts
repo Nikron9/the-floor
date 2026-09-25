@@ -16,7 +16,13 @@ import { FruitsCategory } from "./categories/data/fruits";
 import { GarageCategory } from "./categories/data/garage";
 import { GothicCategory } from "./categories/data/gothic";
 import { HarryPotterCharactersCategory } from "./categories/data/harry-potter-characters";
-import { HolidaysCategory } from "./categories/data/holidays";
+import { ChristmasCategory } from "./categories/data/christmas";
+import { EuropeanCapitalsCategory } from "./categories/data/european-capitals";
+import { WorldCapitalsCategory } from "./categories/data/world-capitals";
+import { ProverbsCategory } from "./categories/data/proverbs";
+import { EmojiRebusCategory } from "./categories/data/emoji-rebus";
+import { RomanNumeralsCategory } from "./categories/data/roman-numerals";
+import { ColorsCategory } from "./categories/data/colors";
 import { HorsesCategory } from "./categories/data/horses";
 import { JunkDrawerCategory } from "./categories/data/junk-drawer";
 import { KitchenGadgetsCategory } from "./categories/data/kitchen-gadgets";
@@ -35,6 +41,15 @@ import { PolishActorsCategory } from "./categories/data/polish-actors";
 import { CatBreedsCategory } from "./categories/data/cat-breeds";
 import { PolishRappersCategory } from "./categories/data/polish-rappers";
 import { PolishInfluencersCategory } from "./categories/data/polish-influencers";
+import { CosmeticsCategory } from "./categories/data/cosmetics";
+import { CosmeticBrandsCategory } from "./categories/data/cosmetic-brands";
+import { FashionBrandsCategory } from "./categories/data/fashion-brands";
+import { ClothingCategory } from "./categories/data/clothing";
+import { HairstylesCategory } from "./categories/data/hairstyles";
+import { PolishFemaleSingersCategory } from "./categories/data/polish-female-singers";
+import { PolishMaleSingersCategory } from "./categories/data/polish-male-singers";
+import { FlowersCategory } from "./categories/data/flowers";
+import { HouseplantsCategory } from "./categories/data/houseplants";
 import { ScaryAnimalsCategory } from "./categories/data/scary-animals";
 import { HalloweenDecorationsCategory } from "./categories/data/halloween-decorations";
 import { MonstersCategory } from "./categories/data/monsters";
@@ -135,7 +150,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Rachel",
-    category: "Święta",
+    category: "Boże Narodzenie",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -291,6 +306,15 @@ export type Category =
   | "Rasy kotów"
   | "Polscy raperzy"
   | "Polscy influencerzy i celebryci"
+  | "Kosmetyki i akcesoria"
+  | "Marki kosmetyków"
+  | "Marki modowe"
+  | "Ubrania, buty i dodatki"
+  | "Fryzury"
+  | "Polskie piosenkarki"
+  | "Polscy piosenkarze"
+  | "Kwiaty"
+  | "Rośliny doniczkowe"
   | "Straszne zwierzęta"
   | "Halloween"
   | "Potwory i demony"
@@ -312,7 +336,13 @@ export type Category =
   | "Sieci fast food"
   | "Lodówka"
   | "Garaż"
-  | "Święta"
+  | "Boże Narodzenie"
+  | "Stolice Europy"
+  | "Stolice spoza Europy"
+  | "Dokończ przysłowie"
+  | "Emoji-rebusy"
+  | "Liczby rzymskie"
+  | "Jaki to kolor?"
   | "Sporty"
   | "Anime"
   | "Minecraft"
@@ -379,6 +409,15 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Rasy kotów": CatBreedsCategory,
   "Polscy raperzy": PolishRappersCategory,
   "Polscy influencerzy i celebryci": PolishInfluencersCategory,
+  "Kosmetyki i akcesoria": CosmeticsCategory,
+  "Marki kosmetyków": CosmeticBrandsCategory,
+  "Marki modowe": FashionBrandsCategory,
+  "Ubrania, buty i dodatki": ClothingCategory,
+  "Fryzury": HairstylesCategory,
+  "Polskie piosenkarki": PolishFemaleSingersCategory,
+  "Polscy piosenkarze": PolishMaleSingersCategory,
+  "Kwiaty": FlowersCategory,
+  "Rośliny doniczkowe": HouseplantsCategory,
   "Straszne zwierzęta": ScaryAnimalsCategory,
   Halloween: HalloweenDecorationsCategory,
   "Potwory i demony": MonstersCategory,
@@ -392,7 +431,13 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Lodówka": FridgeCategory,
   "Garaż": GarageCategory,
   "Postacie z Harry'ego Pottera": HarryPotterCharactersCategory,
-  "Święta": HolidaysCategory,
+  "Boże Narodzenie": ChristmasCategory,
+  "Stolice Europy": EuropeanCapitalsCategory,
+  "Stolice spoza Europy": WorldCapitalsCategory,
+  "Dokończ przysłowie": ProverbsCategory,
+  "Emoji-rebusy": EmojiRebusCategory,
+  "Liczby rzymskie": RomanNumeralsCategory,
+  "Jaki to kolor?": ColorsCategory,
   "Konie": HorsesCategory,
   "Szuflada z rupieciami": JunkDrawerCategory,
   "Gadżety kuchenne": KitchenGadgetsCategory,
