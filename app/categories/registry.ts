@@ -5,6 +5,7 @@ import {
   type ImageExample,
   type TextExample,
 } from "../data";
+import { answerList } from "./answers";
 
 /**
  * Turning a category key into something the screen can render.
@@ -101,6 +102,8 @@ const LEGACY_CATEGORY_IDS: Readonly<Record<string, Category>> = {
   Dogs: "Psy",
   "EU Flags": "Flagi Europy",
   "Fair foods": "Jedzenie z jarmarku",
+  "Czarne charaktery z horrorów": "Czarne charaktery z filmów",
+  "Dekoracje na Halloween": "Halloween",
   "Famous people who died before turning 30": "Sławni, którzy zmarli przed 30",
   "Fast food chains": "Sieci fast food",
   Fridge: "Lodówka",
@@ -149,16 +152,14 @@ const resolveCuratedExample = (
   overrides: CuratedOverrides
 ): ResolvedExample => {
   if ("text" in example) {
-    return {
-      name: example.name,
-      alternatives: example.alternatives,
-      text: example.text,
-    };
+    const [name = "", ...alternatives] = answerList(example);
+    return { name, alternatives, text: example.text };
   }
 
+  const [name = "", ...alternatives] = answerList(example);
   return {
-    name: example.name,
-    alternatives: example.alternatives,
+    name,
+    alternatives,
     src:
       overrides[folder]?.[example.image] ?? `/images/${folder}/${example.image}`,
   };

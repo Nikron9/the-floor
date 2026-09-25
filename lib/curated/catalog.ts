@@ -1,3 +1,4 @@
+import { primaryAnswer } from "../../app/categories/answers";
 import { CATEGORY_METADATA, type Category } from "../../app/data";
 
 /**
@@ -33,7 +34,7 @@ export const findCuratedImage = (
   const meta = CATEGORY_METADATA[category];
   for (const example of meta.examples) {
     if ("image" in example && example.image === image) {
-      return { category, categoryName: meta.name, folder, image, name: example.name };
+      return { category, categoryName: meta.name, folder, image, name: primaryAnswer(example) };
     }
   }
   return undefined;

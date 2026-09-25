@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { primaryAnswer } from "../app/categories/answers";
 import { resolveCategory } from "../app/categories/registry";
 import { CATEGORY_METADATA, type Category } from "../app/data";
 import { curatedImageKey, findCuratedImage } from "../lib/curated/catalog";
@@ -8,10 +9,11 @@ const imageCategory = (Object.keys(CATEGORY_METADATA) as Category[]).find((key) 
   CATEGORY_METADATA[key].examples.some((example) => "image" in example)
 )!;
 const meta = CATEGORY_METADATA[imageCategory];
-const firstImage = (meta.examples.find((example) => "image" in example) as {
-  image: string;
-  name: string;
-});
+const firstExample = meta.examples.find((example) => "image" in example) as import("../app/categories/data/types").ImageExample;
+const firstImage = {
+  image: firstExample.image,
+  name: primaryAnswer(firstExample),
+};
 
 describe("curated picture overrides", () => {
   it("replaces only the overridden example's picture", () => {

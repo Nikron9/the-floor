@@ -70,12 +70,21 @@ Players take consecutive examples in turn, so:
 
 ## 6. Names and answers
 
-- `name` is **what a Polish player says first**: the Polish release title, the
-  Polish name of a dish. Use a foreign name only when Poles actually say it
-  that way (Hot dog, Kebab, Paella). `name` is shown to players, so it is Polish.
-- `alternatives` holds the original title, abbreviations and colloquial names
-  (`"Kiełbasa curry"` → `["Currywurst"]`, `"Jak wytresować smoka"` → `["Szczerbatek"]`).
-- No duplicate alternatives. A test checks this, case-insensitively.
+Answers use four slots, in priority order (see `app/categories/data/types.ts`):
+
+| Slot | Meaning | Example |
+|---|---|---|
+| `pl` | the common Polish word | `"Owczarek niemiecki"` |
+| `plAlt` | other Polish ways to say it: synonyms, short forms, nicknames | `["Wilczur", "Owczarek"]` |
+| `properPl` | proper name as used in Poland (person, Polish title, character) | `"Fineasz i Ferb"` |
+| `properEn` | English/original proper name, when different | `"Phineas and Ferb"` |
+
+- At least one of `pl`, `properPl`, `properEn` is required. The first one set
+  is the main answer (shown on the projector, so it must be Polish when a
+  Polish form exists); the host panel lists every answer in slot order.
+- Use a foreign name as the main answer only when Poles actually say it that
+  way (Hot dog, Kebab, Paella).
+- No duplicates across slots. A test checks this, case-insensitively.
 
 ## 7. Age-dependent categories
 

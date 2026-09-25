@@ -12,11 +12,8 @@ const IMAGE_EXAMPLE_SNIPPET = `const SeaCreaturesCategory: CategoryMetadata = {
   name: "Stworzenia morskie",
   folder: "sea-creatures",
   examples: [
-    {
-      name: "Ośmiornica",
-      image: "octopus.png",
-      alternatives: ["Octopus"],
-    },
+    { pl: "Ośmiornica", plAlt: ["Ośmiorniczka"], properEn: "Octopus", image: "octopus.png" },
+    { properPl: "Kraken", image: "kraken.png" },
     // ...more entries
   ],
 };`;
@@ -25,11 +22,7 @@ const TEXT_EXAMPLE_SNIPPET = `const FamousQuotesCategory: CategoryMetadata = {
   name: "Słynne cytaty",
   folder: "famous-quotes",
   examples: [
-    {
-      name: "Neil Armstrong",
-      text: "To mały krok dla człowieka...",
-      alternatives: [],
-    },
+    { plAlt: ["Armstrong"], properPl: "Neil Armstrong", text: "To mały krok dla człowieka..." },
     // ...more entries
   ],
 };`;
@@ -136,14 +129,21 @@ export default function ContributeCategoriesPage() {
                 dopisz jej import, nazwę do typu{" "}
                 <code className="text-neon font-mono">Category</code> i wpis w{" "}
                 <code className="text-neon font-mono">CATEGORY_METADATA</code>.
-                Każdy przykład ma pole{" "}
-                <code className="text-neon font-mono">name</code>{" "}
-                (odpowiedź), zasób (nazwę pliku w{" "}
-                <code className="text-neon font-mono">image</code> lub
-                tekst w <code className="text-neon font-mono">text</code>)
-                oraz tablicę{" "}
-                <code className="text-neon font-mono">alternatives</code>{" "}
-                z akceptowanymi alternatywnymi odpowiedziami.
+                Każdy przykład ma zasób (nazwę pliku w{" "}
+                <code className="text-neon font-mono">image</code> lub tekst w{" "}
+                <code className="text-neon font-mono">text</code>) i odpowiedzi
+                według ważności:{" "}
+                <code className="text-neon font-mono">pl</code> (po polsku),{" "}
+                <code className="text-neon font-mono">plAlt</code> (inne polskie
+                warianty),{" "}
+                <code className="text-neon font-mono">properPl</code> (nazwa
+                własna po polsku) i{" "}
+                <code className="text-neon font-mono">properEn</code> (nazwa
+                własna po angielsku). Wystarczy jedno z pól{" "}
+                <code className="text-neon font-mono">pl</code>,{" "}
+                <code className="text-neon font-mono">properPl</code> lub{" "}
+                <code className="text-neon font-mono">properEn</code>; pierwsze
+                wypełnione jest główną odpowiedzią.
               </p>
 
               <p className="mt-4 mb-2 font-semibold" style={{ color: "var(--color-neon)" }}>

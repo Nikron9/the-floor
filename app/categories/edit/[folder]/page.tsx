@@ -10,6 +10,7 @@ import FloorPageLayout from "@/app/components/FloorPageLayout";
 import ImageEditor from "@/app/components/community/ImageEditor";
 import ImagePicker from "@/app/components/community/ImagePicker";
 import { CATEGORY_METADATA, type Category, type ImageExample } from "@/app/data";
+import { primaryAnswer } from "@/app/categories/answers";
 import { LIMITS } from "@/lib/community/config";
 import { defaultQuery, type ImageResult } from "@/lib/community/search";
 
@@ -106,7 +107,7 @@ export default function EditCuratedCategoryPage({
       const { overrides: all } = await getCuratedOverrides();
       setOverrides(all[folder] ?? {});
     } catch (caught) {
-      setError(`${example.name}: ${messageOf(caught, "Nie udało się zapisać.")}`);
+      setError(`${primaryAnswer(example)}: ${messageOf(caught, "Nie udało się zapisać.")}`);
     } finally {
       setBusy((previous) => {
         const next = { ...previous };
@@ -262,7 +263,7 @@ export default function EditCuratedCategoryPage({
                 <div className="relative bg-gray-800 rounded-md overflow-hidden aspect-square flex items-center justify-center">
                   <img
                     src={srcOf(example)}
-                    alt={example.name}
+                    alt={primaryAnswer(example)}
                     className="max-w-full max-h-full object-contain"
                     loading="lazy"
                     decoding="async"
@@ -278,8 +279,8 @@ export default function EditCuratedCategoryPage({
                     </span>
                   )}
                 </div>
-                <p className="text-white font-semibold text-sm text-center truncate" title={example.name}>
-                  {example.name}
+                <p className="text-white font-semibold text-sm text-center truncate" title={primaryAnswer(example)}>
+                  {primaryAnswer(example)}
                 </p>
                 <div className="flex gap-1 justify-center flex-wrap">
                   <button
@@ -301,7 +302,7 @@ export default function EditCuratedCategoryPage({
                       className="text-xs px-2 py-1 rounded border border-white/40 text-white/80 disabled:opacity-40"
                       disabled={Boolean(status)}
                       onClick={() => {
-                        if (!window.confirm(`Przywrócić oryginalny obrazek „${example.name}”?`)) return;
+                        if (!window.confirm(`Przywrócić oryginalny obrazek „${primaryAnswer(example)}”?`)) return;
                         run(example, "Przywracam…", () => revertCuratedImage(folder, example.image));
                       }}
                     >
@@ -317,10 +318,10 @@ export default function EditCuratedCategoryPage({
 
       {picking && (
         <ImagePicker
-          itemName={picking.name}
+          itemName={primaryAnswer(picking)}
           categoryName={meta.name}
           webSearchAvailable={webSearchAvailable}
-          initialQuery={defaultQuery(picking.name, meta.name)}
+          initialQuery={defaultQuery(primaryAnswer(picking), meta.name)}
           onPick={(result: ImageResult) => {
             const example = picking;
             setPicking(null);
@@ -343,7 +344,7 @@ export default function EditCuratedCategoryPage({
       {editing && (
         <ImageEditor
           src={srcOf(editing)}
-          itemName={editing.name}
+          itemName={primaryAnswer(editing)}
           onSave={(blob) => {
             const example = editing;
             setEditing(null);

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { primaryAnswer } from "../app/categories/answers";
 import { CATEGORY_METADATA } from "../app/data";
 
 /**
@@ -23,7 +24,7 @@ const ascendingShare = (keys: string[]): number => {
 
 describe("categories are not in alphabetical order", () => {
   for (const [id, category] of Object.entries(CATEGORY_METADATA)) {
-    const names = category.examples.map((example) => example.name);
+    const names = (category.examples as Parameters<typeof primaryAnswer>[0][]).map(primaryAnswer);
     if (names.length < 5) continue;
 
     it(`${id} is not sorted by name`, () => {

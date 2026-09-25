@@ -11,6 +11,7 @@ import FloorPageLayout from "../components/FloorPageLayout";
 import FloorButton from "../components/FloorButton";
 import Link from "next/link";
 import { useCuratedOverrides } from "./useCuratedOverrides";
+import { answerList, primaryAnswer } from "./answers";
 
 export default function CategoriesPage() {
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
@@ -103,19 +104,13 @@ export default function CategoriesPage() {
                       </div>
                       <div className="flex flex-col items-center w-full text-center gap-2">
                         <p className="w-full font-white font-bold text-2xl">
-                          {item.name}
+                          {primaryAnswer(item)}
                         </p>
-                        {/* {item.alternatives && item.alternatives.length > 0 && (
-                            <p className="text-sm text-white/60">
-                                <span
-                                className="font-semibold"
-                                style={{ color: "var(--color-gold)" }}
-                                >
-                                Alternatives:
-                                </span>{" "}
-                                {item.alternatives.join(", ")}
-                            </p>
-                            )} */}
+                        {answerList(item).length > 1 && (
+                          <p className="text-sm text-white/60 text-center">
+                            także: {answerList(item).slice(1).join(", ")}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ) : isImageExample ? (
@@ -129,7 +124,7 @@ export default function CategoriesPage() {
                             curatedOverrides[categoryData.folder]?.[item.image] ??
                             `/images/${categoryData.folder}/${item.image}`
                           }
-                          alt={item.name}
+                          alt={primaryAnswer(item)}
                           className="max-w-full max-h-[200px] object-contain"
                           loading="lazy"
                           decoding="async"
@@ -137,19 +132,13 @@ export default function CategoriesPage() {
                       </div>
                       <div className="flex flex-col gap-2">
                         <p className="w-full font-white font-bold text-2xl text-center">
-                          {item.name}
+                          {primaryAnswer(item)}
                         </p>
-                        {/* {item.alternatives && item.alternatives.length > 0 && (
-                          <p className="text-sm text-white/60">
-                            <span
-                              className="font-semibold"
-                              style={{ color: "var(--color-gold)" }}
-                            >
-                              Alternatives:
-                            </span>{" "}
-                            {item.alternatives.join(", ")}
+                        {answerList(item).length > 1 && (
+                          <p className="text-sm text-white/60 text-center">
+                            także: {answerList(item).slice(1).join(", ")}
                           </p>
-                        )} */}
+                        )}
                       </div>
                     </div>
                   ) : null}

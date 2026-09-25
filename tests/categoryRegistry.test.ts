@@ -47,7 +47,7 @@ describe("resolving curated categories", () => {
     expect(resolved?.name).toBe("Owoce");
     expect(resolved?.examples[0]).toEqual({
       name: "Jabłko",
-      alternatives: ["Apple", "Apples"],
+      alternatives: [],
       src: "/images/fruits/apple.png",
     });
   });

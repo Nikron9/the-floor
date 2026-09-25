@@ -70,13 +70,16 @@ export const SeaCreaturesCategory: CategoryMetadata = {
   name: "Sea Creatures",
   folder: "sea-creatures",
   examples: [
-    { name: "Octopus", image: "octopus.png", alternatives: ["Squid"] },
+    { pl: "Ośmiornica", plAlt: ["Ośmiorniczka"], properEn: "Octopus", image: "octopus.png" },
   ],
 };
 ```
 
-`name` is the answer, `alternatives` are the other things you'll accept when a
-player shouts something close enough. Categories can use `text:` instead of
+Answers go in four optional slots, in priority order: `pl` (the Polish word),
+`plAlt` (other Polish ways to say it), `properPl` (proper name as used in
+Poland) and `properEn` (English/original name). At least one of `pl`,
+`properPl`, `properEn` is required; the first one set is the main answer, and
+the host panel lists all of them in that order. Categories can use `text:` instead of
 `image:` if they're word or number prompts — see `Math`.
 
 There's a walkthrough with more detail at `/categories/contribute`.

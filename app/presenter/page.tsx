@@ -672,15 +672,32 @@ export default function PresenterPage({
               className="neon-panel flex flex-col gap-4 p-6"
               style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.2)" }}
             >
-              <p className="text-xl text-white">
-                Aktualna odpowiedź:{" "}
-                <span
-                  className="font-bold glow-text"
+              {/* Every accepted answer, most fitting first: Polish word,
+                  Polish alternatives, Polish proper name, English name. */}
+              <div className="flex flex-col gap-1">
+                <p className="text-sm uppercase tracking-widest text-white/60">
+                  Aktualna odpowiedź
+                </p>
+                <p
+                  className="text-3xl font-bold glow-text leading-tight"
                   style={{ color: "var(--color-neon)" }}
                 >
                   {roundDetails.example?.name}
-                </span>
-              </p>
+                </p>
+                {(roundDetails.example?.alternatives.length ?? 0) > 0 && (
+                  <ol className="flex flex-col gap-0.5 mt-1">
+                    {roundDetails.example?.alternatives.map((answer) => (
+                      <li
+                        key={answer}
+                        className="text-lg font-semibold"
+                        style={{ color: "var(--color-gold)" }}
+                      >
+                        {answer}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </div>
               <p className="text-lg text-white">
                 Przykład nr:{" "}
                 <span className="font-bold" style={{ color: "var(--color-neon)" }}>
@@ -694,12 +711,6 @@ export default function PresenterPage({
                 </span>
               </p>
 
-              <p className="text-lg text-white">
-                Alternatywy:{" "}
-                <span className="font-semibold" style={{ color: "var(--color-gold)" }}>
-                  {roundDetails.example?.alternatives.join(", ")}
-                </span>
-              </p>
 
               <div className="flex flex-row gap-3 mt-4">
                 <FloorButton

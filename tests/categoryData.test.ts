@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { answerList, primaryAnswer } from "../app/categories/answers";
+
 import {
   CATEGORY_METADATA,
   type ImageExample,
@@ -129,14 +131,14 @@ describe("category metadata is well formed", () => {
     "%s has no duplicate example names",
     (_category, meta) => {
       const names = (meta.examples as Example[]).map((e) =>
-        e.name.trim().toLowerCase()
+        primaryAnswer(e).toLowerCase()
       );
       expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
     }
   );
 
   it.each(textCategories)("%s asks each prompt only once", (_category, meta) => {
-    // In a text category `name` is the answer, so it repeats by design --
+    // In a text category the answer, so it repeats by design --
     // Math reaches 9 four different ways. The prompt is what must be unique.
     const prompts = (meta.examples as Example[])
       .filter(isTextExample)
@@ -151,29 +153,34 @@ describe("category metadata is well formed", () => {
     expect(images.filter((img, i) => images.indexOf(img) !== i)).toEqual([]);
   });
 
-  it.each(entries)("%s has usable example names", (_category, meta) => {
+  it.each(entries)("%s has a main answer for every example", (_category, meta) => {
+    // At least one of pl / properPl / properEn -- plAlt alone is not enough.
     const blank = (meta.examples as Example[]).filter(
-      (e) => typeof e.name !== "string" || e.name.trim() === ""
+      (e) => ![e.pl, e.properPl, e.properEn].some((v) => v && v.trim() !== "")
     );
     expect(blank).toEqual([]);
   });
 
-  it.each(entries)("%s has clean alternatives", (_category, meta) => {
+  it.each(entries)("%s has clean answers", (_category, meta) => {
     for (const example of meta.examples as Example[]) {
+      const label = primaryAnswer(example);
+      const raw = [
+        example.pl,
+        ...(example.plAlt ?? []),
+        example.properPl,
+        example.properEn,
+      ].filter((v): v is string => v !== undefined);
       expect(
-        Array.isArray(example.alternatives),
-        `${example.name}: alternatives must be an array`
-      ).toBe(true);
-
-      const alts = example.alternatives.map((a) => a.trim().toLowerCase());
-      expect(
-        alts.filter((a) => a === ""),
-        `${example.name}: empty alternative`
+        raw.filter((a) => a.trim() === "" || a !== a.trim()),
+        `${label}: empty or untrimmed answer`
       ).toEqual([]);
+      const lower = raw.map((a) => a.toLowerCase());
       expect(
-        alts.filter((a, i) => alts.indexOf(a) !== i),
-        `${example.name}: duplicate alternative`
+        lower.filter((a, i) => lower.indexOf(a) !== i),
+        `${label}: duplicate answer`
       ).toEqual([]);
+      if (example.plAlt) expect(example.plAlt.length, `${label}: empty plAlt`).toBeGreaterThan(0);
+      expect(answerList(example)[0]).toBe(label);
     }
   });
 });

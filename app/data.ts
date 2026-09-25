@@ -31,6 +31,10 @@ import { PolishDishesCategory } from "./categories/data/polish-dishes";
 import { PolishEntertainmentCategory } from "./categories/data/polish-entertainment";
 import { PolishLandmarksCategory } from "./categories/data/polish-landmarks";
 import { PolishNatureCategory } from "./categories/data/polish-nature";
+import { ScaryAnimalsCategory } from "./categories/data/scary-animals";
+import { HalloweenDecorationsCategory } from "./categories/data/halloween-decorations";
+import { MonstersCategory } from "./categories/data/monsters";
+import { MovieVillainsCategory } from "./categories/data/movie-villains";
 import { PoolEquipmentCategory } from "./categories/data/pool-equipment";
 import { PopDivasCategory } from "./categories/data/pop-divas";
 import { RomComsCategory } from "./categories/data/rom-coms";
@@ -283,6 +287,10 @@ export type Category =
   | "Znane budynki i pomniki"
   | "Rozrywka w Polsce"
   | "Przyroda Polski"
+  | "Straszne zwierzęta"
+  | "Halloween"
+  | "Potwory i demony"
+  | "Czarne charaktery z filmów"
   | "Gry planszowe"
   | "Postacie z Harry'ego Pottera"
   | "Kostiumy na Halloween"
@@ -368,6 +376,10 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Znane budynki i pomniki": PolishLandmarksCategory,
   "Rozrywka w Polsce": PolishEntertainmentCategory,
   "Przyroda Polski": PolishNatureCategory,
+  "Straszne zwierzęta": ScaryAnimalsCategory,
+  Halloween: HalloweenDecorationsCategory,
+  "Potwory i demony": MonstersCategory,
+  "Czarne charaktery z filmów": MovieVillainsCategory,
   "Panoramy miast": CitySkylinesCategory,
   "Bajki i filmy 2000-2010": Cartoons2000sCategory,
   "Postacie Disneya": DisneyCharactersCategory,
