@@ -2,6 +2,8 @@
 import classNames from "classnames";
 
 const SIZES = {
+  /** The small logo in the top navigation bar. */
+  nav: "h-10 sm:h-12",
   sm: "h-20",
   md: "h-36",
   lg: "h-32 md:h-56",
@@ -11,8 +13,9 @@ const SIZES = {
 
 /**
  * The game's logo: the gold "THE FLOOR" wordmark with its corner brackets,
- * a transparent WebP in public/ (cropped from the source image, 1400px wide
- * so it stays sharp at projector sizes).
+ * a transparent WebP in public/, padded so the bracket frame sits exactly in
+ * the middle of the image (the sparkle on the right used to pull it off
+ * centre). New file name because public images are cached as immutable.
  */
 export default function FloorLogo({
   size = "md",
@@ -23,10 +26,10 @@ export default function FloorLogo({
 }) {
   return (
     <img
-      src="/the-floor-logo.webp"
+      src="/the-floor-logo-v2.webp"
       alt="The Floor"
-      width={1400}
-      height={729}
+      width={1495}
+      height={756}
       decoding="async"
       className={classNames(
         SIZES[size],

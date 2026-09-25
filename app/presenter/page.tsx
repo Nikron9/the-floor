@@ -15,7 +15,6 @@ import FloorButton from "../components/FloorButton";
 import FloorLogo from "../components/FloorLogo";
 import FloorPageLayout from "../components/FloorPageLayout";
 import { useLocalStorage } from "usehooks-ts";
-import Link from "next/link";
 
 export enum PROJECTOR_MESSAGE_TYPE {
   RANDOMIZER = "RANDOMIZER",
@@ -842,9 +841,9 @@ export default function PresenterPage({
   }
 
   return (
-    <FloorPageLayout>
-      {/* Sized to the viewport so the whole menu fits on one screen. */}
-      <div className="min-h-dvh w-full flex flex-col items-center justify-center gap-[3vh] px-6 py-[3vh] text-center">
+    <FloorPageLayout nav>
+      {/* Fills the screen below the nav bar, so the whole menu fits without scrolling. */}
+      <div className="flex-1 w-full flex flex-col items-center justify-center gap-[3vh] px-6 pb-[6vh] text-center">
         <div className="w-full max-w-xl lg:hidden">{desktopPlayWarning}</div>
 
         <div className="flex flex-col items-center gap-[1.5vh]">
@@ -856,39 +855,31 @@ export default function PresenterPage({
           </p>
         </div>
 
-        <FloorButton
-          variant="square"
-          className="font-bold text-xl relative z-10 w-[clamp(8.75rem,20vh,11rem)]"
-          onClick={() => setGameDetails({ data: [] })}
-        >
-          Rozpocznij grę
-        </FloorButton>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+        {/* Equal-sized buttons; the start button is set apart only by colour. */}
+        <div className="flex flex-col gap-3 w-full max-w-xs">
           <FloorButton
             variant="rectangular"
-            className="font-semibold text-base"
+            className="btn-primary w-full font-bold text-base"
+            onClick={() => setGameDetails({ data: [] })}
+          >
+            Rozpocznij grę
+          </FloorButton>
+          <FloorButton
+            variant="rectangular"
+            className="w-full font-semibold text-base"
             onClick={() => setDemoDetails({ category: "Aplikacje" })}
           >
             Pojedyncza runda
           </FloorButton>
           <FloorButton
             variant="rectangular"
-            className="font-semibold text-base"
+            className="w-full font-semibold text-base"
             onClick={() => triggerStartDemoRound(MIXED_CATEGORY_ID)}
           >
             Co to jest?
           </FloorButton>
         </div>
 
-        <nav className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-semibold uppercase tracking-wider text-white/70">
-          <Link className="hover:text-white" href="/categories" prefetch={false}>
-            Kategorie
-          </Link>
-          <Link className="hover:text-white" href="/about" prefetch={false}>
-            O grze
-          </Link>
-        </nav>
       </div>
     </FloorPageLayout>
   );

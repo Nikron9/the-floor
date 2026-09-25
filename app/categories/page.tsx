@@ -42,8 +42,8 @@ export default function CategoriesPage() {
     const examples = categoryData.examples;
 
     return (
-      <FloorPageLayout>
-        <div className="w-full p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
+      <FloorPageLayout nav>
+        <div className="w-full px-6 md:px-12 pt-4 pb-16 flex flex-col gap-6 max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-row items-center justify-between mb-4">
             <h2
@@ -148,8 +148,8 @@ export default function CategoriesPage() {
   }
 
   return (
-    <FloorPageLayout>
-      <div className="w-full p-8 md:p-20 flex flex-col gap-6 max-w-7xl mx-auto">
+    <FloorPageLayout nav>
+      <div className="w-full px-6 md:px-12 pt-4 pb-16 flex flex-col gap-6 max-w-7xl mx-auto">
         {/* Header */}
         <h1
           className="text-4xl font-bold mb-4 glow-text"
@@ -199,26 +199,6 @@ export default function CategoriesPage() {
           )}
         </div>
 
-        {/* Back Button */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t-2 border-neon/30">
-          <FloorButton
-            variant="rectangular"
-            className="font-semibold"
-            onClick={() => (window.location.href = "/presenter")}
-          >
-            Wróć do panelu prowadzącego
-          </FloorButton>
-          <Link href="/about" prefetch={false}>
-            <FloorButton variant="rectangular" className="font-semibold">
-              O grze
-            </FloorButton>
-          </Link>
-          <Link href="/categories/contribute" prefetch={false}>
-            <FloorButton variant="rectangular" className="font-semibold">
-              Jak dodać więcej kategorii
-            </FloorButton>
-          </Link>
-        </div>
       </div>
     </FloorPageLayout>
   );

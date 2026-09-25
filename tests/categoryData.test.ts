@@ -108,7 +108,7 @@ describe("category metadata is well formed", () => {
   });
 
   it("uses lowercase kebab-case folder names", () => {
-    // The convention documented on the contribute page.
+    // The convention documented in CATEGORY_GUIDELINES.md.
     const offenders = entries
       .filter(([, meta]) => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(meta.folder))
       .map(([category, meta]) => `${category} -> "${meta.folder}"`);

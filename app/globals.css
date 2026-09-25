@@ -376,6 +376,13 @@ body {
   padding: 0.75rem 1.5rem;
 }
 
+/* The main call to action: same size as its neighbours, gold instead of blue. */
+.btn-glow.btn-primary {
+  border-color: var(--color-gold);
+  color: #fff4cf;
+  box-shadow: var(--gold-glow);
+}
+
 .btn-glow:hover:not(:disabled) {
   border-color: var(--color-gold);
   color: #fff4cf;
