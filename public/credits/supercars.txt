@@ -1,0 +1,51 @@
+# Photo sources (licence as stated; Wikipedia non-free images used as fair use).
+porsche-911.jpg — Matti Blume, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Porsche_911_No_1000000,_70_Years_Porsche_Sports_Car,_Berlin_(1X7A3888).jpg
+lamborghini-aventador.jpg — Calreyn88, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Lamborghini_Aventador_S_(44554).jpg
+ferrari-f40.jpg — Will ainsworth, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:F40_Ferrari_20090509.jpg
+bugatti-veyron.jpg — M 93, CC BY-SA 3.0 de, https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_16.4_%E2%80%93_Frontansicht_(1),_5._April_2012,_D%C3%BCsseldorf.jpg
+lamborghini-huracan.jpg — MrWalkr, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:2017_Lamborghini_Huracan_LP610.jpg
+ford-mustang.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Ford_Mustang_VII_GT_Rutesheimer_Autoschau_2025_DSC_9234.jpg
+audi-r8.jpg — Vauxford, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:2018_Audi_R8_Coupe_V10_plus_Front.jpg
+bugatti-chiron.jpg — Calreyn88, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Bugatti_Chiron_1.jpg
+lamborghini-countach.jpg — Brian Snelson from Hockley, Essex, England, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Lamborghini_Countach_-_Flickr_-_exfordy_(2)_(cropped-2).jpg
+laferrari.jpg — Axion23, CC BY 2.0, https://commons.wikimedia.org/wiki/File:LaFerrari_in_Beverly_Hills_(14563979888).jpg
+nissan-gtr.jpg — OSX, Public domain, https://commons.wikimedia.org/wiki/File:2009-2010_Nissan_GT-R_(R35)_coupe_01.jpg
+delorean.jpg — Kevin Abato, www.grenexmedia.com, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Delorean_DMC-12_side.jpg
+lamborghini-urus.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Lamborghini_Urus_SE_DSC_8524.jpg
+mclaren-p1.jpg — Axion23 (original)
+Tony Patt (cropped), CC BY 2.0, https://commons.wikimedia.org/wiki/File:McLaren_P1.jpg
+chevrolet-corvette.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Chevrolet_Corvette_C8_IAA_2021_1X7A0156.jpg
+ferrari-458.jpg — Michael Barera, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Ferrari_458_Fort_Worth_June_2016_56_(Ferrari)_(cropped-2).jpg
+ferrari-testarossa.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Ferrari_Testarossa_IMG_3043.jpg
+toyota-supra.jpg — Gold Pony, CC BY 3.0, https://commons.wikimedia.org/wiki/File:2020_Toyota_GR_Supra_(United_States).png
+bmw-i8.jpg — Vauxford, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:2016_BMW_i8.jpg
+mercedes-sls.jpg — M 93, CC BY-SA 3.0 de, https://commons.wikimedia.org/wiki/File:Mercedes-Benz_SLS_AMG_(C_197)_%E2%80%93_Frontansicht_ge%C3%B6ffnet,_10._August_2011,_D%C3%BCsseldorf.jpg
+dodge-challenger.jpg — Ermell, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Dodge_Challenger_SRT8_(2015)_Hirschaid-20220709-RM-120221_(cropped).jpg
+ferrari-enzo.jpg — Axion23, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Orange_Enzo_Ferrari_(7191948164).jpg
+mclaren-f1.jpg — Chelsea Jay, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:1996_McLaren_F1_Chassis_No_63_6.1_Front.jpg
+ford-gt.jpg — Jiří Sedláček, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Ford_GT_2018_and_Ford_GT_1968_at_Legendy_2019_in_Prague_(cropped).jpg
+aston-martin-db5.jpg — DeFacto, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Aston_Martin_DB5_(Skyfall).jpg
+dodge-viper.jpg — Patrick Corcoran, CC BY 2.0 it, https://commons.wikimedia.org/wiki/File:%22_14_Fiat-Chrysler_SRT_Viper_GTS_(cropped).jpg
+lamborghini-diablo.jpg — MrWalkr, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:1995_Lamborghini_Diablo_SE_30.jpg
+porsche-918.jpg — Thomas Wolf, www.foto-tw.de, CC BY-SA 3.0 de, https://commons.wikimedia.org/wiki/File:Porsche_918_Spyder_IAA_2013.jpg
+mercedes-300sl.jpg — Bahnfrend, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Fox_Classic_Car_Collection,_2008_(02).JPG
+mclaren-senna.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:McLaren_Senna_IMG_3279.jpg
+ferrari-sf90.jpg — Alexandre Prevot from Nancy, France, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:Red_2019_Ferrari_SF90_Stradale_(48264238897)_(cropped).jpg
+mercedes-amg-gt.jpg — Thesupermat, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Festival_automobile_international_2015_-_Mercedes_AMG_GT_-_003.jpg
+jaguar-e-type.jpg — DeFacto, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Jaguar_E-Type_Series_1_3.8_Litre_1961.jpg
+tesla-roadster.jpg — Tesla Motors Inc., Copyrighted free use, https://commons.wikimedia.org/wiki/File:Roadster_San_Diego.jpg
+porsche-carrera-gt.jpg — Brian Snelson from Hockley, Essex, England, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Porsche_Carrera_GT_-_Goodwood_Breakfast_Club_(July_2008).jpg
+mclaren-720s.jpg — Vauxford, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:2018_McLaren_720S_V8_S-A_4.0.jpg
+pagani-zonda.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Pagani_Zonda_C12_%27chassis_001%27_Genf_2019_1Y7A5539.jpg
+pagani-huayra.jpg — Matti Blume, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Pagani,_GIMS_2019,_Le_Grand-Saconnex_(GIMS0023).jpg
+koenigsegg-agera.jpg — MrWalkr, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Agera_RST_Koenigsegg.jpg
+koenigsegg-jesko.jpg — Matti Blume, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:GIMS_2019,_Le_Grand-Saconnex_(GIMS0833).jpg
+honda-nsx.jpg — Travis Rigel Lukas Hornung, CC BY 2.0, https://commons.wikimedia.org/wiki/File:AcuraNSX-05-cropped.jpg
+bmw-m1.jpg — Mr.choppers, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:BMW_M1,_front_right_(Brooklyn).jpg
+lexus-lfa.jpg — Tennen-Gas, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Lexus_LFA_001.JPG
+bentley-continental-gt.jpg — Alexandre Prevot from Nancy, France, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:Bentley_Continental_GT_First_Edition_(49919050697)_(cropped)_(cropped).jpg
+maserati-mc20.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Maserati_MC20_IAA_2021_1X7A0087.jpg
+alfa-4c.jpg — Thesupermat, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Festival_automobile_international_2014_-_Alfa_Romeo_4C_-_009.jpg
+aston-martin-valkyrie.jpg — Alexander Migl, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Aston_Martin_Valkyrie_Verification_Prototype_001_Genf_2019_1Y7A5569.jpg
+rimac-nevera.jpg — MrWalkr, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Rimac_Nevera.jpg
+lotus-evora.jpg — Mr.choppers, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:2017_Lotus_Evora_400,_sky_blue,_front_left.jpg

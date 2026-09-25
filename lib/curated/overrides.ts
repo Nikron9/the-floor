@@ -6,6 +6,7 @@ import { neon } from "@neondatabase/serverless";
 
 import { NotConfigured, databaseUrl, isProduction } from "../shared/config";
 import type { ImageCredit } from "../shared/types";
+import type { ExampleEdit } from "../../app/categories/examples";
 
 /**
  * Picture replacements for the built-in (curated) categories.
@@ -40,7 +41,19 @@ export type PinState = {
   windowStartedAt: string | null;
 };
 
+/** An added, edited or deleted example; see app/categories/examples.ts. */
+export type CuratedExampleEdit = {
+  folder: string;
+  key: string;
+  edit: ExampleEdit;
+  updatedAt: string;
+};
+
 export type CuratedRepo = {
+  listEdits(): Promise<CuratedExampleEdit[]>;
+  getEdit(folder: string, key: string): Promise<CuratedExampleEdit | undefined>;
+  upsertEdit(folder: string, key: string, edit: ExampleEdit): Promise<CuratedExampleEdit>;
+  removeEdit(folder: string, key: string): Promise<void>;
   list(): Promise<CuratedOverride[]>;
   get(folder: string, image: string): Promise<CuratedOverride | undefined>;
   upsert(override: Omit<CuratedOverride, "updatedAt">): Promise<CuratedOverride>;
@@ -74,8 +87,32 @@ const fromRow = (row: Row): CuratedOverride => ({
   updatedAt: new Date(row.updated_at as string).toISOString(),
 });
 
+const editFromRow = (row: Row): CuratedExampleEdit => ({
+  folder: String(row.folder),
+  key: String(row.key),
+  edit: row.edit as ExampleEdit,
+  updatedAt: new Date(row.updated_at as string).toISOString(),
+});
+
 const postgresRepo = (connectionString: string): CuratedRepo => {
   const sql = neon(connectionString);
+
+  // Added after the first deploys, so the table is created on first use
+  // instead of relying on schema.sql having been re-run.
+  let editsTable: Promise<unknown> | undefined;
+  const ensureEditsTable = () =>
+    (editsTable ??= sql`
+      create table if not exists curated_example_edits (
+        folder     text        not null,
+        key        text        not null,
+        edit       jsonb       not null,
+        updated_at timestamptz not null default now(),
+        primary key (folder, key)
+      )
+    `.catch((error) => {
+      editsTable = undefined;
+      throw error;
+    }));
 
   const pinRow = async (): Promise<Row | undefined> => {
     // The settings table holds exactly one row; create it on first use so a
@@ -86,6 +123,37 @@ const postgresRepo = (connectionString: string): CuratedRepo => {
   };
 
   return {
+    async listEdits() {
+      await ensureEditsTable();
+      const rows = await sql`select * from curated_example_edits order by folder, key`;
+      return rows.map(editFromRow);
+    },
+
+    async getEdit(folder, key) {
+      await ensureEditsTable();
+      const rows = await sql`
+        select * from curated_example_edits where folder = ${folder} and key = ${key}
+      `;
+      return rows[0] ? editFromRow(rows[0]) : undefined;
+    },
+
+    async upsertEdit(folder, key, edit) {
+      await ensureEditsTable();
+      const rows = await sql`
+        insert into curated_example_edits (folder, key, edit, updated_at)
+        values (${folder}, ${key}, ${JSON.stringify(edit)}::jsonb, now())
+        on conflict (folder, key) do update
+           set edit = excluded.edit, updated_at = now()
+        returning *
+      `;
+      return editFromRow(rows[0]);
+    },
+
+    async removeEdit(folder, key) {
+      await ensureEditsTable();
+      await sql`delete from curated_example_edits where folder = ${folder} and key = ${key}`;
+    },
+
     async list() {
       const rows = await sql`select * from curated_image_overrides order by folder, image`;
       return rows.map(fromRow);
@@ -179,7 +247,7 @@ const postgresRepo = (connectionString: string): CuratedRepo => {
 /* Local JSON file, for `npm run dev` without a database                       */
 /* -------------------------------------------------------------------------- */
 
-type DevFile = { overrides: CuratedOverride[]; pin: PinState };
+type DevFile = { overrides: CuratedOverride[]; edits?: CuratedExampleEdit[]; pin: PinState };
 
 const devRepo = (): CuratedRepo => {
   const file = path.join(process.cwd(), ".community-dev", "curated.json");
@@ -208,7 +276,23 @@ const devRepo = (): CuratedRepo => {
   const same = (o: CuratedOverride, folder: string, image: string) =>
     o.folder === folder && o.image === image;
 
+  const sameEdit = (e: CuratedExampleEdit, folder: string, key: string) =>
+    e.folder === folder && e.key === key;
+
   return {
+    listEdits: async () => (await read()).edits ?? [],
+    getEdit: async (folder, key) =>
+      ((await read()).edits ?? []).find((e) => sameEdit(e, folder, key)),
+    upsertEdit: (folder, key, edit) =>
+      mutate((data) => {
+        const saved = { folder, key, edit, updatedAt: new Date().toISOString() };
+        data.edits = [...(data.edits ?? []).filter((e) => !sameEdit(e, folder, key)), saved];
+        return saved;
+      }),
+    removeEdit: (folder, key) =>
+      mutate((data) => {
+        data.edits = (data.edits ?? []).filter((e) => !sameEdit(e, folder, key));
+      }),
     list: async () => (await read()).overrides,
     get: async (folder, image) =>
       (await read()).overrides.find((o) => same(o, folder, image)),

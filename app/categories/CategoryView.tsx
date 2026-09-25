@@ -96,25 +96,40 @@ export const CategoryViewControls = ({
       </select>
     </label>
     {options.showDifficulty && (
-      <span className="text-xs text-white/60">
-        {([1, 2, 3] as const)
-          .map((level) => `${DIFFICULTY_INFO[level].emoji} ${DIFFICULTY_INFO[level].label}`)
-          .join("   ")}
+      <span className="flex items-center gap-4 text-xs text-white/60">
+        {([1, 2, 3] as const).map((level) => (
+          <span key={level} className="flex items-center gap-1.5">
+            <DifficultyPips level={level} />
+            {DIFFICULTY_INFO[level].label}
+          </span>
+        ))}
       </span>
     )}
   </div>
 );
 
-/** The difficulty emoji for a category, or nothing if it has none. */
+/** Three small pips, as many lit as the difficulty level. */
+export const DifficultyPips = ({ level }: { level: 1 | 2 | 3 }) => (
+  <span
+    className="inline-flex items-center gap-[3px] align-middle"
+    title={`Trudność: ${DIFFICULTY_INFO[level].label}`}
+    aria-label={`Trudność: ${DIFFICULTY_INFO[level].label}`}
+  >
+    {[1, 2, 3].map((pip) => (
+      <span
+        key={pip}
+        className={`block h-1.5 w-1.5 rounded-full ${
+          pip <= level ? "bg-current opacity-90" : "bg-current opacity-25"
+        }`}
+      />
+    ))}
+  </span>
+);
+
+/** The difficulty pips for a category, or nothing if it has none. */
 export const DifficultyMark = ({ id }: { id: string }) => {
   const difficulty = catalogEntry(id)?.difficulty;
-  if (!difficulty) return null;
-  const { emoji, label } = DIFFICULTY_INFO[difficulty];
-  return (
-    <span title={`Trudność: ${label}`} aria-label={`Trudność: ${label}`}>
-      {emoji}
-    </span>
-  );
+  return difficulty ? <DifficultyPips level={difficulty} /> : null;
 };
 
 /** Renders categories as one grid, or one titled grid per group. */

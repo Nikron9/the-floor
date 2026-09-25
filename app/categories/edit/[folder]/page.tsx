@@ -9,12 +9,13 @@ import FloorButton from "@/app/components/FloorButton";
 import FloorPageLayout from "@/app/components/FloorPageLayout";
 import ImageEditor from "@/app/components/curated/ImageEditor";
 import ImagePicker from "@/app/components/curated/ImagePicker";
-import { CATEGORY_METADATA, type Category, type ImageExample } from "@/app/data";
-import { primaryAnswer } from "@/app/categories/answers";
+import { CATEGORY_METADATA, type Category } from "@/app/data";
+import { curatedItems, isImageCategory, type CuratedItem } from "@/app/categories/examples";
 import { LIMITS } from "@/lib/shared/config";
 import { defaultQuery, type ImageResult } from "@/lib/shared/search";
 
 import {
+  editCuratedExample,
   getCuratedAccess,
   getCuratedOverrides,
   lockCurated,
@@ -30,12 +31,27 @@ const messageOf = (caught: unknown, fallback: string) =>
   caught instanceof Error ? caught.message : fallback;
 
 /**
- * Replace pictures in a built-in category.
+ * Edit a built-in category: add, change and delete its examples, and replace
+ * pictures.
  *
- * Replacements are stored in the database and layered over the shipped files,
- * so they survive deploys. Unlocked with the shared PIN, or by the admin.
- * "Przywróć" drops the replacement and the shipped file shows again.
+ * Changes are stored in the database and layered over the shipped files, so
+ * they survive deploys. Unlocked with the shared PIN, or by the admin.
+ * "Przywróć" drops a change and the shipped version shows again.
  */
+
+type FormState = {
+  /** Undefined when adding a new example. */
+  item?: CuratedItem;
+  name: string;
+  alternatives: string;
+  text: string;
+};
+
+const splitAnswers = (value: string) =>
+  value
+    .split(/[\n,;]/)
+    .map((part) => part.trim())
+    .filter(Boolean);
 export default function EditCuratedCategoryPage({
   params,
 }: {
@@ -51,23 +67,24 @@ export default function EditCuratedCategoryPage({
     [folder]
   );
   const meta = category ? CATEGORY_METADATA[category] : undefined;
-  const examples = useMemo(
-    () =>
-      ((meta?.examples ?? []) as Array<{ image?: string }>).filter(
-        (example): example is ImageExample => typeof example.image === "string"
-      ),
-    [meta]
-  );
+  const imageCategory = category ? isImageCategory(category) : false;
 
   const [access, setAccess] = useState<CuratedAccess | null>(null);
-  const [overrides, setOverrides] = useState<Record<string, string>>({});
+  const [allOverrides, setAllOverrides] = useState<Record<string, Record<string, string>>>({});
+  const overrides = allOverrides[folder] ?? {};
+  const items = useMemo(
+    () => (category ? curatedItems(category, allOverrides, { includeDeleted: true }) : []),
+    [category, allOverrides]
+  );
   const [error, setError] = useState("");
   const [pin, setPin] = useState("");
   const [pinError, setPinError] = useState("");
   const [working, setWorking] = useState(false);
   const [busy, setBusy] = useState<Record<string, string>>({});
-  const [picking, setPicking] = useState<ImageExample | null>(null);
-  const [editing, setEditing] = useState<ImageExample | null>(null);
+  const [picking, setPicking] = useState<CuratedItem | null>(null);
+  const [editing, setEditing] = useState<CuratedItem | null>(null);
+  const [form, setForm] = useState<FormState | null>(null);
+  const [saving, setSaving] = useState(false);
   const [webSearchAvailable, setWebSearchAvailable] = useState(false);
 
   const load = useCallback(async () => {
@@ -77,7 +94,7 @@ export default function EditCuratedCategoryPage({
         getCuratedOverrides(),
       ]);
       setAccess(found);
-      setOverrides(all[folder] ?? {});
+      setAllOverrides(all);
     } catch (caught) {
       setError(messageOf(caught, "Nie udało się wczytać."));
       setAccess({ isAdmin: false, isPinEditor: false, canEdit: false, hasPin: false });
@@ -92,28 +109,69 @@ export default function EditCuratedCategoryPage({
       .catch(() => undefined);
   }, [load]);
 
-  const srcOf = (example: ImageExample) =>
-    overrides[example.image] ?? `/images/${folder}/${example.image}`;
+  const refresh = async () => {
+    const { overrides: all } = await getCuratedOverrides();
+    setAllOverrides(all);
+    return all;
+  };
 
-  const run = async (
-    example: ImageExample,
-    label: string,
-    action: () => Promise<unknown>
-  ) => {
-    setBusy((previous) => ({ ...previous, [example.image]: label }));
+  const run = async (item: CuratedItem, label: string, action: () => Promise<unknown>) => {
+    setBusy((previous) => ({ ...previous, [item.key]: label }));
     setError("");
     try {
       await action();
-      const { overrides: all } = await getCuratedOverrides();
-      setOverrides(all[folder] ?? {});
+      await refresh();
     } catch (caught) {
-      setError(`${primaryAnswer(example)}: ${messageOf(caught, "Nie udało się zapisać.")}`);
+      setError(`${item.name}: ${messageOf(caught, "Nie udało się zapisać.")}`);
     } finally {
       setBusy((previous) => {
         const next = { ...previous };
-        delete next[example.image];
+        delete next[item.key];
         return next;
       });
+    }
+  };
+
+  const openAdd = () => setForm({ name: "", alternatives: "", text: "" });
+  const openEdit = (item: CuratedItem) =>
+    setForm({
+      item,
+      name: item.name,
+      alternatives: item.alternatives.join("\n"),
+      text: item.text ?? "",
+    });
+
+  const onSaveForm = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!form) return;
+    setSaving(true);
+    setError("");
+    try {
+      const result = await editCuratedExample({
+        folder,
+        action: form.item ? "edit" : "add",
+        key: form.item?.key,
+        name: form.name,
+        alternatives: splitAnswers(form.alternatives),
+        text: form.text,
+      });
+      await refresh();
+      const added = !form.item && result.edit?.key;
+      setForm(null);
+      // A new picture example needs a picture before it can appear in a round.
+      if (added && imageCategory) {
+        setPicking({
+          key: result.edit!.key,
+          name: form.name.trim(),
+          alternatives: [],
+          image: result.edit!.key,
+          status: "added",
+        });
+      }
+    } catch (caught) {
+      setError(messageOf(caught, "Nie udało się zapisać."));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -168,15 +226,14 @@ export default function EditCuratedCategoryPage({
               className="text-4xl font-bold glow-text mt-2"
               style={{ color: "var(--color-neon)" }}
             >
-              Obrazki „{meta.name}”
+              Edycja „{meta.name}”
             </h1>
           </div>
           {error && <p className="text-red-300">{error}</p>}
           {access.hasPin ? (
             <form onSubmit={onUnlock} className="flex flex-col gap-4">
               <p className="text-white/70">
-                Podmiana obrazków we wbudowanych kategoriach jest chroniona
-                wspólnym PIN-em.
+                Edycja wbudowanych kategorii jest chroniona wspólnym PIN-em.
               </p>
               <label className="flex flex-col gap-2">
                 <span className="font-semibold" style={{ color: "var(--color-neon)" }}>
@@ -218,7 +275,8 @@ export default function EditCuratedCategoryPage({
     );
   }
 
-  const replaced = examples.filter((example) => overrides[example.image]).length;
+  const changed = items.filter((item) => item.status !== "shipped").length;
+  const visible = items.filter((item) => item.status !== "deleted").length;
 
   return (
     <FloorPageLayout>
@@ -230,47 +288,83 @@ export default function EditCuratedCategoryPage({
               className="text-3xl font-bold glow-text mt-2"
               style={{ color: "var(--color-neon)" }}
             >
-              Obrazki „{meta.name}”
+              Edycja „{meta.name}”
             </h1>
             <p className="text-white/60 text-sm">
-              Podmienione: {replaced} z {examples.length}
+              Elementów: {visible} · zmienionych: {changed}
               {access.isAdmin ? " · jako admin" : " · odblokowane PIN-em"}
               {" · zmiany zapisują się od razu i przetrwają aktualizacje gry"}
             </p>
           </div>
-          {access.isPinEditor && (
-            <FloorButton variant="rectangular" className="text-sm font-semibold" onClick={onLock}>
-              Zakończ edycję
+          <div className="flex gap-2">
+            <FloorButton variant="rectangular" className="btn-primary text-sm font-semibold" onClick={openAdd}>
+              Dodaj element
             </FloorButton>
-          )}
+            {access.isPinEditor && (
+              <FloorButton variant="rectangular" className="text-sm font-semibold" onClick={onLock}>
+                Zakończ edycję
+              </FloorButton>
+            )}
+          </div>
         </div>
 
         <p className="text-white/50 text-sm">
-          <strong className="text-white/70">Szukaj</strong> podmienia obrazek na
-          inny, <strong className="text-white/70">Edytuj</strong> przycina lub
-          wymazuje jego fragment, a <strong className="text-white/70">Przywróć</strong>{" "}
-          wraca do oryginału. Nazwy i kolejność przykładów się nie zmieniają.
+          <strong className="text-white/70">Odpowiedzi</strong> zmienia nazwę i
+          akceptowane odpowiedzi, <strong className="text-white/70">Usuń</strong>{" "}
+          zdejmuje element z gry
+          {imageCategory && (
+            <>
+              , <strong className="text-white/70">Obrazek</strong> podmienia
+              zdjęcie, a <strong className="text-white/70">Kadruj</strong> przycina
+              je lub wymazuje fragment
+            </>
+          )}
+          . Nowe elementy trafiają na koniec kategorii (są najtrudniejsze).
         </p>
 
         {error && <p className="text-red-300">{error}</p>}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {examples.map((example) => {
-            const isReplaced = Boolean(overrides[example.image]);
-            const status = busy[example.image];
+          {items.map((item) => {
+            const status = busy[item.key];
+            const deleted = item.status === "deleted";
+            const pictureReplaced = Boolean(item.image && overrides[item.image]);
+            const badge =
+              item.status === "added"
+                ? "dodany"
+                : item.status === "edited"
+                  ? "zmieniony"
+                  : deleted
+                    ? "usunięty"
+                    : pictureReplaced
+                      ? "nowy obrazek"
+                      : "";
             return (
-              <div key={example.image} className="neon-panel p-2 flex flex-col gap-2">
-                <div className="relative bg-gray-800 rounded-md overflow-hidden aspect-square flex items-center justify-center">
-                  <img
-                    src={srcOf(example)}
-                    alt={primaryAnswer(example)}
-                    className="max-w-full max-h-full object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  {isReplaced && (
+              <div
+                key={item.key}
+                className={`neon-panel p-2 flex flex-col gap-2 ${deleted ? "opacity-50" : ""}`}
+              >
+                <div className="relative bg-gray-800 rounded-md overflow-hidden aspect-square flex items-center justify-center p-2">
+                  {item.text !== undefined ? (
+                    <span className="text-white text-xl font-bold text-center break-words">
+                      {item.text}
+                    </span>
+                  ) : item.src ? (
+                    <img
+                      src={item.src}
+                      alt={item.name}
+                      className="max-w-full max-h-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <span className="text-white/50 text-sm text-center">
+                      Brak obrazka — element nie pojawi się w grze
+                    </span>
+                  )}
+                  {badge && (
                     <span className="absolute top-1 left-1 text-[10px] font-bold uppercase bg-gold text-black px-1.5 py-0.5 rounded">
-                      podmieniony
+                      {badge}
                     </span>
                   )}
                   {status && (
@@ -279,35 +373,96 @@ export default function EditCuratedCategoryPage({
                     </span>
                   )}
                 </div>
-                <p className="text-white font-semibold text-sm text-center truncate" title={primaryAnswer(example)}>
-                  {primaryAnswer(example)}
+                <p className="text-white font-semibold text-sm text-center truncate" title={item.name}>
+                  {item.name}
                 </p>
+                {item.alternatives.length > 0 && (
+                  <p className="text-white/50 text-xs text-center truncate" title={item.alternatives.join(", ")}>
+                    także: {item.alternatives.join(", ")}
+                  </p>
+                )}
                 <div className="flex gap-1 justify-center flex-wrap">
-                  <button
-                    className="text-xs px-2 py-1 rounded border border-neon/60 text-neon disabled:opacity-40"
-                    disabled={Boolean(status)}
-                    onClick={() => setPicking(example)}
-                  >
-                    Szukaj
-                  </button>
-                  <button
-                    className="text-xs px-2 py-1 rounded border border-neon/60 text-neon disabled:opacity-40"
-                    disabled={Boolean(status)}
-                    onClick={() => setEditing(example)}
-                  >
-                    Edytuj
-                  </button>
-                  {isReplaced && (
+                  {deleted ? (
                     <button
                       className="text-xs px-2 py-1 rounded border border-white/40 text-white/80 disabled:opacity-40"
                       disabled={Boolean(status)}
-                      onClick={() => {
-                        if (!window.confirm(`Przywrócić oryginalny obrazek „${primaryAnswer(example)}”?`)) return;
-                        run(example, "Przywracam…", () => revertCuratedImage(folder, example.image));
-                      }}
+                      onClick={() =>
+                        run(item, "Przywracam…", () =>
+                          editCuratedExample({ folder, action: "restore", key: item.key })
+                        )
+                      }
                     >
-                      Przywróć
+                      Przywróć element
                     </button>
+                  ) : (
+                    <>
+                      <button
+                        className="text-xs px-2 py-1 rounded border border-neon/60 text-neon disabled:opacity-40"
+                        disabled={Boolean(status)}
+                        onClick={() => openEdit(item)}
+                      >
+                        Odpowiedzi
+                      </button>
+                      {item.image && (
+                        <button
+                          className="text-xs px-2 py-1 rounded border border-neon/60 text-neon disabled:opacity-40"
+                          disabled={Boolean(status)}
+                          onClick={() => setPicking(item)}
+                        >
+                          Obrazek
+                        </button>
+                      )}
+                      {item.src && (
+                        <button
+                          className="text-xs px-2 py-1 rounded border border-neon/60 text-neon disabled:opacity-40"
+                          disabled={Boolean(status)}
+                          onClick={() => setEditing(item)}
+                        >
+                          Kadruj
+                        </button>
+                      )}
+                      {pictureReplaced && item.status !== "added" && (
+                        <button
+                          className="text-xs px-2 py-1 rounded border border-white/40 text-white/80 disabled:opacity-40"
+                          disabled={Boolean(status)}
+                          onClick={() => {
+                            if (!window.confirm(`Przywrócić oryginalny obrazek „${item.name}”?`)) return;
+                            run(item, "Przywracam…", () => revertCuratedImage(folder, item.image!));
+                          }}
+                        >
+                          Oryginalny obrazek
+                        </button>
+                      )}
+                      {item.status === "edited" && (
+                        <button
+                          className="text-xs px-2 py-1 rounded border border-white/40 text-white/80 disabled:opacity-40"
+                          disabled={Boolean(status)}
+                          onClick={() =>
+                            run(item, "Przywracam…", () =>
+                              editCuratedExample({ folder, action: "restore", key: item.key })
+                            )
+                          }
+                        >
+                          Cofnij zmiany
+                        </button>
+                      )}
+                      <button
+                        className="text-xs px-2 py-1 rounded border border-red-400/60 text-red-300 disabled:opacity-40"
+                        disabled={Boolean(status)}
+                        onClick={() => {
+                          const question =
+                            item.status === "added"
+                              ? `Usunąć na stałe dodany element „${item.name}”?`
+                              : `Usunąć „${item.name}” z gry? Można go potem przywrócić.`;
+                          if (!window.confirm(question)) return;
+                          run(item, "Usuwam…", () =>
+                            editCuratedExample({ folder, action: "delete", key: item.key })
+                          );
+                        }}
+                      >
+                        Usuń
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -316,26 +471,92 @@ export default function EditCuratedCategoryPage({
         </div>
       </div>
 
+      {form && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <form
+            onSubmit={onSaveForm}
+            className="neon-panel w-full max-w-lg p-6 flex flex-col gap-4 bg-black"
+          >
+            <h2 className="text-2xl font-bold text-white">
+              {form.item ? `Edytuj „${form.item.name}”` : "Nowy element"}
+            </h2>
+            {!imageCategory && (
+              <label className="flex flex-col gap-1 text-sm text-white/80">
+                Treść na ekranie
+                <input
+                  value={form.text}
+                  onChange={(event) => setForm({ ...form, text: event.target.value })}
+                  className="bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none"
+                  required
+                  autoFocus
+                />
+              </label>
+            )}
+            <label className="flex flex-col gap-1 text-sm text-white/80">
+              Odpowiedź (pokazywana na rzutniku)
+              <input
+                value={form.name}
+                onChange={(event) => setForm({ ...form, name: event.target.value })}
+                className="bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none"
+                required
+                autoFocus={imageCategory}
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm text-white/80">
+              Inne akceptowane odpowiedzi (każda w nowej linii albo po przecinku)
+              <textarea
+                value={form.alternatives}
+                onChange={(event) => setForm({ ...form, alternatives: event.target.value })}
+                rows={4}
+                className="bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none"
+              />
+            </label>
+            {!form.item && imageCategory && (
+              <p className="text-xs text-white/50">
+                Po zapisaniu od razu wybierzesz obrazek dla nowego elementu.
+              </p>
+            )}
+            <div className="flex justify-end gap-2">
+              <FloorButton type="button" variant="rectangular" className="text-sm" onClick={() => setForm(null)}>
+                Anuluj
+              </FloorButton>
+              <FloorButton
+                type="submit"
+                variant="rectangular"
+                className="btn-primary text-sm font-semibold"
+                disabled={saving || !form.name.trim() || (!imageCategory && !form.text.trim())}
+              >
+                {saving ? "Zapisuję…" : "Zapisz"}
+              </FloorButton>
+            </div>
+          </form>
+        </div>
+      )}
+
       {picking && (
         <ImagePicker
-          itemName={primaryAnswer(picking)}
+          itemName={picking.name}
           categoryName={meta.name}
           webSearchAvailable={webSearchAvailable}
-          initialQuery={defaultQuery(primaryAnswer(picking), meta.name)}
+          initialQuery={defaultQuery(picking.name, meta.name)}
           onPick={(result: ImageResult) => {
             const example = picking;
             setPicking(null);
-            run(example, "Zapisuję…", () => replaceFromResult(folder, example.image, result));
+            run(example, "Zapisuję…", () => replaceFromResult(folder, example.image!, result));
           }}
           onPickUrl={(url: string) => {
             const example = picking;
             setPicking(null);
-            run(example, "Zapisuję…", () => replaceFromUrl(folder, example.image, url));
+            run(example, "Zapisuję…", () => replaceFromUrl(folder, example.image!, url));
           }}
           onPickFile={(file: File) => {
             const example = picking;
             setPicking(null);
-            run(example, "Zapisuję…", () => replaceWithFile(folder, example.image, file));
+            run(example, "Zapisuję…", () => replaceWithFile(folder, example.image!, file));
           }}
           onClose={() => setPicking(null)}
         />
@@ -343,13 +564,13 @@ export default function EditCuratedCategoryPage({
 
       {editing && (
         <ImageEditor
-          src={srcOf(editing)}
-          itemName={primaryAnswer(editing)}
+          src={editing.src ?? ""}
+          itemName={editing.name}
           onSave={(blob) => {
             const example = editing;
             setEditing(null);
             return run(example, "Zapisuję…", () =>
-              replaceWithFile(folder, example.image, blob, "Edited")
+              replaceWithFile(folder, example.image!, blob, "Edited")
             );
           }}
           onClose={() => setEditing(null)}

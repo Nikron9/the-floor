@@ -1,6 +1,6 @@
 import { isAdmin } from "@/lib/shared/adminSession";
 import { fail, handle, json } from "@/lib/shared/http";
-import { findCuratedImage } from "@/lib/curated/catalog";
+import { findEditableImage } from "@/lib/curated/editable";
 import { curatedRepo, sha256 } from "@/lib/curated/overrides";
 
 /**
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const overrides = await curatedRepo().list();
     const rows = await Promise.all(
       overrides.map(async (o) => {
-        const target = findCuratedImage(o.folder, o.image);
+        const target = await findEditableImage(o.folder, o.image);
         let repoChanged = false;
         if (target && o.originalHash) {
           try {

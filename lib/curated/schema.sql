@@ -41,3 +41,13 @@ create table if not exists curated_settings (
   pin_attempts          integer     not null default 0,
   pin_window_started_at timestamptz
 );
+
+-- Added, edited and deleted examples of the built-in categories
+-- (app/categories/examples.ts). Also created on first use by the app.
+create table if not exists curated_example_edits (
+  folder     text        not null,
+  key        text        not null,
+  edit       jsonb       not null,
+  updated_at timestamptz not null default now(),
+  primary key (folder, key)
+);

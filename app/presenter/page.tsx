@@ -31,6 +31,7 @@ import {
   CategorySections,
   CategoryViewControls,
   DifficultyMark,
+  DifficultyPips,
   useCategoryViewOptions,
 } from "../categories/CategoryView";
 import { useLocalStorage } from "usehooks-ts";
@@ -99,6 +100,18 @@ export default function PresenterPage({
   // Seed behind the one-per-difficulty category suggestions for the next
   // player; a new seed draws new suggestions.
   const [suggestionSeed, setSuggestionSeed] = useState(newShuffleSeed);
+  // Category choice unlocks a second after the host stops typing a name, and
+  // that is when the three suggestions are drawn.
+  const [categoryUiReady, setCategoryUiReady] = useState(false);
+  useEffect(() => {
+    setCategoryUiReady(false);
+    if (!newPlayerName.trim()) return;
+    const timer = setTimeout(() => {
+      setCategoryUiReady(true);
+      setSuggestionSeed(newShuffleSeed());
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [newPlayerName]);
   const [editPlayerName, setEditPlayerName] = useState("");
   const [editPlayerCategory, setEditPlayerCategory] = useState<
     CategoryId | undefined
@@ -336,7 +349,7 @@ export default function PresenterPage({
             const difficulty = catalogEntry(String(id))?.difficulty;
             const mark =
               viewOptions.showDifficulty && difficulty
-                ? `${DIFFICULTY_INFO[difficulty].emoji} `
+                ? `${DIFFICULTY_INFO[difficulty].dots}  `
                 : "";
             return (
               <option key={id} value={id}>
@@ -380,11 +393,15 @@ export default function PresenterPage({
       editPlayerName.trim() !== "" &&
       isNameTaken(editPlayerName, editingIndex);
 
-    const pickRandomCategory = () => {
+    // A fully random free category other than the three on show, and the
+    // player is added with it straight away.
+    const addWithRandomCategory = () => {
+      const shown = new Set(suggestions.map(({ id }) => id));
       const free = getAvailableCategories();
-      if (free.length > 0) {
-        setNewPlayerCategory(free[Math.floor(Math.random() * free.length)].id);
-      }
+      const pool = free.filter(({ id }) => !shown.has(id));
+      const from = pool.length > 0 ? pool : free;
+      if (from.length === 0) return;
+      handleAddPlayer(from[Math.floor(Math.random() * from.length)].id);
     };
 
     const startGame = () => {
@@ -394,19 +411,19 @@ export default function PresenterPage({
       openProjector();
     };
 
-    const handleAddPlayer = () => {
-      if (!newPlayerName.trim() || newPlayerCategory === undefined) return;
+    const handleAddPlayer = (category: CategoryId | undefined = newPlayerCategory) => {
+      if (!newPlayerName.trim() || category === undefined) return;
       if (isNameTaken(newPlayerName)) return;
 
       // Check if category is already used
-      if (usedCategories.has(newPlayerCategory)) {
+      if (usedCategories.has(category)) {
         alert("Ta kategoria jest już przypisana innemu graczowi!");
         return;
       }
 
       const newPlayer: FloorData = {
         person: newPlayerName.trim(),
-        category: newPlayerCategory,
+        category,
         hasPlayed: false,
         isStillInTheGame: true,
       };
@@ -468,10 +485,11 @@ export default function PresenterPage({
 
     const fieldClass =
       "bg-gray-900 text-white p-3 rounded-md border-2 border-neon focus:outline-none focus:ring-2 focus:ring-neon";
+    const categoryUiLocked = !categoryUiReady || newNameTaken;
 
     return (
       <FloorPageLayout back={{ onClick: () => setGameDetails(undefined) }}>
-        <div className="w-full max-w-4xl mx-auto px-6 pt-4 pb-32 flex flex-col gap-6">
+        <div className="w-full max-w-7xl mx-auto px-6 pt-4 pb-32 flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1
               className="text-4xl md:text-5xl font-bold uppercase tracking-wide glow-text"
@@ -485,7 +503,9 @@ export default function PresenterPage({
           </div>
           <div className="w-full lg:hidden">{desktopPlayWarning}</div>
 
-          {/* Add a player */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {/* Left: adding a player */}
+          <div className="flex flex-col gap-4 lg:sticky lg:top-4">
           <form
             className="neon-panel p-4 md:p-5 flex flex-col gap-4"
             onSubmit={(event) => {
@@ -508,6 +528,16 @@ export default function PresenterPage({
               </p>
             )}
 
+            {!newPlayerName.trim() && (
+              <p className="-mt-1 text-sm text-white/50">
+                Wpisz imię gracza, żeby wybrać kategorię.
+              </p>
+            )}
+
+            <fieldset
+              disabled={categoryUiLocked}
+              className={`flex flex-col gap-4 transition-opacity ${categoryUiLocked ? "opacity-40" : ""}`}
+            >
             {suggestions.length > 0 && (
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-3">
@@ -533,7 +563,7 @@ export default function PresenterPage({
                       onClick={() => setNewPlayerCategory(id)}
                     >
                       <span className="text-xs font-normal normal-case tracking-normal text-white/70">
-                        {DIFFICULTY_INFO[difficulty].emoji} {DIFFICULTY_INFO[difficulty].label}
+                        <DifficultyPips level={difficulty} /> {DIFFICULTY_INFO[difficulty].label}
                       </span>
                       <span className="text-center">{name}</span>
                     </FloorButton>
@@ -555,7 +585,8 @@ export default function PresenterPage({
                 type="button"
                 variant="rectangular"
                 className="font-semibold text-sm"
-                onClick={pickRandomCategory}
+                onClick={addWithRandomCategory}
+                title="Losuje kategorię spoza trzech propozycji i od razu dodaje gracza"
               >
                 Całkowicie losowa
               </FloorButton>
@@ -570,6 +601,7 @@ export default function PresenterPage({
                 Dodaj
               </FloorButton>
             </div>
+            </fieldset>
             {newPlayerCategory !== undefined && (
               <p className="text-sm text-white/70">
                 Wybrana kategoria:{" "}
@@ -580,8 +612,13 @@ export default function PresenterPage({
             )}
           </form>
           <CategoryViewControls options={viewOptions} onChange={setViewOptions} />
+          </div>
 
-          {/* Players */}
+          {/* Right: the players so far */}
+          <div className="flex flex-col gap-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-white/70">
+            Gracze ({gameDetails.data.length})
+          </p>
           {gameDetails.data.length === 0 ? (
             <p className="text-center text-white/60 py-10">
               Nie dodano jeszcze żadnych graczy.
@@ -675,6 +712,8 @@ export default function PresenterPage({
               })}
             </ol>
           )}
+          </div>
+          </div>
         </div>
 
         {/* Always in reach, however long the player list gets. */}

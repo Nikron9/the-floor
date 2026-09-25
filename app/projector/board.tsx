@@ -185,7 +185,7 @@ export default function Board({
         );
       })}
 
-      {states.map(({ territory, owner, isSelected, isHighlighted }) => (
+      {states.map(({ territory, owner, isSelected }) => (
         <div
           key={`label-${territory.id}`}
           className={classNames("territory-label", {
@@ -196,10 +196,10 @@ export default function Board({
             gridRow: `${territory.label.row + 1} / span ${territory.label.rows}`,
           }}
         >
-          <p className="territory-name">{owner.person}</p>
-          {(isSelected || isHighlighted) && !isRandomizing && (
-            <p className="territory-category">{categoryName(owner)}</p>
-          )}
+          {/* The category is what the players pick, so it is always on show
+              and is the big text; the owner is the smaller line under it. */}
+          <p className="territory-name">{categoryName(owner)}</p>
+          <p className="territory-category">{owner.person}</p>
         </div>
       ))}
     </div>

@@ -177,3 +177,16 @@ export const replaceWithFile = (
   form.append("creditSource", source);
   return post(form);
 };
+
+export type ExampleAction = "add" | "edit" | "delete" | "restore";
+
+/** Add, edit, delete or restore an example of a built-in category. */
+export const editCuratedExample = (payload: {
+  folder: string;
+  action: ExampleAction;
+  key?: string;
+  name?: string;
+  alternatives?: string[];
+  text?: string;
+}): Promise<{ edit?: { key: string } }> =>
+  sendJson("POST", "/api/curated/examples", payload);

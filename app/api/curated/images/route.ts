@@ -9,7 +9,8 @@ import { imageStore } from "@/lib/shared/storage";
 import type { ImageCredit } from "@/lib/shared/types";
 import { cleanText } from "@/lib/shared/validate";
 import { curatedAccess } from "@/lib/curated/access";
-import { curatedImageKey, findCuratedImage } from "@/lib/curated/catalog";
+import { curatedImageKey } from "@/lib/curated/catalog";
+import { findEditableImage } from "@/lib/curated/editable";
 import { curatedRepo, sha256 } from "@/lib/curated/overrides";
 
 /**
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
     const form = await request.formData().catch(() => undefined);
     if (!form) return fail("Oczekiwano formularza multipart.");
 
-    const target = findCuratedImage(
+    const target = await findEditableImage(
       cleanText(form.get("folder")),
       cleanText(form.get("image"))
     );
@@ -126,7 +127,7 @@ export async function DELETE(request: Request) {
     }
 
     const params = new URL(request.url).searchParams;
-    const target = findCuratedImage(params.get("folder") ?? "", params.get("image") ?? "");
+    const target = await findEditableImage(params.get("folder") ?? "", params.get("image") ?? "");
     if (!target) return fail("Nie ma takiego obrazka we wbudowanych kategoriach.", 404);
 
     const repo = curatedRepo();

@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Category,
-  CATEGORY_METADATA,
-  ImageExample,
-  TextExample,
-} from "../data";
+import { Category, CATEGORY_METADATA } from "../data";
 import FloorPageLayout from "../components/FloorPageLayout";
 import FloorButton from "../components/FloorButton";
 import Link from "next/link";
 import { useCuratedOverrides } from "./useCuratedOverrides";
-import { answerList, primaryAnswer } from "./answers";
+import { curatedItems } from "./examples";
 import { newShuffleSeed, seededShuffle } from "./shuffle";
 import { CATEGORY_GROUPS, DIFFICULTY_INFO, CATEGORY_CATALOG } from "./catalog";
 import {
@@ -32,6 +27,10 @@ export default function CategoriesPage() {
     "random"
   );
   const [previewSeed, setPreviewSeed] = useState(0);
+  // Answers stay hidden while browsing, so looking at a category doesn't
+  // spoil it; a click on one card reveals just that answer.
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const curatedOverrides = useCuratedOverrides();
   const [viewOptions, setViewOptions] = useCategoryViewOptions();
 
@@ -47,18 +46,22 @@ export default function CategoriesPage() {
     window.scrollTo({ top: 0 });
     setExampleOrder("random");
     setPreviewSeed(newShuffleSeed());
+    setShowAnswers(false);
+    setRevealed(new Set());
   }, [selectedCategory]);
 
   if (selectedCategory) {
     const categoryData = CATEGORY_METADATA[selectedCategory];
-    const gameOrder = categoryData.examples as Array<ImageExample | TextExample>;
+    // With the edits made in the app; added pictures without an image yet
+    // don't appear in the game, so they aren't shown here either.
+    const gameOrder = curatedItems(selectedCategory, curatedOverrides).filter(
+      (item) => item.text !== undefined || item.src
+    );
     const examples =
       exampleOrder === "game"
         ? gameOrder
         : exampleOrder === "alpha"
-          ? [...gameOrder].sort((a, b) =>
-              primaryAnswer(a).localeCompare(primaryAnswer(b), "pl")
-            )
+          ? [...gameOrder].sort((a, b) => a.name.localeCompare(b.name, "pl"))
           : seededShuffle(gameOrder, previewSeed);
 
     return (
@@ -73,13 +76,11 @@ export default function CategoriesPage() {
               {CATEGORY_METADATA[selectedCategory].name}
             </h2>
             <div className="flex gap-2 flex-wrap justify-end">
-              {examples.some((item) => "image" in item) && (
-                <Link href={`/categories/edit/${categoryData.folder}`} prefetch={false}>
-                  <FloorButton variant="rectangular" className="font-semibold">
-                    Podmień obrazki
-                  </FloorButton>
-                </Link>
-              )}
+              <Link href={`/categories/edit/${categoryData.folder}`} prefetch={false}>
+                <FloorButton variant="rectangular" className="font-semibold">
+                  Edytuj kategorię
+                </FloorButton>
+              </Link>
             </div>
           </div>
 
@@ -103,14 +104,15 @@ export default function CategoriesPage() {
                 {CATEGORY_GROUPS.find(({ id }) => id === CATEGORY_CATALOG[selectedCategory].group)?.label}
               </span>
               <span>
-                {DIFFICULTY_INFO[CATEGORY_CATALOG[selectedCategory].difficulty].emoji} Trudność:{" "}
+                <DifficultyMark id={selectedCategory} /> Trudność:{" "}
                 {DIFFICULTY_INFO[CATEGORY_CATALOG[selectedCategory].difficulty].label.toLowerCase()}
               </span>
               <span>Przykłady: {examples.length}</span>
             </p>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-white/80 -mt-4">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 -mt-4">
+          <label className="flex items-center gap-2 text-sm text-white/80">
             Kolejność:
             <select
               value={exampleOrder}
@@ -124,66 +126,75 @@ export default function CategoriesPage() {
               <option value="game">Jak w grze</option>
             </select>
           </label>
+          <label className="flex items-center gap-2 text-sm text-white/80 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showAnswers}
+              onChange={(event) => {
+                setShowAnswers(event.target.checked);
+                setRevealed(new Set());
+              }}
+              className="w-5 h-5 accent-[var(--color-neon)]"
+            />
+            Pokaż odpowiedzi
+          </label>
+          {!showAnswers && (
+            <span className="text-xs text-white/50">Kliknij element, żeby zobaczyć jego odpowiedź.</span>
+          )}
+          </div>
 
           {/* Examples Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {examples.map((item, index) => {
-              const isTextExample = "text" in item;
-              const isImageExample = "image" in item;
-
+            {examples.map((item) => {
+              const visible = showAnswers || revealed.has(item.key);
               return (
-                <div
-                  key={index}
-                  className="neon-panel p-6 flex flex-col gap-4"
+                <button
+                  type="button"
+                  key={item.key}
+                  className="neon-panel p-6 flex flex-col gap-4 text-left"
+                  onClick={() =>
+                    setRevealed((current) => {
+                      const next = new Set(current);
+                      if (next.has(item.key)) next.delete(item.key);
+                      else next.add(item.key);
+                      return next;
+                    })
+                  }
+                  aria-label={visible ? item.name : "Pokaż odpowiedź"}
                 >
-                  {isTextExample ? (
-                    <div className="flex flex-col gap-3">
-                      <div className="bg-gray-800 p-4 rounded-md min-h-[100px] flex items-center justify-center">
-                        <p className="text-3xl font-bold text-white text-center">
-                          {item.text}
-                        </p>
-                      </div>
-                      <div className="flex flex-col items-center w-full text-center gap-2">
-                        <p className="w-full font-white font-bold text-2xl">
-                          {primaryAnswer(item)}
-                        </p>
-                        {answerList(item).length > 1 && (
-                          <p className="text-sm text-white/60 text-center">
-                            także: {answerList(item).slice(1).join(", ")}
+                  {item.text !== undefined ? (
+                    <div className="bg-gray-800 p-4 rounded-md min-h-[100px] w-full flex items-center justify-center">
+                      <p className="text-3xl font-bold text-white text-center">{item.text}</p>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-800 rounded-md overflow-hidden w-full flex items-center justify-center min-h-[200px]">
+                      {/* Browsing a category renders every example at
+                          once, so without lazy loading the browser fetches
+                          all ~50 images up front to fill a 200px box. */}
+                      <img
+                        src={item.src}
+                        alt={visible ? item.name : ""}
+                        className="max-w-full max-h-[200px] object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-col items-center w-full text-center gap-2 min-h-[3.5rem] justify-center">
+                    {visible ? (
+                      <>
+                        <p className="w-full text-white font-bold text-2xl">{item.name}</p>
+                        {item.alternatives.length > 0 && (
+                          <p className="text-sm text-white/60">
+                            także: {item.alternatives.join(", ")}
                           </p>
                         )}
-                      </div>
-                    </div>
-                  ) : isImageExample ? (
-                    <div className="flex flex-col gap-3">
-                      <div className="bg-gray-800 rounded-md overflow-hidden flex items-center justify-center min-h-[200px]">
-                        {/* Browsing a category renders every example at
-                            once, so without lazy loading the browser fetches
-                            all ~50 images up front to fill a 200px box. */}
-                        <img
-                          src={
-                            curatedOverrides[categoryData.folder]?.[item.image] ??
-                            `/images/${categoryData.folder}/${item.image}`
-                          }
-                          alt={primaryAnswer(item)}
-                          className="max-w-full max-h-[200px] object-contain"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <p className="w-full font-white font-bold text-2xl text-center">
-                          {primaryAnswer(item)}
-                        </p>
-                        {answerList(item).length > 1 && (
-                          <p className="text-sm text-white/60 text-center">
-                            także: {answerList(item).slice(1).join(", ")}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
+                      </>
+                    ) : (
+                      <p className="text-white/30 text-2xl tracking-[0.3em]">? ? ?</p>
+                    )}
+                  </div>
+                </button>
               );
             })}
           </div>
@@ -234,7 +245,7 @@ export default function CategoriesPage() {
                 onClick={() => setSelectedCategory(id)}
               >
                 {viewOptions.showDifficulty && (
-                  <span className="text-xl leading-none">
+                  <span className="leading-none text-white/70">
                     <DifficultyMark id={id} />
                   </span>
                 )}

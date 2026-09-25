@@ -10,11 +10,16 @@ import { DisneyCharactersCategory } from "./categories/data/disney-characters";
 import { DogsCategory } from "./categories/data/dogs";
 import { EuropeanFlagsCategory } from "./categories/data/european-flags";
 import { FairFoodsCategory } from "./categories/data/fair-foods";
-import { FastFoodChainsCategory } from "./categories/data/fast-food-chains";
 import { FridgeCategory } from "./categories/data/fridge";
 import { FruitsCategory } from "./categories/data/fruits";
 import { GarageCategory } from "./categories/data/garage";
 import { GothicCategory } from "./categories/data/gothic";
+import { PolishPoliticiansCategory } from "./categories/data/polish-politicians";
+import { GymCategory } from "./categories/data/gym";
+import { PolishCitiesCategory } from "./categories/data/polish-cities";
+import { CurrenciesCategory } from "./categories/data/currencies";
+import { SupercarsCategory } from "./categories/data/supercars";
+import { CarBrandsCategory } from "./categories/data/car-brands";
 import { DessertsCategory } from "./categories/data/desserts";
 import { DrinksCategory } from "./categories/data/drinks";
 import { NailsMakeupCategory } from "./categories/data/nails-makeup";
@@ -35,7 +40,6 @@ import { AnimalBabiesCategory } from "./categories/data/animal-babies";
 import { EmojiProverbsCategory } from "./categories/data/emoji-proverbs";
 import { EmojiJobsCategory } from "./categories/data/emoji-jobs";
 import { EmojiGamesAppsCategory } from "./categories/data/emoji-games-apps";
-import { HorsesCategory } from "./categories/data/horses";
 import { JunkDrawerCategory } from "./categories/data/junk-drawer";
 import { KitchenGadgetsCategory } from "./categories/data/kitchen-gadgets";
 import { LaundryCategory } from "./categories/data/laundry";
@@ -97,7 +101,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Josh",
-    category: "Sieci fast food",
+    category: "Ciasta i desery",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -241,7 +245,7 @@ const FLOOR_DATA_CONST = [
   },
   {
     person: "Emma",
-    category: "Konie",
+    category: "Kawy i napoje",
     hasPlayed: false,
     isStillInTheGame: true,
   },
@@ -344,10 +348,8 @@ export type Category =
   | "Bajki i filmy 2000-2010"
   | "Slogany reklamowe"
   | "Psy"
-  | "Konie"
   | "Wesołe miasteczka"
   | "Jedzenie z jarmarku"
-  | "Sieci fast food"
   | "Lodówka"
   | "Garaż"
   | "Boże Narodzenie"
@@ -376,6 +378,12 @@ export type Category =
   | "Polskie potrawy"
   | "Polscy sportowcy"
   | "Gothic"
+  | "Znani polscy politycy"
+  | "Siłownia"
+  | "Polskie miasta"
+  | "Waluty"
+  | "Supersamochody"
+  | "Marki samochodowe"
   | "Ciasta i desery"
   | "Kawy i napoje"
   | "Paznokcie i makijaż"
@@ -453,7 +461,6 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Postacie Disneya": DisneyCharactersCategory,
   "Psy": DogsCategory,
   "Jedzenie z jarmarku": FairFoodsCategory,
-  "Sieci fast food": FastFoodChainsCategory,
   "Lodówka": FridgeCategory,
   "Garaż": GarageCategory,
   "Postacie z Harry'ego Pottera": HarryPotterCharactersCategory,
@@ -472,7 +479,6 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Przysłowia z emoji": EmojiProverbsCategory,
   "Zawody z emoji": EmojiJobsCategory,
   "Gry i aplikacje z emoji": EmojiGamesAppsCategory,
-  "Konie": HorsesCategory,
   "Szuflada z rupieciami": JunkDrawerCategory,
   "Gadżety kuchenne": KitchenGadgetsCategory,
   "Pranie": LaundryCategory,
@@ -489,6 +495,12 @@ export const CATEGORY_METADATA: Record<Category, CategoryMetadata> = {
   "Polskie potrawy": PolishDishesCategory,
   "Polscy sportowcy": PolishAthletesCategory,
   "Gothic": GothicCategory,
+  "Znani polscy politycy": PolishPoliticiansCategory,
+  "Siłownia": GymCategory,
+  "Polskie miasta": PolishCitiesCategory,
+  "Waluty": CurrenciesCategory,
+  "Supersamochody": SupercarsCategory,
+  "Marki samochodowe": CarBrandsCategory,
   "Ciasta i desery": DessertsCategory,
   "Kawy i napoje": DrinksCategory,
   "Paznokcie i makijaż": NailsMakeupCategory,

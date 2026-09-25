@@ -8,10 +8,14 @@ import type { Category } from "../data";
  */
 export type Difficulty = 1 | 2 | 3;
 
-export const DIFFICULTY_INFO: Record<Difficulty, { emoji: string; label: string }> = {
-  1: { emoji: "🟢", label: "Łatwa" },
-  2: { emoji: "🟡", label: "Średnia" },
-  3: { emoji: "🔴", label: "Trudna" },
+/**
+ * `dots` is the plain-text form (e.g. inside a <select>); elsewhere the
+ * DifficultyMark component draws the same thing as three small pips.
+ */
+export const DIFFICULTY_INFO: Record<Difficulty, { dots: string; label: string }> = {
+  1: { dots: "●○○", label: "Łatwa" },
+  2: { dots: "●●○", label: "Średnia" },
+  3: { dots: "●●●", label: "Trudna" },
 };
 
 /** Groups in display order. */
@@ -45,7 +49,6 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Owoce": { group: "food", difficulty: 1 },
   "Polskie potrawy": { group: "food", difficulty: 1 },
   "Jedzenie z jarmarku": { group: "food", difficulty: 1 },
-  "Sieci fast food": { group: "food", difficulty: 1 },
   "Kraj po potrawie": { group: "food", difficulty: 2 },
   // Zwierzęta i przyroda
   "Psy": { group: "nature", difficulty: 2 },
@@ -54,7 +57,6 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Kwiaty": { group: "nature", difficulty: 2 },
   "Przyroda Polski": { group: "nature", difficulty: 2 },
   "Rasy kotów": { group: "nature", difficulty: 3 },
-  "Konie": { group: "nature", difficulty: 3 },
   "Rośliny doniczkowe": { group: "nature", difficulty: 3 },
   // Geografia i miejsca
   "Stolice Europy": { group: "places", difficulty: 2 },
@@ -91,6 +93,12 @@ export const CATEGORY_CATALOG: Record<Category, { group: CategoryGroupId; diffic
   "Minecraft": { group: "games", difficulty: 2 },
   "Gry i aplikacje z emoji": { group: "games", difficulty: 2 },
   "Gothic": { group: "games", difficulty: 3 },
+  "Znani polscy politycy": { group: "people", difficulty: 2 },
+  "Siłownia": { group: "leisure", difficulty: 1 },
+  "Polskie miasta": { group: "places", difficulty: 2 },
+  "Waluty": { group: "brain", difficulty: 2 },
+  "Supersamochody": { group: "brands", difficulty: 3 },
+  "Marki samochodowe": { group: "brands", difficulty: 2 },
   "Ciasta i desery": { group: "food", difficulty: 1 },
   "Kawy i napoje": { group: "food", difficulty: 1 },
   "Paznokcie i makijaż": { group: "home", difficulty: 2 },

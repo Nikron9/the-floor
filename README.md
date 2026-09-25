@@ -128,16 +128,23 @@ npm run build   # production build
 CI runs both on every pull request, deliberately on Linux so casing bugs
 surface there instead of in production.
 
-## Replacing pictures in built-in categories
+## Editing built-in categories
 
-`/categories` → a category → **Podmień obrazki** lets the admin, or anyone with
-the shared PIN (set in `/admin`), replace a picture with search, link, upload
-and an in-browser crop / erase editor. Replacements are stored in Postgres
-(`curated_image_overrides`, see `lib/curated/schema.sql`) and layered over
-`public/images/` at runtime, so deploys never overwrite them. If a later deploy
-changes a replaced file, the replacement still wins and the admin page flags
-it. Code: `lib/curated/`, `lib/shared/`, `app/api/curated/`. Setup and
-environment variables: [SETUP.md](SETUP.md).
+`/categories` → a category → **Edytuj kategorię** lets the admin, or anyone with
+the shared PIN (set in `/admin`), add, edit and delete examples and replace
+pictures (search, link, upload and an in-browser crop / erase editor).
+
+- Picture replacements are stored in `curated_image_overrides`; added, edited and
+  deleted examples in `curated_example_edits` (created on first use; see
+  `lib/curated/schema.sql`). Both are layered over the shipped files at runtime
+  (`app/categories/examples.ts`), so deploys never overwrite them.
+- Added examples go to the end of the category (hardest). A deleted shipped
+  example can be restored; an added one is removed for good.
+- If a later deploy changes a replaced file, the replacement still wins and the
+  admin page flags it.
+
+Code: `lib/curated/`, `lib/shared/`, `app/api/curated/`. Setup and environment
+variables: [SETUP.md](SETUP.md).
 
 ## Built with
 

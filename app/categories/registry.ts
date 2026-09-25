@@ -2,10 +2,8 @@ import {
   CATEGORY_METADATA,
   type Category,
   type CategoryId,
-  type ImageExample,
-  type TextExample,
 } from "../data";
-import { answerList } from "./answers";
+import { curatedItems, type CuratedItem } from "./examples";
 
 /**
  * Turning a category key into something the screen can render.
@@ -84,14 +82,12 @@ const LEGACY_CATEGORY_IDS: Readonly<Record<string, Category>> = {
   "Fair foods": "Jedzenie z jarmarku",
   "Czarne charaktery z horrorów": "Czarne charaktery z filmów",
   "Dekoracje na Halloween": "Halloween",
-  "Fast food chains": "Sieci fast food",
   Fridge: "Lodówka",
   Fruits: "Owoce",
   Garage: "Garaż",
   "Harry Potter characters": "Postacie z Harry'ego Pottera",
   Holidays: "Boże Narodzenie",
   "Święta": "Boże Narodzenie",
-  Horses: "Konie",
   "Junk drawer": "Szuflada z rupieciami",
   "Kitchen gadgets": "Gadżety kuchenne",
   Laundry: "Pranie",
@@ -123,24 +119,21 @@ export const isTextExample = (
   example: ResolvedExample
 ): example is ResolvedTextExample => "text" in example;
 
-const resolveCuratedExample = (
-  folder: string,
-  example: ImageExample | TextExample,
-  overrides: CuratedOverrides
-): ResolvedExample => {
-  if ("text" in example) {
-    const [name = "", ...alternatives] = answerList(example);
-    return { name, alternatives, text: example.text };
+/** A curated item (edits applied) in the shape the round renders. */
+const toResolved = (item: CuratedItem): ResolvedExample | undefined => {
+  if (item.text !== undefined) {
+    return { name: item.name, alternatives: item.alternatives, text: item.text };
   }
-
-  const [name = "", ...alternatives] = answerList(example);
-  return {
-    name,
-    alternatives,
-    src:
-      overrides[folder]?.[example.image] ?? `/images/${folder}/${example.image}`,
-  };
+  // An added picture example has nothing to show until a picture is set.
+  if (!item.src) return undefined;
+  return { name: item.name, alternatives: item.alternatives, src: item.src };
 };
+
+const resolvedItems = (id: Category, overrides: CuratedOverrides): ResolvedExample[] =>
+  curatedItems(id, overrides).flatMap((item) => {
+    const resolved = toResolved(item);
+    return resolved ? [resolved] : [];
+  });
 
 export const resolveCuratedCategory = (
   id: Category,
@@ -153,9 +146,7 @@ export const resolveCuratedCategory = (
     name: meta.name,
     instruction: meta.instruction,
     details: meta.details,
-    examples: (meta.examples as Array<ImageExample | TextExample>).map(
-      (example) => resolveCuratedExample(meta.folder, example, overrides)
-    ),
+    examples: resolvedItems(id, overrides),
   };
 };
 
@@ -183,9 +174,7 @@ export const resolveMixedCategory = (
   examples: (Object.keys(CATEGORY_METADATA) as Category[]).flatMap((id) => {
     const meta = CATEGORY_METADATA[id];
     if (MIXED_EXCLUDED_FOLDERS.has(meta.folder)) return [];
-    return (meta.examples as Array<ImageExample | TextExample>)
-      .filter((example): example is ImageExample => "image" in example)
-      .map((example) => resolveCuratedExample(meta.folder, example, overrides));
+    return resolvedItems(id, overrides).filter(isImageExample);
   }),
 });
 

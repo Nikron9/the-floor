@@ -1,0 +1,36 @@
+# Photo sources (licence as stated; Wikipedia non-free images used as fair use).
+volkswagen.jpg — Volkswagen, Public domain, https://commons.wikimedia.org/wiki/File:Volkswagen_logo_2019.svg
+audi.jpg — Strichpunkt / KMS Team, Public domain, https://commons.wikimedia.org/wiki/File:Audi-Logo_2016.svg
+mercedes.jpg — Mercedes-Benz, Public domain, https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Star_(1969-1986,_2025-).svg
+toyota.jpg — Toyota Europe, Public domain, https://commons.wikimedia.org/wiki/File:Toyota_EU.svg
+opel.jpg — ГП, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:%D0%9E%D0%BF%D0%B5%D0%BB-%D0%BB%D0%BE%D0%B3%D0%BE.jpg
+skoda.jpg — Skoda Auto, Public domain, https://commons.wikimedia.org/wiki/File:%C5%A0koda_nieuw.png
+renault.jpg — Renault, Public domain, https://commons.wikimedia.org/wiki/File:Renault_2021.svg
+peugeot.jpg — Howard Yeo (@hy_ixv), Unsplash, https://unsplash.com/photos/fj2gVL9XmC0
+tesla.jpg — Tesla (logo), Fry1989 eh? (vectorization), Public domain, https://commons.wikimedia.org/wiki/File:Tesla_T_symbol.svg
+ferrari.jpg — Glen Bowman from Newcastle, England, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Ferrari_Prancing_Horse_Logo_on_2000_Ferrari_Modena_360_Spider_-_Haynes_International_Motor_Museum_-_Sparkford,_Yeovil,_Somerset_(11694624846).jpg
+honda.jpg — Honda Motor Co., Ltd. and its subsidiaries and affiliates., Public domain, https://commons.wikimedia.org/wiki/File:Honda_auto_logo.svg
+hyundai.jpg — Atharv Chandel, CC BY 4.0, https://commons.wikimedia.org/wiki/File:Hyundai_Emblem_on_the_front_grill_of_Hyundai_i20.jpg
+mazda.jpg — Unknown authorUnknown author, Public domain, https://commons.wikimedia.org/wiki/File:Mazda-Logo.png
+citroen.jpg — WXDS, Public domain, https://commons.wikimedia.org/wiki/File:Citroen_2021_(alternate).svg
+seat.jpg — SEAT S.A., Public domain, https://commons.wikimedia.org/wiki/File:SEAT_Logo_from_2017.svg
+suzuki.jpg — Suzuki Motor Corporation, Public domain, https://commons.wikimedia.org/wiki/File:Suzuki_Motor_Corporation_logo.svg
+mitsubishi.jpg — QiaXiong Wuang Qin Xiangkong 2, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Mitsubishi_logo_2.JPG
+dacia.jpg — Automobile Dacia S.A., Public domain, https://commons.wikimedia.org/wiki/File:Dacia_2021_symbol.svg
+lamborghini.jpg — Chris Kursikowski (@c3k), Unsplash, https://unsplash.com/photos/ze5wHM9kplc
+chevrolet.jpg — Chevrolet, Public domain, https://commons.wikimedia.org/wiki/File:Chevrolet_bowtie_2023.svg
+subaru.jpg — TW8 MGP, Public domain, https://commons.wikimedia.org/wiki/File:Subaru_Logo_2024.svg
+lexus.jpg — Glebushko0703, CC0, https://commons.wikimedia.org/wiki/File:Lexus_Logo.svg
+jaguar.jpg — SG2012, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Jaguar_Mk_II_Mascot_%22Jaguar_Leaper%22_(1964)_-_8904900869.jpg
+maserati.jpg — Maserati, Public domain, https://commons.wikimedia.org/wiki/File:Maserati_logo_2.svg
+rolls-royce.jpg — Charles Robinson Sykes, Public domain, https://commons.wikimedia.org/wiki/File:2007-07-15_Spirit_of_Ecstasy,_K%C3%BChlerfigur_auf_einem_Rolls-Royce_20-25_hp_(GOS_45),_Baujahr_1931_IMG_3304_%E2%80%93_without_logo.jpg
+cupra.jpg — SEAT S.A., Public domain, https://commons.wikimedia.org/wiki/File:Cupra_symbol.svg
+fso.jpg — Jakub "Flyz1" Maciejewski, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:FSO_(logo)_-_Muzeum_w_Chlewiskach.jpg
+mclaren.jpg — Ved havet, Public domain, https://commons.wikimedia.org/wiki/File:McLaren_Speedmark.svg
+aston-martin.jpg — Ivan Radic, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Aston_Martin_badge_on_a_car.jpg
+cadillac.jpg — Tx-re, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Cadillac_Emblem.jpg
+infiniti.jpg — Infiniti, Public domain, https://commons.wikimedia.org/wiki/File:Infiniti_logo_1989_-_no_text.svg
+ds.jpg — Automobiles Citroën S.A., Public domain, https://commons.wikimedia.org/wiki/File:DS_Automobiles_2009_logo.svg
+polestar.jpg — Unknown artistUnknown artist, Public domain, https://commons.wikimedia.org/wiki/File:Polestar_logo_2020.svg
+ram.jpg — Falcon® Photography from France, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:Dodge_Ram_(21402726981).jpg
+acura.jpg — Basavarajtalwar, Public domain, https://commons.wikimedia.org/wiki/File:Acura_logo.svg
